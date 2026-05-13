@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html class="dark" lang="pt-BR">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Tesouraria - A∴R∴L∴S∴ Major Manoel dos Santos Portugal Nº 4424</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400;500;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "background": "#131313",
+                        "secondary": "#e9c349",
+                        "on-background": "#e4e2e1",
+                        "on-tertiary-container": "#878585",
+                        "outline-variant": "#44474d",
+                        "surface": "#131313",
+                        "surface-container-low": "#1b1c1c",
+                        "error": "#ffb4ab"
+                    },
+                    "fontFamily": {
+                        "h1": ["Newsreader"],
+                        "h2": ["Newsreader"],
+                        "h3": ["Newsreader"],
+                        "body-md": ["Inter"],
+                        "label-caps": ["Inter"]
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .glass-card {
+            background: rgba(31, 32, 32, 0.4);
+            backdrop-filter: blur(40px);
+            border: 1px solid rgba(233, 195, 73, 0.1);
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+        }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #0e0e0e; }
+        ::-webkit-scrollbar-thumb { background: #353535; border-radius: 4px; }
+
+        @media (max-width: 768px) {
+            h1.text-4xl { font-size: 2.25rem !important; }
+            main { padding: 1rem !important; padding-top: 5.5rem !important; }
+            .glass-card { border-radius: 1rem !important; }
+            .px-8 { padding-left: 1.25rem !important; padding-right: 1.25rem !important; }
+            
+            /* Action buttons optimization */
+            .flex.items-center.justify-end.gap-4 button, 
+            .flex.items-center.justify-end.gap-4 a {
+                width: 44px;
+                height: 44px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                background: rgba(233, 195, 73, 0.1);
+                border-radius: 0.5rem;
+                color: #e9c349 !important;
+            }
+            
+            /* Modals */
+            #uploadModal > div {
+                width: 95% !important;
+                padding: 1.5rem !important;
+            }
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background min-h-screen">
+    <!-- MOBILE TOP BAR -->
+    <nav class="lg:hidden fixed top-0 w-full z-50 flex justify-between items-center px-6 py-4 bg-slate-950/90 backdrop-blur-xl border-b border-white/10">
+        <div class="flex items-center gap-3">
+            <img src="logo.png" alt="Logo" class="h-8 w-auto">
+            <span class="font-newsreader text-amber-500 font-bold">Major Manoel</span>
+        </div>
+        <button onclick="toggleMobileMenu()" class="text-amber-500">
+            <span class="material-symbols-outlined text-3xl">menu</span>
+        </button>
+    </nav>
+
+    <!-- MOBILE MENU OVERLAY -->
+    <div id="mobileMenu" class="fixed inset-0 z-[60] hidden flex flex-col bg-slate-950/98 backdrop-blur-2xl p-8 transform transition-transform duration-500 translate-x-full">
+        <div class="flex justify-between items-center mb-12">
+            <div class="flex items-center gap-3">
+                <img src="logo.png" alt="Logo" class="h-8">
+                <span class="font-newsreader text-amber-500 font-bold text-lg">Menu Principal</span>
+            </div>
+            <button onclick="toggleMobileMenu()" class="text-amber-500 w-12 h-12 flex items-center justify-center">
+                <span class="material-symbols-outlined text-4xl">close</span>
+            </button>
+        </div>
+        <div class="flex flex-col gap-4">
+            <a class="flex items-center gap-6 p-5 bg-white/5 rounded-2xl text-slate-200 border border-white/5 active:scale-95 transition-all" href="dashboard.html">
+                <span class="material-symbols-outlined text-amber-500">dashboard</span>
+                <span class="text-lg font-medium tracking-wide">Painel Principal</span>
+            </a>
+            <a class="flex items-center gap-6 p-5 bg-white/5 rounded-2xl text-amber-500 border border-amber-500/10 active:scale-95 transition-all" href="tesouraria.html">
+                <span class="material-symbols-outlined text-amber-500">account_balance_wallet</span>
+                <span class="text-lg font-medium tracking-wide">Tesouraria</span>
+            </a>
+            <a class="flex items-center gap-6 p-5 bg-white/5 rounded-2xl text-slate-200 border border-white/5 active:scale-95 transition-all" href="biblioteca.html">
+                <span class="material-symbols-outlined text-amber-500">auto_stories</span>
+                <span class="text-lg font-medium tracking-wide">Biblioteca Digital</span>
+            </a>
+            <a class="flex items-center gap-6 p-5 bg-white/5 rounded-2xl text-slate-200 border border-white/5 active:scale-95 transition-all" href="fraternidade.html">
+                <span class="material-symbols-outlined text-amber-500">groups</span>
+                <span class="text-lg font-medium tracking-wide">Galeria de Fotos</span>
+            </a>
+            <button onclick="logout()" class="flex items-center gap-6 p-5 bg-red-500/10 rounded-2xl text-red-400 border border-red-500/10 active:scale-95 transition-all mt-8">
+                <span class="material-symbols-outlined">logout</span>
+                <span class="text-lg font-medium tracking-wide uppercase">Sair do Portal</span>
+            </button>
+        </div>
+        <div class="mt-auto text-center pb-8 px-6">
+            <p class="text-slate-600 text-[10px] uppercase tracking-widest mb-4">A∴R∴L∴S∴ Major Manoel dos Santos Portugal Nº 4424</p>
+            
+            <!-- Institutional Affiliation (Mobile) -->
+            <div class="pt-6 border-t border-white/5 flex flex-col items-center">
+                <div class="flex items-center gap-6 mb-3">
+                    <a href="https://gob-rj.org.br/home" target="_blank" rel="noopener noreferrer" class="transition-transform hover:scale-105">
+                        <img src="logo_gob_rj-2.png" alt="GOB-RJ" class="h-10 w-auto opacity-30">
+                    </a>
+                    <a href="https://www.gob.org.br/" target="_blank" rel="noopener noreferrer" class="transition-transform hover:scale-105">
+                        <img src="logo-gob-brasilia-df-selo.png" alt="GOB" class="h-10 w-auto opacity-30">
+                    </a>
+                </div>
+                <div class="space-y-0.5">
+                    <p class="font-newsreader text-[10px] text-slate-400">Grande Oriente do Brasil no Rio de Janeiro</p>
+                    <p class="text-[7px] text-amber-500/30 uppercase tracking-widest font-bold">Federado ao Grande Oriente do Brasil</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SIDE NAVBAR -->
+    <nav class="hidden lg:flex fixed left-0 top-0 h-screen flex-col bg-slate-950/95 backdrop-blur-lg w-72 border-r border-white/10 shadow-2xl z-50">
+        <div class="p-8 flex flex-col items-center text-center">
+            <h1 class="text-amber-500 font-bold font-newsreader text-lg leading-tight tracking-tight">A∴R∴L∴S∴ Major Manoel dos Santos Portugal Nº 4424</h1>
+            <p class="text-slate-500 text-[10px] uppercase tracking-[0.2em] mt-2">Nº 4424 - GOB - Rito Moderno</p>
+        </div>
+
+        <div class="flex-1 px-4 py-6 space-y-2">
+            <a href="dashboard.html" class="flex items-center gap-4 px-6 py-4 text-slate-400 hover:text-amber-500 hover:bg-white/5 rounded-xl transition-all group">
+                <span class="material-symbols-outlined">dashboard</span>
+                <span class="font-medium">Painel Principal</span>
+            </a>
+            <a href="tesouraria.html" class="flex items-center gap-4 px-6 py-4 bg-amber-500/10 text-amber-500 rounded-xl transition-all">
+                <span class="material-symbols-outlined">account_balance_wallet</span>
+                <span class="font-medium">Tesouraria</span>
+            </a>
+            <a href="biblioteca.html" class="flex items-center gap-4 px-6 py-4 text-slate-400 hover:text-amber-500 hover:bg-white/5 rounded-xl transition-all">
+                <span class="material-symbols-outlined">auto_stories</span>
+                <span class="font-medium">Biblioteca Digital</span>
+            </a>
+            <a href="fraternidade.html" class="flex items-center gap-4 px-6 py-4 text-slate-400 hover:text-amber-500 hover:bg-white/5 rounded-xl transition-all">
+                <span class="material-symbols-outlined">local_library</span>
+                <span class="font-medium">Galeria de Fotos</span>
+            </a>
+        </div>
+
+        <div class="p-6 border-t border-white/5">
+            <button onclick="logout()" class="w-full flex items-center justify-center gap-2 py-3 text-slate-500 hover:text-red-400 transition-colors text-sm font-bold uppercase tracking-widest">
+                <span class="material-symbols-outlined text-xl">logout</span>
+                Sair do Portal
+            </button>
+            
+            <!-- Institutional Affiliation (Desktop) -->
+            <div class="mt-6 pt-6 border-t border-white/5 flex flex-col items-center">
+                <div class="flex items-center gap-6 mb-3">
+                    <a href="https://gob-rj.org.br/home" target="_blank" rel="noopener noreferrer" class="transition-transform hover:scale-105">
+                        <img src="logo_gob_rj-2.png" alt="GOB-RJ" class="h-10 w-auto opacity-20 hover:opacity-100 grayscale hover:grayscale-0 transition-all duration-500">
+                    </a>
+                    <a href="https://www.gob.org.br/" target="_blank" rel="noopener noreferrer" class="transition-transform hover:scale-105">
+                        <img src="logo-gob-brasilia-df-selo.png" alt="GOB" class="h-10 w-auto opacity-20 hover:opacity-100 grayscale hover:grayscale-0 transition-all duration-500">
+                    </a>
+                </div>
+                <div class="space-y-0.5">
+                    <p class="font-newsreader text-[10px] text-slate-400">Grande Oriente do Brasil no Rio de Janeiro</p>
+                    <p class="text-[7px] text-amber-500/30 uppercase tracking-widest font-bold">Federado ao Grande Oriente do Brasil</p>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- MAIN CONTENT -->
+    <main class="lg:ml-72 p-6 md:p-12 pt-24 lg:pt-12">
+        <header class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
+            <div>
+                <span class="font-label-caps text-[10px] text-secondary mb-2 block tracking-[0.2em] uppercase">Gestão Financeira</span>
+                <h1 class="font-newsreader text-4xl md:text-6xl text-on-background">Tesouraria</h1>
+            </div>
+            <div id="treasurerActions" class="hidden">
+                <button onclick="openUploadModal()" class="px-6 py-3 bg-secondary text-black hover:brightness-110 transition-colors flex items-center gap-2 font-label-caps text-[10px] uppercase tracking-widest">
+                    <span class="material-symbols-outlined text-xl">upload</span>
+                    Importar Documento
+                </button>
+            </div>
+        </header>
+
+        <!-- Document List -->
+        <section class="mb-24">
+            <div class="glass-card rounded-xl overflow-hidden">
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                        <tr class="text-slate-500 font-label-caps text-[10px] uppercase tracking-widest bg-white/5 border-b border-white/5">
+                            <th class="px-8 py-5 font-semibold">Documento</th>
+                            <th class="px-8 py-5 font-semibold hidden md:table-cell">Data de Upload</th>
+                            <th class="px-8 py-5 font-semibold text-right">Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody id="documentList" class="divide-y divide-white/5">
+                        <!-- Dinâmico -->
+                        <tr>
+                            <td colspan="3" class="px-8 py-12 text-center text-slate-500 italic text-sm">Carregando documentos...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+
+    <!-- Upload Modal -->
+    <div id="uploadModal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-[100] flex items-center justify-center p-4">
+        <div class="glass-card max-w-md w-full p-8 shadow-2xl relative animate-in zoom-in duration-300">
+            <button onclick="closeUploadModal()" class="absolute top-4 right-4 text-on-tertiary-container hover:text-secondary transition-colors">
+                <span class="material-symbols-outlined">close</span>
+            </button>
+            <h3 class="text-xl font-h3 text-on-background mb-2">Importar Documento Financeiro</h3>
+            <p class="text-[10px] text-secondary font-label-caps uppercase tracking-widest mb-6">Área Restrita: Tesouraria</p>
+            
+            <form id="uploadForm" class="space-y-6">
+                <div>
+                    <label class="block text-xs font-label-caps uppercase tracking-widest text-on-tertiary-container mb-2">Título do Documento</label>
+                    <input type="text" id="docTitle" required class="w-full bg-surface border-outline-variant text-on-background p-3 focus:border-secondary outline-none border focus:ring-0 text-sm" placeholder="Ex: Balancete Mensal - Maio 2024">
+                </div>
+                <div>
+                    <label class="block text-xs font-label-caps uppercase tracking-widest text-on-tertiary-container mb-2">Descrição (Opcional)</label>
+                    <textarea id="docDesc" class="w-full bg-surface border-outline-variant text-on-background p-3 focus:border-secondary outline-none border focus:ring-0 text-sm" rows="3" placeholder="Breve resumo do conteúdo..."></textarea>
+                </div>
+                <div>
+                    <label class="block text-xs font-label-caps uppercase tracking-widest text-on-tertiary-container mb-2">Arquivo (PDF ou Imagem)</label>
+                    <input type="file" id="docFile" required class="w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-secondary/10 file:text-secondary hover:file:bg-secondary/20 transition-all">
+                </div>
+                
+                <div class="flex gap-4 pt-4">
+                    <button type="button" onclick="closeUploadModal()" class="flex-1 px-4 py-3 border border-outline-variant text-on-background text-xs font-label-caps uppercase tracking-widest hover:bg-white/5">Cancelar</button>
+                    <button type="submit" class="flex-1 bg-secondary text-black px-4 py-3 text-xs font-label-caps uppercase tracking-widest hover:brightness-110 flex items-center justify-center gap-2">
+                        <span id="uploadSpinner" class="hidden animate-spin material-symbols-outlined text-sm">progress_activity</span>
+                        <span>Salvar Documento</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Preview Modal -->
+    <div id="previewModal" class="hidden fixed inset-0 bg-black/90 backdrop-blur-md z-[200] flex flex-col p-4">
+        <div class="flex justify-between items-center mb-4 px-4">
+            <h3 id="previewTitle" class="text-on-background font-h3 text-xl">Visualizar Documento</h3>
+            <button onclick="closePreviewModal()" class="text-secondary hover:scale-110 transition-transform">
+                <span class="material-symbols-outlined text-4xl">close</span>
+            </button>
+        </div>
+        <div class="flex-1 w-full max-w-5xl mx-auto bg-surface-container-low rounded-xl overflow-hidden relative shadow-2xl border border-white/5">
+            <div id="previewContent" class="w-full h-full flex items-center justify-center">
+                <!-- Conteúdo dinâmico aqui -->
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="/js/supabase-config.js"></script>
+    <script>
+        async function checkSession() {
+            const { data: { session } } = await window.supabaseClient.auth.getSession();
+            if (!session) { window.location.href = 'login.html'; return; }
+
+            const { data: profile } = await window.supabaseClient
+                .from('profiles')
+                .select('position, role')
+                .eq('id', session.user.id)
+                .single();
+            
+            if (profile && (profile.position === 'Tesoureiro' || profile.position === 'Venerável Mestre' || profile.role === 'admin')) {
+                document.getElementById('treasurerActions').classList.remove('hidden');
+            }
+            loadDocuments();
+        }
+
+        async function loadDocuments() {
+            const { data, error } = await window.supabaseClient
+                .from('financial_documents')
+                .select('*')
+                .order('created_at', { ascending: false });
+            
+            const listEl = document.getElementById('documentList');
+            if (error || !data || data.length === 0) {
+                listEl.innerHTML = '<tr><td colspan="3" class="px-8 py-12 text-center text-slate-500 italic text-sm">Nenhum documento encontrado.</td></tr>';
+                return;
+            }
+
+            listEl.innerHTML = data.map(doc => `
+                <tr class="hover:bg-white/5 transition-colors group">
+                    <td class="px-8 py-5">
+                        <div class="flex items-center gap-4">
+                            <span class="material-symbols-outlined text-secondary">description</span>
+                            <div>
+                                <p class="text-sm font-medium text-on-background">${doc.title}</p>
+                                <p class="text-[10px] text-slate-500 uppercase tracking-tighter">${doc.description || ''}</p>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="px-8 py-5 hidden md:table-cell text-slate-500 text-sm">
+                        ${new Date(doc.created_at).toLocaleDateString('pt-BR')}
+                    </td>
+                    <td class="px-8 py-5 text-right">
+                        <div class="flex items-center justify-end gap-4">
+                            <button onclick="previewDocument('${doc.file_url}', '${doc.title.replace(/'/g, "\\'")}')" class="material-symbols-outlined text-slate-500 hover:text-secondary transition-colors">visibility</button>
+                            <a href="${doc.file_url}" target="_blank" class="material-symbols-outlined text-slate-500 hover:text-secondary transition-colors">download</a>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        window.openUploadModal = () => document.getElementById('uploadModal').classList.remove('hidden');
+        window.closeUploadModal = () => document.getElementById('uploadModal').classList.add('hidden');
+
+        document.getElementById('uploadForm').onsubmit = async (e) => {
+            e.preventDefault();
+            const spinner = document.getElementById('uploadSpinner');
+            spinner.classList.remove('hidden');
+            
+            const title = document.getElementById('docTitle').value;
+            const desc = document.getElementById('docDesc').value;
+            const file = document.getElementById('docFile').files[0];
+            
+            const { data: { session } } = await window.supabaseClient.auth.getSession();
+            
+            // Sanitize filename: remove accents, spaces and special chars
+            const cleanName = file.name.normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-zA-Z0-9.]/g, '_');
+            const fileName = `${Date.now()}_${cleanName}`;
+            
+            // Upload to Storage
+            const { data: uploadData, error: uploadError } = await window.supabaseClient.storage
+                .from('documents')
+                .upload(`financial/${fileName}`, file);
+            
+            if (uploadError) {
+                alert("Erro upload: " + uploadError.message);
+                spinner.classList.add('hidden');
+                return;
+            }
+
+            const { data: { publicUrl } } = window.supabaseClient.storage
+                .from('documents')
+                .getPublicUrl(`financial/${fileName}`);
+
+            // Save to DB
+            const { error: dbError } = await window.supabaseClient
+                .from('financial_documents')
+                .insert({
+                    title,
+                    description: desc,
+                    file_url: publicUrl,
+                    uploaded_by: session.user.id
+                });
+
+            spinner.classList.add('hidden');
+            if (dbError) alert("Erro DB: " + dbError.message);
+            else {
+                closeUploadModal();
+                loadDocuments();
+                e.target.reset();
+            }
+        };
+
+        window.logout = async () => {
+            await window.supabaseClient.auth.signOut();
+            window.location.href = 'login.html';
+        };
+
+        window.previewDocument = (url, title) => {
+            const modal = document.getElementById('previewModal');
+            const content = document.getElementById('previewContent');
+            const titleEl = document.getElementById('previewTitle');
+            
+            titleEl.textContent = title;
+            content.innerHTML = '<span class="animate-spin material-symbols-outlined text-secondary text-4xl">progress_activity</span>';
+            modal.classList.remove('hidden');
+            
+            const isImage = /\.(jpg|jpeg|png|webp|gif)$/i.test(url);
+            if (isImage) {
+                content.innerHTML = `<img src="${url}" class="max-w-full max-h-full object-contain animate-in fade-in zoom-in duration-300">`;
+            } else {
+                content.innerHTML = `<iframe src="${url}#toolbar=0" class="w-full h-full border-0 animate-in fade-in duration-500"></iframe>`;
+            }
+        };
+
+        window.closePreviewModal = () => {
+            document.getElementById('previewModal').classList.add('hidden');
+            document.getElementById('previewContent').innerHTML = '';
+        };
+
+        window.toggleMobileMenu = () => {
+            const menu = document.getElementById('mobileMenu');
+            menu.classList.toggle('hidden');
+            menu.classList.toggle('translate-x-full');
+        };
+
+        document.addEventListener('DOMContentLoaded', checkSession);
+    </script>
+</body>
+</html>

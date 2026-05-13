@@ -1,0 +1,1387 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="pt-BR"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,200..800;1,6..72,200..800&amp;family=Inter:wght@100..900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-container-high": "#2a2a2a",
+                        "on-background": "#e4e2e1",
+                        "on-surface": "#e4e2e1",
+                        "on-tertiary-container": "#878585",
+                        "primary-fixed-dim": "#b6c7ec",
+                        "on-tertiary-fixed": "#1c1b1b",
+                        "background": "#131313",
+                        "outline": "#8f9098",
+                        "on-tertiary": "#313030",
+                        "on-secondary-container": "#342800",
+                        "surface-container-low": "#1b1c1c",
+                        "secondary-fixed-dim": "#e9c349",
+                        "surface-container": "#1f2020",
+                        "tertiary": "#c8c6c5",
+                        "primary-container": "#0b1e3b",
+                        "error": "#ffb4ab",
+                        "inverse-primary": "#4e5f7f",
+                        "secondary": "#e9c349",
+                        "surface-dim": "#131313",
+                        "surface-container-lowest": "#0e0e0e",
+                        "outline-variant": "#44474d",
+                        "on-secondary": "#3c2f00",
+                        "secondary-container": "#af8d11",
+                        "primary-fixed": "#d7e2ff",
+                        "surface": "#131313",
+                        "tertiary-fixed-dim": "#c8c6c5",
+                        "on-primary": "#1f304e",
+                        "tertiary-fixed": "#e5e2e1",
+                        "primary": "#b6c7ec",
+                        "on-primary-fixed-variant": "#364766",
+                        "on-secondary-fixed": "#241a00",
+                        "tertiary-container": "#1e1e1e",
+                        "on-error": "#690005",
+                        "surface-tint": "#b6c7ec",
+                        "on-secondary-fixed-variant": "#574500",
+                        "secondary-fixed": "#ffe088",
+                        "on-primary-container": "#7686a9",
+                        "surface-container-highest": "#353535",
+                        "surface-bright": "#393939",
+                        "on-error-container": "#ffdad6",
+                        "on-tertiary-fixed-variant": "#474646",
+                        "surface-variant": "#353535",
+                        "on-surface-variant": "#c5c6ce",
+                        "inverse-surface": "#e4e2e1",
+                        "inverse-on-surface": "#303030",
+                        "error-container": "#93000a",
+                        "on-primary-fixed": "#081b38"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "container-max": "1280px",
+                        "margin-safe": "40px",
+                        "base": "8px",
+                        "gutter": "32px",
+                        "section-gap": "160px"
+                    },
+                    "fontFamily": {
+                        "h1": ["Newsreader"],
+                        "body-md": ["Inter"],
+                        "h3": ["Newsreader"],
+                        "h2": ["Newsreader"],
+                        "label-caps": ["Inter"],
+                        "body-lg": ["Inter"]
+                    },
+                    "fontSize": {
+                        "h1": ["4.5rem", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "400"}],
+                        "body-md": ["1rem", {"lineHeight": "1.6", "fontWeight": "400"}],
+                        "h3": ["2rem", {"lineHeight": "1.3", "fontWeight": "500"}],
+                        "h2": ["3rem", {"lineHeight": "1.2", "letterSpacing": "-0.01em", "fontWeight": "400"}],
+                        "label-caps": ["0.75rem", {"lineHeight": "1", "letterSpacing": "0.1em", "fontWeight": "600"}],
+                        "body-lg": ["1.125rem", {"lineHeight": "1.7", "fontWeight": "400"}]
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .glass-card {
+            background: rgba(31, 32, 32, 0.4);
+            backdrop-filter: blur(40px);
+            border: 1px solid rgba(233, 195, 73, 0.1);
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+        }
+        .subtle-divider {
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(233, 195, 73, 0.2), transparent);
+        }
+        
+        /* Presence Modal Selected State */
+        button.selected {
+            border-color: rgba(233, 195, 73, 0.5) !important;
+            background: rgba(233, 195, 73, 0.1) !important;
+        }
+        button#btnConfirm.selected .material-symbols-outlined { color: #e9c349 !important; }
+        button#btnConfirm.selected span:last-child { color: #e9c349 !important; }
+        button#btnAbsent.selected { border-color: rgba(239, 68, 68, 0.5) !important; background: rgba(239, 68, 68, 0.1) !important; }
+        button#btnAbsent.selected .material-symbols-outlined { color: #ef4444 !important; }
+        button#btnAbsent.selected span:last-child { color: #ef4444 !important; }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #131313; }
+        ::-webkit-scrollbar-thumb { background: #353535; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #44474d; }
+        /* FullCalendar Customization (Dark Theme) */
+        #calendar {
+            background: rgba(31, 32, 32, 0.8) !important;
+            color: #e4e2e1 !important;
+            border-radius: 1rem;
+            padding: 1.5rem;
+            border: 1px solid rgba(233, 195, 73, 0.1);
+            font-family: 'Inter', sans-serif;
+            min-height: 650px;
+        }
+        .fc .fc-toolbar-title {
+            font-family: 'Newsreader', serif;
+            font-size: 1.5rem !important;
+            color: #e9c349 !important;
+            font-weight: 700;
+        }
+        .fc .fc-button-primary {
+            background-color: rgba(233, 195, 73, 0.1) !important;
+            border: 1px solid rgba(233, 195, 73, 0.2) !important;
+            color: #e9c349 !important;
+            font-size: 0.875rem !important;
+            text-transform: capitalize !important;
+            padding: 0.4rem 0.8rem !important;
+        }
+        .fc .fc-button-primary:hover {
+            background-color: rgba(233, 195, 73, 0.2) !important;
+        }
+        .fc .fc-col-header-cell-cushion {
+            font-size: 0.75rem !important;
+            color: #878585 !important;
+            text-transform: uppercase !important;
+            letter-spacing: 0.05em !important;
+            padding: 12px 0 !important;
+            text-decoration: none !important;
+            font-weight: 700 !important;
+        }
+        .fc-theme-standard td, .fc-theme-standard th {
+            border-color: rgba(255,255,255,0.05) !important;
+        }
+        .fc-daygrid-day-number {
+            font-size: 0.85rem !important;
+            color: #e4e2e1 !important;
+            padding: 8px !important;
+            text-decoration: none !important;
+            font-weight: 500 !important;
+        }
+        .fc-day-today {
+            background-color: rgba(233, 195, 73, 0.05) !important;
+        }
+        .fc-day-today .fc-daygrid-day-number {
+            background: #f59e0b;
+            color: white !important;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 4px;
+        }
+        .fc-event {
+            background-color: #fef3c7 !important; /* amber-100 */
+            border: 1px solid #f59e0b !important;
+            color: #000000 !important; /* Texto do evento em preto */
+            padding: 2px 6px !important;
+            font-size: 0.75rem !important;
+            border-radius: 4px !important;
+            margin: 1px 4px !important;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .fc-event:hover {
+            filter: brightness(0.95);
+        }
+        .fc-event-title {
+            font-weight: 700 !important;
+        }
+        .bg-logo-overlay {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 70vh;
+            height: 70vh;
+            background-image: url('logo.png');
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            opacity: 0.15; /* Increased opacity as requested */
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        /* MOBILE OPTIMIZATIONS */
+        @media (max-width: 768px) {
+            :root { --gutter: 16px; }
+            
+            /* Typography Scales */
+            h2.text-h2 { font-size: 1.75rem !important; line-height: 1.2 !important; }
+            h3.text-h3 { font-size: 1.25rem !important; }
+            .font-newsreader { letter-spacing: -0.01em; }
+            
+            /* Spacing & Layout */
+            main { padding: 1rem !important; padding-top: 5.5rem !important; }
+            .grid-cols-12 { display: flex; flex-direction: column; gap: 1rem; }
+            .section-gap { margin-top: 4rem !important; }
+            
+            /* Card Refinements */
+            .glass-card { padding: 1.25rem !important; border-radius: 1rem !important; }
+            
+            /* Interactive Elements */
+            button, a.group { min-height: 48px; border-radius: 0.5rem !important; }
+            .flex-wrap { gap: 0.75rem; }
+            
+            /* Tables/Lists */
+            .overflow-x-auto {
+                margin: 0 -1rem;
+                padding: 0 1rem;
+                -webkit-overflow-scrolling: touch;
+            }
+            
+            /* Modals for Mobile */
+            #presenceModal > div, #eventModal > div, #announcementModal > div, #editMemberModal > div {
+                width: 95% !important;
+                max-width: none !important;
+                margin: 1rem auto;
+                padding: 1.5rem !important;
+            }
+        }
+    </style>
+    <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js'></script>
+</head>
+<body class="bg-background text-on-background min-h-screen">
+    <div class="bg-logo-overlay"></div>
+
+    <!-- MOBILE TOP BAR -->
+    <nav class="lg:hidden fixed top-0 w-full z-50 flex justify-between items-center px-6 py-4 bg-slate-950/90 backdrop-blur-xl border-b border-white/10">
+        <div class="flex items-center gap-3">
+            <img src="logo.png" alt="Logo" class="h-8 w-auto">
+            <span class="font-newsreader text-amber-500 font-bold">Major Manoel</span>
+        </div>
+        <button onclick="toggleMobileMenu()" class="text-amber-500">
+            <span class="material-symbols-outlined text-3xl">menu</span>
+        </button>
+    </nav>
+
+    <!-- MOBILE MENU OVERLAY -->
+    <div id="mobileMenu" class="fixed inset-0 z-[60] hidden flex flex-col bg-slate-950/98 backdrop-blur-2xl p-8 transform transition-transform duration-500 translate-x-full">
+        <div class="flex justify-between items-center mb-12">
+            <div class="flex items-center gap-3">
+                <img src="logo.png" alt="Logo" class="h-8">
+                <span class="font-newsreader text-amber-500 font-bold text-lg">Menu Principal</span>
+            </div>
+            <button onclick="toggleMobileMenu()" class="text-amber-500 w-12 h-12 flex items-center justify-center">
+                <span class="material-symbols-outlined text-4xl">close</span>
+            </button>
+        </div>
+        <div class="flex flex-col gap-4">
+            <a class="flex items-center gap-6 p-5 bg-white/5 rounded-2xl text-slate-200 border border-white/5 active:scale-95 transition-all" href="dashboard.html">
+                <span class="material-symbols-outlined text-amber-500">dashboard</span>
+                <span class="text-lg font-medium tracking-wide">Painel Principal</span>
+            </a>
+            <a class="flex items-center gap-6 p-5 bg-white/5 rounded-2xl text-slate-200 border border-white/5 active:scale-95 transition-all" href="biblioteca.html">
+                <span class="material-symbols-outlined text-amber-500">auto_stories</span>
+                <span class="text-lg font-medium tracking-wide">Biblioteca Digital</span>
+            </a>
+            <a class="flex items-center gap-6 p-5 bg-white/5 rounded-2xl text-slate-200 border border-white/5 active:scale-95 transition-all" href="fraternidade.html">
+                <span class="material-symbols-outlined text-amber-500">groups</span>
+                <span class="text-lg font-medium tracking-wide">Galeria de Fotos</span>
+            </a>
+            <a class="flex items-center gap-6 p-5 bg-white/5 rounded-2xl text-slate-200 border border-white/5 active:scale-95 transition-all" href="calendario.html">
+                <span class="material-symbols-outlined text-amber-500">calendar_month</span>
+                <span class="text-lg font-medium tracking-wide">Calendário</span>
+            </a>
+            <a class="flex items-center gap-6 p-5 bg-white/5 rounded-2xl text-slate-200 border border-white/5 active:scale-95 transition-all" href="tesouraria.html">
+                <span class="material-symbols-outlined text-amber-500">account_balance_wallet</span>
+                <span class="text-lg font-medium tracking-wide">Tesouraria</span>
+            </a>
+            <button onclick="logout()" class="flex items-center gap-6 p-5 bg-red-500/10 rounded-2xl text-red-400 border border-red-500/10 active:scale-95 transition-all mt-8">
+                <span class="material-symbols-outlined">logout</span>
+                <span class="text-lg font-medium tracking-wide uppercase">Sair do Portal</span>
+            </button>
+        </div>
+        <div class="mt-auto text-center pb-8">
+            <p class="text-slate-600 text-[10px] uppercase tracking-widest">A∴R∴L∴S∴ Major Manoel dos Santos Portugal Nº 4424</p>
+        </div>
+    </div>
+
+    <!-- SIDE NAVBAR (Desktop) -->
+    <nav class="hidden lg:flex fixed left-0 top-0 h-screen flex-col bg-slate-950/95 backdrop-blur-lg w-72 border-r border-white/10 shadow-2xl z-50">
+        <div class="p-8 flex flex-col items-center text-center">
+            <h1 class="text-amber-500 font-bold font-newsreader text-lg leading-tight tracking-tight">A∴R∴L∴S∴ Major Manoel dos Santos Portugal Nº 4424</h1>
+            <p class="text-slate-500 text-[10px] uppercase tracking-[0.2em] mt-2">Nº 4424 - GOB - Rito Moderno</p>
+        </div>
+
+        <div class="flex-1 px-4 py-6 space-y-2">
+            <a href="dashboard.html" class="flex items-center gap-4 px-6 py-4 bg-amber-500/10 text-amber-500 rounded-xl transition-all group">
+                <span class="material-symbols-outlined">dashboard</span>
+                <span class="font-medium">Painel Principal</span>
+            </a>
+            <a href="biblioteca.html" class="flex items-center gap-4 px-6 py-4 text-slate-400 hover:text-amber-500 hover:bg-white/5 rounded-xl transition-all group">
+                <span class="material-symbols-outlined">auto_stories</span>
+                <span class="font-medium">Biblioteca Digital</span>
+            </a>
+            <a href="fraternidade.html" class="flex items-center gap-4 px-6 py-4 text-slate-400 hover:text-amber-500 hover:bg-white/5 rounded-xl transition-all group">
+                <span class="material-symbols-outlined">local_library</span>
+                <span class="font-medium">Galeria de Fotos</span>
+            </a>
+            <a href="calendario.html" class="flex items-center gap-4 px-6 py-4 text-slate-400 hover:text-amber-500 hover:bg-white/5 rounded-xl transition-all group">
+                <span class="material-symbols-outlined">calendar_month</span>
+                <span class="font-medium">Calendário de Sessões</span>
+            </a>
+            <a href="tesouraria.html" class="flex items-center gap-4 px-6 py-4 text-slate-400 hover:text-amber-500 hover:bg-white/5 rounded-xl transition-all group">
+                <span class="material-symbols-outlined">account_balance_wallet</span>
+                <span class="font-medium">Tesouraria</span>
+            </a>
+            <!-- Admin Link (Hidden by default) -->
+            <a id="adminMenuLink" href="#" class="hidden items-center gap-4 px-6 py-4 text-slate-400 hover:text-amber-500 hover:bg-white/5 rounded-xl transition-all group">
+                <span class="material-symbols-outlined">settings_honorary</span>
+                <span class="font-medium">Administração</span>
+            </a>
+        </div>
+
+        <div class="p-6 border-t border-white/10 flex items-center gap-4">
+            <div class="w-10 h-10 rounded-full overflow-hidden border border-amber-500/30">
+                <div class="w-full h-full bg-amber-500 flex items-center justify-center text-black font-bold" id="navInitial">P</div>
+            </div>
+            <div>
+                <p class="text-on-background font-medium text-sm" id="navName">Ir. Portugal</p>
+                <p class="text-slate-500 text-[10px] uppercase tracking-widest" id="navPosition">Mestre Maçom</p>
+            </div>
+        </div>
+        <div class="px-6 pb-6">
+            <button onclick="logout()" class="w-full flex items-center justify-center gap-2 py-3 text-slate-500 hover:text-red-400 transition-colors text-sm font-bold uppercase tracking-widest group">
+                <span class="material-symbols-outlined text-xl group-hover:rotate-12 transition-transform">logout</span>
+                <span>Sair</span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- MAIN CONTENT CANVAS -->
+    <main class="lg:ml-72 min-h-screen p-6 lg:p-12 pt-24 lg:pt-12">
+<!-- HEADER -->
+<header class="mb-12 flex justify-between items-end">
+<div>
+<h2 class="font-h2 text-h2 text-on-background">Saudações, Irmão Portugal</h2>
+<div class="subtle-divider w-24 mt-4"></div>
+</div>
+<div class="text-right">
+<p id="currentDate" class="font-label-caps text-label-caps text-secondary">Carregando data...</p>
+<p class="text-on-tertiary-container text-xs mt-1">Oriente do Rio de Janeiro</p>
+</div>
+</header>
+<!-- BENTO GRID LAYOUT -->
+<div id="dashboardHome">
+<div class="grid grid-cols-12 gap-gutter">
+<!-- PRá“XIMA SESSáƒO (WIDGET) -->
+<section class="col-span-12 lg:col-span-8">
+<div class="glass-card p-8 h-full flex flex-col justify-between overflow-hidden relative group">
+<div class="absolute top-0 right-0 w-64 h-64 bg-secondary/5 blur-[80px] -mr-32 -mt-32"></div>
+<div>
+<div class="flex items-center gap-2 mb-6">
+<span class="material-symbols-outlined text-secondary" data-icon="event_upcoming">event_upcoming</span>
+<h3 class="font-label-caps text-label-caps text-secondary">Próxima Sessão</h3>
+</div>
+<div class="flex flex-col md:flex-row gap-12 items-start">
+<div class="flex-shrink-0 text-center px-6 py-4 border border-secondary/20 rounded-lg bg-surface-container-low">
+<span id="nextSessionDay" class="block text-h2 font-h2 text-secondary leading-none">28</span>
+<span id="nextSessionMonth" class="block font-label-caps text-label-caps uppercase mt-2">Maio</span>
+</div>
+<div>
+<h4 id="nextSessionTitle" class="font-h3 text-h3 text-on-surface mb-2">Sessão Ordinária de Aprendiz</h4>
+<p class="text-on-surface-variant flex items-center gap-2">
+<span class="material-symbols-outlined text-sm" data-icon="schedule">schedule</span>
+<span id="nextSessionTime">20:00 - Templo Principal</span>
+</p>
+<p id="nextSessionDescription" class="mt-4 text-on-surface-variant max-w-md">Ordem do dia: Instruções de Primeiro Grau e recebimento de correspondências externas. Traje: Formal.</p>
+</div>
+</div>
+</div>
+                    <div class="mt-8 flex flex-wrap gap-4 items-center justify-between relative z-10">
+                        <div class="flex gap-4">
+                            <button onclick="openPresenceModal()" class="bg-secondary text-black px-8 py-3 font-label-caps text-label-caps hover:brightness-110 transition-all flex items-center gap-2">
+                                <span class="material-symbols-outlined text-sm">check_circle</span>
+                                Confirmar Presença
+                            </button>
+                            <button onclick="togglePresenceList()" class="border border-secondary text-secondary px-8 py-3 font-label-caps text-label-caps hover:bg-secondary/10 transition-all">
+                                Ver Lista (<span id="confirmedCount">0</span>)
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Presence List (Hidden by default) -->
+                    <div id="presenceListContainer" class="hidden mt-8 pt-8 border-t border-white/5 animate-in fade-in duration-500">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                            <div>
+                                <h4 class="font-label-caps text-[10px] text-secondary uppercase tracking-widest mb-4">Irmãos Confirmados</h4>
+                                <div id="confirmedList" class="space-y-3 text-sm">
+                                    <!-- Dinâmico -->
+                                </div>
+                            </div>
+                            <div>
+                                <h4 class="font-label-caps text-[10px] text-on-tertiary-container uppercase tracking-widest mb-4">Justificativas</h4>
+                                <div id="justifiedList" class="space-y-3 text-sm">
+                                    <!-- Dinâmico -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+</div>
+</section>
+<section class="col-span-12 lg:col-span-4">
+<div class="glass-card p-8 h-full">
+<div class="flex items-center gap-2 mb-8">
+<span class="material-symbols-outlined text-secondary" data-icon="grid_view">grid_view</span>
+<h3 class="font-label-caps text-label-caps text-secondary">Acesso Rápido</h3>
+</div>
+<div class="grid grid-cols-2 gap-4">
+<a class="group flex flex-col items-center justify-center p-6 border border-white/5 rounded-lg hover:border-secondary/30 hover:bg-white/5 transition-all" href="tesouraria.html">
+<span class="material-symbols-outlined text-3xl mb-3 text-secondary transition-transform group-hover:scale-110" data-icon="account_balance">account_balance</span>
+<span class="font-label-caps text-[10px] uppercase text-center">Tesouraria</span>
+</a>
+<a class="group flex flex-col items-center justify-center p-6 border border-white/5 rounded-lg hover:border-secondary/30 hover:bg-white/5 transition-all" href="#">
+<span class="material-symbols-outlined text-3xl mb-3 text-secondary transition-transform group-hover:scale-110" data-icon="menu_book">menu_book</span>
+<span class="font-label-caps text-[10px] uppercase text-center">Estatuto</span>
+</a>
+<a class="group flex flex-col items-center justify-center p-6 border border-white/5 rounded-lg hover:border-secondary/30 hover:bg-white/5 transition-all" href="#">
+<span class="material-symbols-outlined text-3xl mb-3 text-secondary transition-transform group-hover:scale-110" data-icon="history_edu">history_edu</span>
+<span class="font-label-caps text-[10px] uppercase text-center">Atas</span>
+</a>
+<a class="group flex flex-col items-center justify-center p-6 border border-white/5 rounded-lg hover:border-secondary/30 hover:bg-white/5 transition-all" href="#">
+<span class="material-symbols-outlined text-3xl mb-3 text-secondary transition-transform group-hover:scale-110" data-icon="mail">mail</span>
+<span class="font-label-caps text-[10px] uppercase text-center">Pranchas</span>
+</a>
+</div>
+</div>
+</section>
+<!-- MURAL DE AVISOS (LIST STYLE) -->
+<section class="col-span-12">
+<div class="glass-card p-8">
+<div class="flex items-center justify-between mb-8">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary" data-icon="campaign">campaign</span>
+<h3 class="font-label-caps text-label-caps text-secondary">Mural de Avisos</h3>
+</div>
+<div class="flex items-center gap-4">
+    <button id="btnNewAnnouncement" onclick="openAnnouncementModal()" class="hidden bg-secondary text-black px-4 py-2 text-[10px] font-bold uppercase tracking-widest hover:brightness-110 transition-all flex items-center gap-2">
+        <span class="material-symbols-outlined text-sm">add</span> Novo Aviso
+    </button>
+    <a class="text-xs text-on-surface-variant hover:text-secondary transition-colors uppercase tracking-widest" href="#">Ver Todos</a>
+</div>
+</div>
+<div id="announcementList" class="space-y-1">
+    <!-- Carregado dinamicamente -->
+</div>
+</div>
+</section>
+</div>
+</div>
+
+<!-- Modal de Avisos -->
+<div id="announcementModal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-[110] flex items-center justify-center p-4">
+    <div class="glass-card max-w-md w-full p-8 shadow-2xl border border-white/10">
+        <h3 id="announcementModalTitle" class="text-xl font-bold text-on-background mb-6">Novo Aviso no Mural</h3>
+        <form id="announcementForm" class="space-y-4">
+            <input type="hidden" id="announcementId">
+            <div>
+                <label class="block text-xs font-label-caps uppercase tracking-widest text-on-tertiary-container mb-1">Título do Aviso</label>
+                <input type="text" id="announcementTitle" required class="w-full bg-surface border-outline-variant text-on-background p-3 focus:border-secondary outline-none border focus:ring-0" placeholder="Ex: Convocação para Reunião">
+            </div>
+            <div>
+                <label class="block text-xs font-label-caps uppercase tracking-widest text-on-tertiary-container mb-1">Conteúdo</label>
+                <textarea id="announcementContent" required class="w-full bg-surface border-outline-variant text-on-background p-3 focus:border-secondary outline-none border focus:ring-0" rows="4" placeholder="Descreva os detalhes do aviso..."></textarea>
+            </div>
+            <div class="flex items-center gap-2 py-2">
+                <input type="checkbox" id="announcementPriority" class="w-4 h-4 accent-secondary bg-surface border-outline-variant">
+                <label for="announcementPriority" class="text-xs text-on-tertiary-container uppercase tracking-widest">Aviso Prioritário (Destaque)</label>
+            </div>
+            <div class="flex gap-4 pt-4">
+                <button type="button" onclick="closeAnnouncementModal()" class="flex-1 px-4 py-3 border border-outline-variant text-on-background text-xs font-label-caps uppercase tracking-widest hover:bg-white/5 transition-colors">Cancelar</button>
+                <button type="submit" class="flex-1 bg-secondary text-black px-4 py-3 text-xs font-label-caps uppercase tracking-widest hover:brightness-110 transition-colors font-bold">Salvar Aviso</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Modal de Presença -->
+<div id="presenceModal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-[100] flex items-center justify-center p-4">
+    <div class="glass-card max-w-md w-full p-8 shadow-2xl relative animate-in zoom-in duration-300">
+        <button onclick="closePresenceModal()" class="absolute top-4 right-4 text-on-tertiary-container hover:text-secondary transition-colors">
+            <span class="material-symbols-outlined">close</span>
+        </button>
+        <h3 class="text-xl font-h3 text-on-background mb-2">Confirmar Presença</h3>
+        <p id="presenceEventInfo" class="text-xs text-secondary font-label-caps uppercase tracking-widest mb-6"></p>
+        
+        <div class="space-y-6">
+            <div class="grid grid-cols-2 gap-4">
+                <button onclick="setPresenceStatus('confirmed')" id="btnConfirm" class="flex flex-col items-center gap-2 p-4 border border-white/10 rounded-lg hover:border-secondary/50 transition-all group">
+                    <span class="material-symbols-outlined text-3xl text-on-tertiary-container group-[.selected]:text-secondary">check_circle</span>
+                    <span class="text-[10px] uppercase font-bold text-on-tertiary-container group-[.selected]:text-secondary">Vou Comparecer</span>
+                </button>
+                <button onclick="setPresenceStatus('absent')" id="btnAbsent" class="flex flex-col items-center gap-2 p-4 border border-white/10 rounded-lg hover:border-error/50 transition-all group">
+                    <span class="material-symbols-outlined text-3xl text-on-tertiary-container group-[.selected]:text-error">cancel</span>
+                    <span class="text-[10px] uppercase font-bold text-on-tertiary-container group-[.selected]:text-error">Não Poderei Ir</span>
+                </button>
+            </div>
+            
+            <div id="justificationField" class="hidden animate-in fade-in slide-in-from-top-2">
+                <label class="block text-xs font-label-caps uppercase tracking-widest text-on-tertiary-container mb-2">Justificativa da Ausência</label>
+                <textarea id="presenceJustification" class="w-full bg-surface border-outline-variant text-on-background p-3 focus:border-secondary outline-none border focus:ring-0 text-sm" rows="3" placeholder="Irmãos, não poderei comparecer devido a..."></textarea>
+            </div>
+            
+            <div class="flex gap-4 pt-4">
+                <button onclick="closePresenceModal()" class="flex-1 px-4 py-3 border border-outline-variant text-on-background text-xs font-label-caps uppercase tracking-widest hover:bg-white/5">Cancelar</button>
+                <button onclick="savePresence()" class="flex-1 bg-secondary text-black px-4 py-3 text-xs font-label-caps uppercase tracking-widest hover:brightness-110">Salvar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de Evento -->
+<div id="eventModal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-[100] flex items-center justify-center p-4">
+    <div class="glass-card max-w-md w-full p-8 shadow-2xl relative z-[101]">
+        <h3 id="modalTitle" class="text-xl font-h3 text-on-background mb-6">Novo Evento no Calendário</h3>
+        <form id="eventForm" class="space-y-4">
+            <input type="hidden" id="eventId">
+            <div>
+                <label class="block text-xs font-label-caps uppercase tracking-widest text-on-tertiary-container mb-1">Data</label>
+                <input type="date" id="event_date" required class="w-full bg-surface border-outline-variant text-on-background p-2 focus:border-secondary outline-none border focus:ring-0">
+            </div>
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-xs font-label-caps uppercase tracking-widest text-on-tertiary-container mb-1">Hora</label>
+                    <input type="text" id="event_time" placeholder="09h30" class="w-full bg-surface border-outline-variant text-on-background p-2 focus:border-secondary outline-none border focus:ring-0">
+                </div>
+                <div>
+                    <label class="block text-xs font-label-caps uppercase tracking-widest text-on-tertiary-container mb-1">Grau</label>
+                    <input type="text" id="event_degree" placeholder="1" class="w-full bg-surface border-outline-variant text-on-background p-2 focus:border-secondary outline-none border focus:ring-0">
+                </div>
+            </div>
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-xs font-label-caps uppercase tracking-widest text-on-tertiary-container mb-1">Traje</label>
+                    <input type="text" id="attire" placeholder="Bal:." class="w-full bg-surface border-outline-variant text-on-background p-2 focus:border-secondary outline-none border focus:ring-0">
+                </div>
+                <div>
+                    <label class="block text-xs font-label-caps uppercase tracking-widest text-on-tertiary-container mb-1">Sessão</label>
+                    <input type="text" id="session_type" placeholder="Ord:." class="w-full bg-surface border-outline-variant text-on-background p-2 focus:border-secondary outline-none border focus:ring-0">
+                </div>
+            </div>
+            <div>
+                <label class="block text-xs font-label-caps uppercase tracking-widest text-on-tertiary-container mb-1">Assunto / Descrição</label>
+                <textarea id="description" required class="w-full bg-surface border-outline-variant text-on-background p-2 focus:border-secondary outline-none border focus:ring-0" rows="3"></textarea>
+            </div>
+            <div class="flex gap-4 pt-4">
+                <button type="button" onclick="closeEventModal()" class="flex-1 px-4 py-3 border border-outline-variant text-on-background text-xs font-label-caps uppercase tracking-widest hover:bg-white/5 transition-colors">Cancelar</button>
+                <button type="submit" class="flex-1 bg-secondary text-on-secondary px-4 py-3 text-xs font-label-caps uppercase tracking-widest hover:brightness-110 transition-colors">Salvar Evento</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div id="adminSection" class="hidden space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
+    <!-- Admin Tabs -->
+    <div class="flex gap-12 border-b border-white/5 mb-8">
+        <button onclick="showAdminTab('pending')" id="tabPending" class="pb-4 text-secondary border-b-2 border-secondary font-label-caps text-xs uppercase tracking-widest transition-all">Aprovações</button>
+        <button onclick="showAdminTab('roster')" id="tabRoster" class="pb-4 text-on-tertiary-container hover:text-on-background font-label-caps text-xs uppercase tracking-widest transition-all">Quadro de Membros</button>
+    </div>
+
+    <!-- PENDING APPROVALS TAB -->
+    <div id="pendingTabContent" class="glass-card p-8 shadow-sm">
+        <div class="flex justify-between items-center mb-8 border-b border-white/5 pb-4">
+            <h2 class="font-h2 text-2xl text-on-background">Novas Solicitações</h2>
+            <button onclick="loadPendingMembers()" class="text-xs font-label-caps uppercase tracking-widest text-secondary hover:underline flex items-center gap-2">
+                <span class="material-symbols-outlined text-sm">refresh</span> Atualizar
+            </button>
+        </div>
+        
+        <div class="overflow-x-auto">
+            <table class="w-full text-left text-on-background">
+                <thead>
+                    <tr class="text-xs font-label-caps uppercase text-on-tertiary-container tracking-widest border-b border-white/5">
+                        <th class="py-4">Nome</th>
+                        <th class="py-4">CIM</th>
+                        <th class="py-4">Grau</th>
+                        <th class="py-4">E-mail</th>
+                        <th class="py-4 text-right">Ação</th>
+                    </tr>
+                </thead>
+                <tbody id="pendingMembersTable" class="divide-y divide-white/5">
+                    <!-- Dinâmico -->
+                </tbody>
+            </table>
+            <div id="emptyAdminState" class="py-12 text-center text-on-tertiary-container hidden">
+                <span class="material-symbols-outlined text-4xl mb-2 block">done_all</span>
+                Não há membros pendentes.
+            </div>
+        </div>
+    </div>
+
+    <!-- MEMBER ROSTER TAB -->
+    <div id="rosterTabContent" class="hidden glass-card p-8 shadow-sm">
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-8 border-b border-white/5 pb-6">
+            <h2 class="font-h2 text-2xl text-on-background">Gestão do Quadro</h2>
+            <div class="relative w-full md:w-80">
+                <span class="material-symbols-outlined absolute left-3 top-2.5 text-on-tertiary-container text-xl">search</span>
+                <input type="text" id="memberSearch" onkeyup="filterMembers()" placeholder="Buscar irmão..." class="w-full bg-surface border border-outline-variant text-on-background pl-10 pr-4 py-2 text-sm focus:border-secondary outline-none rounded-sm transition-all">
+            </div>
+        </div>
+        
+        <div class="overflow-x-auto">
+            <table class="w-full text-left text-on-background">
+                <thead>
+                    <tr class="text-xs font-label-caps uppercase text-on-tertiary-container tracking-widest border-b border-white/5">
+                        <th class="py-4">Nome Completo</th>
+                        <th class="py-4">CIM</th>
+                        <th class="py-4">Cargo / Função</th>
+                        <th class="py-4">Acesso</th>
+                        <th class="py-4 text-right">Ações</th>
+                    </tr>
+                </thead>
+                <tbody id="membersTableBody" class="divide-y divide-white/5">
+                    <!-- Dinâmico -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de Edição de Membro -->
+<div id="editMemberModal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-[150] flex items-center justify-center p-4">
+    <div class="glass-card max-w-md w-full p-8 shadow-2xl border border-white/10">
+        <h3 class="text-xl font-bold text-on-background mb-6">Editar Perfil do Membro</h3>
+        <form id="editMemberForm" class="space-y-6">
+            <input type="hidden" id="editMemberId">
+            <div>
+                <label class="block text-xs font-label-caps uppercase tracking-widest text-on-tertiary-container mb-1">Nome Completo</label>
+                <input type="text" id="editMemberName" readonly class="w-full bg-surface/50 border border-outline-variant text-on-tertiary-container p-3 outline-none cursor-not-allowed">
+            </div>
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-xs font-label-caps uppercase tracking-widest text-on-tertiary-container mb-1">Cargo / Função</label>
+                    <select id="editMemberPosition" class="w-full bg-surface border border-outline-variant text-on-background p-3 focus:border-secondary outline-none">
+                        <option value="Mestre">Mestre</option>
+                        <option value="Venerável Mestre">Venerável Mestre</option>
+                        <option value="1º Vigilante">1º Vigilante</option>
+                        <option value="2º Vigilante">2º Vigilante</option>
+                        <option value="Orador">Orador</option>
+                        <option value="Secretário">Secretário</option>
+                        <option value="Tesoureiro">Tesoureiro</option>
+                        <option value="Chanceler">Chanceler</option>
+                        <option value="Mestre de Cerimônias">Mestre de Cerimônias</option>
+                        <option value="Hospitalário">Hospitalário</option>
+                        <option value="Arquiteto">Arquiteto</option>
+                        <option value="Mestre de Harmonia">Mestre de Harmonia</option>
+                        <option value="Cobridor Externo">Cobridor Externo</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-xs font-label-caps uppercase tracking-widest text-on-tertiary-container mb-1">Nº do CIM</label>
+                    <input type="text" id="editMemberCim" class="w-full bg-surface border border-outline-variant text-on-background p-3 focus:border-secondary outline-none" placeholder="123456">
+                </div>
+            </div>
+            <div>
+                <label class="block text-xs font-label-caps uppercase tracking-widest text-on-tertiary-container mb-1">Nível de Acesso</label>
+                <select id="editMemberRole" class="w-full bg-surface border border-outline-variant text-on-background p-3 focus:border-secondary outline-none">
+                    <option value="user">Membro Comum</option>
+                    <option value="admin">Administrador</option>
+                </select>
+            </div>
+            <div class="flex gap-4 pt-4">
+                <button type="button" onclick="closeEditMemberModal()" class="flex-1 px-4 py-3 border border-outline-variant text-on-background text-xs font-label-caps uppercase tracking-widest hover:bg-white/5">Cancelar</button>
+                <button type="submit" class="flex-1 bg-secondary text-black px-4 py-3 text-xs font-label-caps uppercase tracking-widest hover:brightness-110 font-bold">Salvar Alterações</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div id="gallerySection" class="hidden space-y-8">
+    <div class="glass-card p-12 text-center">
+        <span class="material-symbols-outlined text-6xl text-amber-500 mb-4">collections</span>
+        <h2 class="text-3xl font-newsreader text-on-background mb-4">Galeria Fraternidade</h2>
+        <p class="text-slate-400 max-w-md mx-auto mb-8">
+            A galeria de fotos agora possui uma página exclusiva para melhor visualização e gestão das imagens, com funcionalidades de zoom e navegação.
+        </p>
+        <a href="fraternidade.html" class="inline-flex items-center gap-2 bg-amber-500 text-black px-8 py-3 font-bold uppercase tracking-widest hover:bg-amber-400 transition-all">
+            <span class="material-symbols-outlined">open_in_new</span> Acessar Galeria Completa
+        </a>
+    </div>
+</div>
+
+<!-- FOOTER -->
+<footer class="mt-section-gap w-full py-12 border-t border-white/5">
+<div class="flex flex-col md:flex-row justify-between items-center gap-8 text-on-tertiary-container">
+<p class="font-newsreader text-xs tracking-widest uppercase">© 2024 A∴R∴L∴S∴ Major Manoel dos Santos Portugal Nº 4424. Todos os direitos reservados.</p>
+
+<!-- Institutional Affiliation -->
+<div class="mt-12 pt-8 border-t border-white/5 flex flex-col items-center text-center">
+    <div class="flex items-center gap-8 mb-4">
+        <a href="https://gob-rj.org.br/home" target="_blank" rel="noopener noreferrer" class="transition-transform hover:scale-105">
+            <img src="logo_gob_rj-2.png" alt="Grande Oriente do Brasil no Rio de Janeiro" class="h-10 w-auto opacity-30 hover:opacity-100 grayscale hover:grayscale-0 transition-all duration-500">
+        </a>
+        <a href="https://www.gob.org.br/" target="_blank" rel="noopener noreferrer" class="transition-transform hover:scale-105">
+            <img src="logo-gob-brasilia-df-selo.png" alt="Grande Oriente do Brasil" class="h-10 w-auto opacity-30 hover:opacity-100 grayscale hover:grayscale-0 transition-all duration-500">
+        </a>
+    </div>
+    <div class="space-y-1">
+        <p class="font-newsreader text-sm text-slate-500">Grande Oriente do Brasil no Rio de Janeiro</p>
+        <p class="text-[8px] text-amber-500/30 uppercase tracking-[0.3em] font-bold">Federado ao Grande Oriente do Brasil</p>
+    </div>
+</div>
+<div class="flex gap-8">
+<a class="font-newsreader text-xs tracking-widest uppercase hover:text-secondary transition-colors" href="#">Privacidade</a>
+<a class="font-newsreader text-xs tracking-widest uppercase hover:text-secondary transition-colors" href="#">Estatuto</a>
+<a class="font-newsreader text-xs tracking-widest uppercase hover:text-secondary transition-colors" href="#">Localização</a>
+</div>
+</div>
+</footer>
+</main>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="/js/supabase-config.js"></script>
+<script>
+    // Gerenciador de Seções (Navegação)
+    function showSection(sectionId) {
+        const sections = ['dashboardHome', 'adminSection', 'calendarSection', 'gallerySection'];
+        sections.forEach(id => {
+            const el = document.getElementById(id);
+            if (el) el.classList.add('hidden');
+        });
+        
+        const target = document.getElementById(sectionId);
+        if (target) target.classList.remove('hidden');
+    }
+
+    // Link Galeria (Assumindo que o link "Fraternidade" é o equivalente na nova nav)
+    const galleryMenuLink = document.querySelector('a:has(span[data-icon="groups"])');
+    if (galleryMenuLink) {
+        galleryMenuLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            showSection('gallerySection');
+        });
+    }
+
+    // Link Home/Painel
+    document.querySelectorAll('a:has(span[data-icon="dashboard"])').forEach(link => {
+        link.addEventListener('click', (e) => {
+            e.preventDefault();
+            showSection('dashboardHome');
+        });
+    });
+
+
+    // Link Admin (Configurações na nova nav será usado para Admin)
+    const adminMenuLink = document.querySelector('a:has(span[data-icon="settings_honorary"])');
+    if (adminMenuLink) {
+        // Inicialmente oculto, revelado apenas para admins
+        adminMenuLink.style.display = 'none';
+        adminMenuLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            showSection('adminSection');
+            loadPendingMembers();
+        });
+    }
+
+    // Logout function
+    window.logout = async function() {
+        const { error } = await window.supabaseClient.auth.signOut();
+        if (error) console.error("Erro ao sair:", error);
+        window.location.href = 'login.html';
+    };
+
+
+    async function loadNextSession() {
+        const today = new Date().toISOString().split('T')[0];
+        
+        const { data: events, error } = await window.supabaseClient
+            .from('calendar_events')
+            .select('*')
+            .gte('event_date', today)
+            .order('event_date', { ascending: true })
+            .limit(1);
+
+        if (error) {
+            console.error('Erro ao carregar próxima sessão:', error);
+            return;
+        }
+
+        if (events && events.length > 0) {
+            const next = events[0];
+            const dateObj = new Date(next.event_date + 'T00:00:00');
+            
+            const dayEl = document.getElementById('nextSessionDay');
+            const monthEl = document.getElementById('nextSessionMonth');
+            const titleEl = document.getElementById('nextSessionTitle');
+            const timeEl = document.getElementById('nextSessionTime');
+            const descEl = document.getElementById('nextSessionDescription');
+
+            if(dayEl) dayEl.textContent = dateObj.getDate();
+            if(monthEl) monthEl.textContent = dateObj.toLocaleDateString('pt-BR', { month: 'short' }).replace('.', '');
+            if(titleEl) titleEl.textContent = next.session_type || 'Sessão';
+            if(timeEl) timeEl.textContent = `${next.event_time || '09:30'} - Templo Principal`;
+            if(descEl) descEl.textContent = next.description;
+        }
+    }
+
+    // Modal de Gestão
+    const eventModal = document.getElementById('eventModal');
+    const eventForm = document.getElementById('eventForm');
+
+    const addEventBtn = document.getElementById('addEventBtn');
+    if(addEventBtn) {
+        addEventBtn.addEventListener('click', () => {
+            openNewEventModal('');
+        });
+    }
+
+    window.closeEventModal = function() {
+        if(eventModal) eventModal.classList.add('hidden');
+    }
+
+    if(eventForm) {
+        eventForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const id = document.getElementById('eventId').value;
+            const eventData = {
+                event_date: document.getElementById('event_date').value,
+                event_time: document.getElementById('event_time').value,
+                degree: document.getElementById('event_degree').value,
+                attire: document.getElementById('attire').value,
+                session_type: document.getElementById('session_type').value,
+                description: document.getElementById('description').value
+            };
+
+            let result;
+            if (id) {
+                result = await window.supabaseClient.from('calendar_events').update(eventData).eq('id', id);
+            } else {
+                result = await window.supabaseClient.from('calendar_events').insert([eventData]);
+            }
+
+            if (result.error) {
+                alert("Erro ao salvar: " + result.error.message);
+            } else {
+                closeEventModal();
+                loadCalendarEvents();
+            }
+        });
+    }
+
+    window.editEvent = async function(id) {
+        const { data: event, error } = await window.supabaseClient.from('calendar_events').select('*').eq('id', id).single();
+        if (event) {
+            document.getElementById('eventId').value = event.id;
+            document.getElementById('event_date').value = event.event_date;
+            document.getElementById('event_time').value = event.event_time;
+            document.getElementById('event_degree').value = event.degree;
+            document.getElementById('attire').value = event.attire;
+            document.getElementById('session_type').value = event.session_type;
+            document.getElementById('description').value = event.description;
+            document.getElementById('modalTitle').textContent = 'Editar Evento';
+            eventModal.classList.remove('hidden');
+        }
+    }
+
+    window.deleteEvent = async function(id) {
+        if (!confirm("Excluir este evento permanentemente?")) return;
+        const { error } = await window.supabaseClient.from('calendar_events').delete().eq('id', id);
+        if (error) alert("Erro: " + error.message);
+        else loadCalendarEvents();
+    }
+
+    // Lógica de Membros Pendentes
+    window.loadPendingMembers = async function() {
+        const tableBody = document.getElementById('pendingMembersTable');
+        const emptyState = document.getElementById('emptyAdminState');
+        if(!tableBody) return;
+
+        tableBody.innerHTML = '<tr><td colspan="5" class="py-8 text-center text-on-tertiary-container">Carregando...</td></tr>';
+        
+        const { data: members, error } = await window.supabaseClient
+            .from('profiles')
+            .select('*')
+            .eq('is_approved', false);
+
+        if (error) {
+            tableBody.innerHTML = '<tr><td colspan="5" class="py-8 text-center text-error">Erro ao carregar membros.</td></tr>';
+            return;
+        }
+
+        if (!members || members.length === 0) {
+            tableBody.innerHTML = '';
+            emptyState.classList.remove('hidden');
+            return;
+        }
+
+        emptyState.classList.add('hidden');
+        tableBody.innerHTML = members.map(member => `
+            <tr class="border-b border-white/5 hover:bg-white/5">
+                <td class="py-4">${member.full_name}</td>
+                <td class="py-4">${member.cim}</td>
+                <td class="py-4">${member.degree}</td>
+                <td class="py-4 text-on-tertiary-container">${member.email || '-'}</td>
+                <td class="py-4 text-right">
+                    <button onclick="approveMember('${member.id}')" class="bg-secondary text-on-secondary px-3 py-1 text-xs font-label-caps uppercase hover:brightness-110 mr-2">Aprovar</button>
+                    <button onclick="rejectMember('${member.id}')" class="border border-error text-error px-3 py-1 text-xs font-label-caps uppercase hover:bg-error/10">Rejeitar</button>
+                </td>
+            </tr>
+        `).join('');
+    }
+
+    window.approveMember = async function(id) {
+        const { error } = await window.supabaseClient.from('profiles').update({ is_approved: true }).eq('id', id);
+        if (error) alert("Erro: " + error.message);
+        else loadPendingMembers();
+    };
+
+    window.rejectMember = async function(id) {
+        if (!confirm("Tem certeza que deseja rejeitar e excluir este perfil?")) return;
+        const { error } = await window.supabaseClient.from('profiles').delete().eq('id', id);
+        if (error) alert("Erro: " + error.message);
+        else loadPendingMembers();
+    };
+
+    function toggleMobileMenu() {
+        const menu = document.getElementById('mobileMenu');
+        const isHidden = menu.classList.contains('hidden');
+        
+        if (isHidden) {
+            menu.classList.remove('hidden');
+            setTimeout(() => menu.classList.remove('translate-x-full'), 10);
+            document.body.style.overflow = 'hidden';
+        } else {
+            menu.classList.add('translate-x-full');
+            setTimeout(() => menu.classList.add('hidden'), 300);
+            document.body.style.overflow = 'auto';
+        }
+    }
+
+    // CheckSession function
+    async function checkSession() {
+        const { data: { session } } = await window.supabaseClient.auth.getSession();
+        
+        if (!session) {
+            window.location.href = 'login.html';
+            return;
+        }
+
+        // Set User Name no Header
+        const userNameEl = document.querySelector('h2.text-h2');
+        if (userNameEl) {
+            const firstName = session.user.user_metadata?.full_name?.split(' ')[0] || "Irmão";
+            userNameEl.textContent = "Saudações, Ir. " + firstName;
+        }
+        // Set User Name na NavLateral
+        const navNameEl = document.getElementById('navName');
+        const navInitialEl = document.getElementById('navInitial');
+        const navPositionEl = document.getElementById('navPosition');
+        if (navNameEl) {
+            const fullName = session.user.user_metadata?.full_name || "Irmão";
+            const firstName = fullName.split(' ')[0];
+            navNameEl.textContent = "Ir. " + firstName;
+            if (navInitialEl) navInitialEl.textContent = firstName.charAt(0);
+            if (navPositionEl) navPositionEl.textContent = session.user.user_metadata?.position || "Mestre Maçom";
+        }
+
+        // Set Current Date
+        const currentDateEl = document.getElementById('currentDate');
+        if (currentDateEl) {
+            const options = { day: '2-digit', month: 'long', year: 'numeric' };
+            currentDateEl.textContent = new Date().toLocaleDateString('pt-BR', options);
+        }
+
+        // Check Admin
+        const { data: profile } = await window.supabaseClient
+            .from('profiles')
+            .select('role, position')
+            .eq('id', session.user.id)
+            .single();
+        
+        if (profile && (profile.role === 'admin' || profile.position === 'Secretário' || profile.position === 'Venerável Mestre' || profile.position === 'Orador')) {
+            isAdmin = true;
+            const btnNewAnnouncement = document.getElementById('btnNewAnnouncement');
+            if(btnNewAnnouncement) btnNewAnnouncement.classList.remove('hidden');
+            
+            if(adminMenuLink) adminMenuLink.style.display = 'flex';
+            const addEventBtn = document.getElementById('addEventBtn');
+            if(addEventBtn) addEventBtn.classList.remove('hidden');
+            document.querySelectorAll('.admin-col').forEach(el => el.classList.remove('hidden'));
+            
+            // Inicializa dados de admin
+            loadPendingMembers();
+            loadAllMembers();
+        }
+
+        // Carrega os dados dinâmicos
+        loadAnnouncements();
+        loadNextSession();
+    }
+
+    // --- LOGICA DE PRESENÇA ---
+    let currentEventId = null;
+    let selectedStatus = null;
+
+    window.openPresenceModal = async function() {
+        if (!currentEventId) {
+            alert("Não há sessão agendada para confirmação.");
+            return;
+        }
+        
+        // Carrega presença existente
+        const { data: { session } } = await window.supabaseClient.auth.getSession();
+        const { data } = await window.supabaseClient
+            .from('session_presences')
+            .select('*')
+            .eq('event_id', currentEventId)
+            .eq('user_id', session.user.id)
+            .single();
+            
+        if (data) {
+            setPresenceStatus(data.status);
+            document.getElementById('presenceJustification').value = data.justification || '';
+        }
+
+        document.getElementById('presenceModal').classList.remove('hidden');
+    };
+
+    window.closePresenceModal = function() {
+        document.getElementById('presenceModal').classList.add('hidden');
+    };
+
+    window.setPresenceStatus = function(status) {
+        selectedStatus = status;
+        document.getElementById('btnConfirm').classList.remove('selected');
+        document.getElementById('btnAbsent').classList.remove('selected');
+        
+        if (status === 'confirmed') {
+            document.getElementById('btnConfirm').classList.add('selected');
+            document.getElementById('justificationField').classList.add('hidden');
+        } else {
+            document.getElementById('btnAbsent').classList.add('selected');
+            document.getElementById('justificationField').classList.remove('hidden');
+        }
+    };
+
+    window.savePresence = async function() {
+        if (!selectedStatus) {
+            alert("Selecione sua disponibilidade.");
+            return;
+        }
+        
+        const { data: { session } } = await window.supabaseClient.auth.getSession();
+        const justification = document.getElementById('presenceJustification').value;
+        
+        const { error } = await window.supabaseClient
+            .from('session_presences')
+            .upsert({
+                event_id: currentEventId,
+                user_id: session.user.id,
+                status: selectedStatus,
+                justification: selectedStatus === 'absent' ? justification : null,
+                updated_at: new Date().toISOString()
+            }, { onConflict: 'event_id,user_id' });
+            
+        if (error) {
+            alert("Erro ao salvar presença: " + error.message);
+        } else {
+            closePresenceModal();
+            loadPresences(currentEventId);
+        }
+    };
+
+    window.loadPresences = async function(eventId) {
+        const { data, error } = await window.supabaseClient
+            .from('session_presences')
+            .select('*, profiles(full_name, position)')
+            .eq('event_id', eventId);
+            
+        if (error) return;
+        
+        const confirmed = data.filter(p => p.status === 'confirmed');
+        const absents = data.filter(p => p.status === 'absent');
+        
+        document.getElementById('confirmedCount').textContent = confirmed.length;
+        
+        const confirmedList = document.getElementById('confirmedList');
+        const justifiedList = document.getElementById('justifiedList');
+        
+        confirmedList.innerHTML = confirmed.map(p => `
+            <div class="flex items-center gap-2 p-2 bg-white/5 rounded border border-white/5">
+                <span class="material-symbols-outlined text-secondary text-sm">check_circle</span>
+                <div>
+                    <p class="font-medium text-xs">${p.profiles.full_name}</p>
+                    <p class="text-[10px] text-on-tertiary-container uppercase">${p.profiles.position || 'Membro'}</p>
+                </div>
+            </div>
+        `).join('') || '<p class="text-xs text-on-tertiary-container italic">Nenhuma confirmação ainda.</p>';
+        
+        justifiedList.innerHTML = absents.map(p => `
+            <div class="p-3 bg-red-500/5 rounded border border-red-500/10">
+                <div class="flex justify-between items-start mb-1">
+                    <p class="font-bold text-xs text-red-400">${p.profiles.full_name}</p>
+                    <span class="text-[9px] text-on-tertiary-container uppercase tracking-widest">Ausência</span>
+                </div>
+                <p class="text-xs text-on-tertiary-container italic">"${p.justification || 'Sem justificativa detalhada.'}"</p>
+            </div>
+        `).join('') || '<p class="text-xs text-on-tertiary-container italic">Nenhuma justificativa.</p>';
+    };
+
+    window.togglePresenceList = function() {
+        const container = document.getElementById('presenceListContainer');
+        container.classList.toggle('hidden');
+    };
+
+    // Sobrescrevendo loadNextSession para capturar o ID
+    const originalLoadNextSession = window.loadNextSession;
+    window.loadNextSession = async function() {
+        const today = new Date().toISOString().split('T')[0];
+        const { data: events } = await window.supabaseClient
+            .from('calendar_events')
+            .select('*')
+            .gte('event_date', today)
+            .order('event_date', { ascending: true })
+            .limit(1);
+
+        if (events && events.length > 0) {
+            currentEventId = events[0].id;
+            document.getElementById('presenceEventInfo').textContent = `${events[0].session_type} - ${new Date(events[0].event_date + 'T00:00:00').toLocaleDateString('pt-BR')}`;
+            loadPresences(currentEventId);
+        }
+        
+        // Chamada original se existir
+        if (typeof originalLoadNextSession === 'function') {
+            // originalLoadNextSession(); // Evitar loop se for a mesma
+        }
+        
+        // Re-implementação simplificada para garantir funcionamento
+        if (events && events.length > 0) {
+            const next = events[0];
+            const dateObj = new Date(next.event_date + 'T00:00:00');
+            document.getElementById('nextSessionDay').textContent = dateObj.getDate();
+            document.getElementById('nextSessionMonth').textContent = dateObj.toLocaleDateString('pt-BR', { month: 'short' }).replace('.', '');
+            document.getElementById('nextSessionTitle').textContent = next.session_type || 'Sessão';
+            document.getElementById('nextSessionTime').textContent = `${next.event_time || '09:30'} - Templo Principal`;
+            document.getElementById('nextSessionDescription').textContent = next.description;
+        }
+    };
+
+    // Mural de Avisos Logic
+    window.loadAnnouncements = async function() {
+        const { data, error } = await window.supabaseClient
+            .from('announcements')
+            .select('*')
+            .order('priority', { ascending: false })
+            .order('created_at', { ascending: false })
+            .limit(5);
+            
+        const listEl = document.getElementById('announcementList');
+        if (error || !data || data.length === 0) {
+            listEl.innerHTML = '<p class="py-8 text-center text-slate-500 italic text-sm">Nenhum aviso no mural.</p>';
+            return;
+        }
+
+        listEl.innerHTML = data.map(aviso => `
+            <div class="group flex items-center justify-between py-6 px-4 hover:bg-white/5 transition-all rounded-lg border-b border-white/5">
+                <div class="flex gap-6 items-center">
+                    <div class="w-2 h-2 rounded-full ${aviso.priority ? 'bg-secondary shadow-[0_0_10px_rgba(233,195,73,0.5)]' : 'bg-transparent'}"></div>
+                    <div>
+                        <h4 class="font-body-lg text-on-surface font-medium">${aviso.title}</h4>
+                        <p class="text-sm text-on-tertiary-container mt-1">Publicado em ${new Date(aviso.created_at).toLocaleDateString('pt-BR')} por ${aviso.author_name || 'Administração'}</p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-4">
+                    ${isAdmin ? `
+                        <button onclick="editAnnouncement('${aviso.id}')" class="material-symbols-outlined text-slate-500 hover:text-secondary transition-colors text-xl">edit</button>
+                        <button onclick="deleteAnnouncement('${aviso.id}')" class="material-symbols-outlined text-slate-500 hover:text-red-400 transition-colors text-xl">delete</button>
+                    ` : ''}
+                    <span class="material-symbols-outlined text-on-tertiary-container group-hover:text-secondary transition-colors" data-icon="chevron_right">chevron_right</span>
+                </div>
+            </div>
+        `).join('');
+    };
+
+    window.openAnnouncementModal = () => {
+        document.getElementById('announcementId').value = '';
+        document.getElementById('announcementForm').reset();
+        document.getElementById('announcementModalTitle').textContent = 'Novo Aviso no Mural';
+        document.getElementById('announcementModal').classList.remove('hidden');
+    };
+
+    window.closeAnnouncementModal = () => document.getElementById('announcementModal').classList.add('hidden');
+
+    document.getElementById('announcementForm').onsubmit = async (e) => {
+        e.preventDefault();
+        const id = document.getElementById('announcementId').value;
+        const title = document.getElementById('announcementTitle').value;
+        const content = document.getElementById('announcementContent').value;
+        const priority = document.getElementById('announcementPriority').checked;
+        
+        const { data: { session } } = await window.supabaseClient.auth.getSession();
+        const authorName = session.user.user_metadata?.full_name || 'Administração';
+
+        const announcementData = {
+            title,
+            content,
+            priority,
+            author_name: authorName,
+            author_id: session.user.id
+        };
+
+        let res;
+        if (id) {
+            res = await window.supabaseClient.from('announcements').update(announcementData).eq('id', id);
+        } else {
+            res = await window.supabaseClient.from('announcements').insert([announcementData]);
+        }
+
+        if (res.error) alert("Erro: " + res.error.message);
+        else {
+            closeAnnouncementModal();
+            loadAnnouncements();
+        }
+    };
+
+    window.editAnnouncement = async (id) => {
+        const { data: aviso } = await window.supabaseClient.from('announcements').select('*').eq('id', id).single();
+        if (aviso) {
+            document.getElementById('announcementId').value = aviso.id;
+            document.getElementById('announcementTitle').value = aviso.title;
+            document.getElementById('announcementContent').value = aviso.content;
+            document.getElementById('announcementPriority').checked = aviso.priority;
+            document.getElementById('announcementModalTitle').textContent = 'Editar Aviso';
+            document.getElementById('announcementModal').classList.remove('hidden');
+        }
+    };
+
+    window.deleteAnnouncement = async (id) => {
+        if (!confirm("Excluir este aviso do mural?")) return;
+        const { error } = await window.supabaseClient.from('announcements').delete().eq('id', id);
+        if (error) alert("Erro: " + error.message);
+        else loadAnnouncements();
+    };
+
+    // Member Management Logic
+    window.showAdminTab = function(tab) {
+        const pendingTab = document.getElementById('pendingTabContent');
+        const rosterTab = document.getElementById('rosterTabContent');
+        const tabPendingBtn = document.getElementById('tabPending');
+        const tabRosterBtn = document.getElementById('tabRoster');
+
+        if (tab === 'pending') {
+            pendingTab.classList.remove('hidden');
+            rosterTab.classList.add('hidden');
+            tabPendingBtn.classList.add('text-secondary', 'border-b-2', 'border-secondary');
+            tabPendingBtn.classList.remove('text-on-tertiary-container');
+            tabRosterBtn.classList.remove('text-secondary', 'border-b-2', 'border-secondary');
+            tabRosterBtn.classList.add('text-on-tertiary-container');
+        } else {
+            pendingTab.classList.add('hidden');
+            rosterTab.classList.remove('hidden');
+            tabRosterBtn.classList.add('text-secondary', 'border-b-2', 'border-secondary');
+            tabRosterBtn.classList.remove('text-on-tertiary-container');
+            tabPendingBtn.classList.remove('text-secondary', 'border-b-2', 'border-secondary');
+            tabPendingBtn.classList.add('text-on-tertiary-container');
+        }
+    };
+
+    window.loadAllMembers = async function() {
+        const tableBody = document.getElementById('membersTableBody');
+        if (!tableBody) return;
+
+        const { data: members, error } = await window.supabaseClient
+            .from('profiles')
+            .select('*')
+            .eq('is_approved', true)
+            .order('full_name', { ascending: true });
+
+        if (error) return;
+
+        tableBody.innerHTML = members.map(m => `
+            <tr class="border-b border-white/5 hover:bg-white/5 transition-colors group">
+                <td class="py-4">
+                    <div class="flex items-center gap-3">
+                        <div class="w-8 h-8 rounded-full bg-secondary/10 flex items-center justify-center text-secondary font-bold text-xs">
+                            ${m.full_name.charAt(0)}
+                        </div>
+                        <span class="text-sm font-medium">${m.full_name}</span>
+                    </div>
+                </td>
+                <td class="py-4 text-xs text-on-tertiary-container">${m.cim || '-'}</td>
+                <td class="py-4">
+                    <span class="px-2 py-1 bg-white/5 rounded text-[10px] uppercase tracking-widest text-slate-400">${m.position || 'Mestre'}</span>
+                </td>
+                <td class="py-4">
+                    <span class="px-2 py-1 ${m.role === 'admin' ? 'bg-amber-500/10 text-amber-500' : 'bg-slate-500/10 text-slate-500'} rounded text-[10px] uppercase tracking-widest">
+                        ${m.role === 'admin' ? 'Admin' : 'Membro'}
+                    </span>
+                </td>
+                <td class="py-4 text-right">
+                    <button onclick="openEditMemberModal('${m.id}')" class="material-symbols-outlined text-slate-500 hover:text-secondary transition-colors text-xl">manage_accounts</button>
+                </td>
+            </tr>
+        `).join('');
+    };
+
+    window.filterMembers = function() {
+        const input = document.getElementById('memberSearch');
+        const filter = input.value.toUpperCase();
+        const rows = document.getElementById('membersTableBody').getElementsByTagName('tr');
+
+        for (let i = 0; i < rows.length; i++) {
+            const name = rows[i].getElementsByTagName('td')[0];
+            if (name) {
+                const textValue = name.textContent || name.innerText;
+                if (textValue.toUpperCase().indexOf(filter) > -1) {
+                    rows[i].style.display = "";
+                } else {
+                    rows[i].style.display = "none";
+                }
+            }
+        }
+    };
+
+    window.openEditMemberModal = async (id) => {
+        const { data: m } = await window.supabaseClient.from('profiles').select('*').eq('id', id).single();
+        if (m) {
+            document.getElementById('editMemberId').value = m.id;
+            document.getElementById('editMemberName').value = m.full_name;
+            document.getElementById('editMemberCim').value = m.cim || '';
+            document.getElementById('editMemberPosition').value = m.position || 'Mestre';
+            document.getElementById('editMemberRole').value = m.role || 'user';
+            document.getElementById('editMemberModal').classList.remove('hidden');
+        }
+    };
+
+    window.closeEditMemberModal = () => document.getElementById('editMemberModal').classList.add('hidden');
+
+    document.getElementById('editMemberForm').onsubmit = async (e) => {
+        e.preventDefault();
+        const id = document.getElementById('editMemberId').value;
+        const position = document.getElementById('editMemberPosition').value;
+        const role = document.getElementById('editMemberRole').value;
+        const cim = document.getElementById('editMemberCim').value;
+
+        const { error } = await window.supabaseClient
+            .from('profiles')
+            .update({ position, role, cim })
+            .eq('id', id);
+
+        if (error) alert("Erro: " + error.message);
+        else {
+            closeEditMemberModal();
+            loadAllMembers();
+        }
+    };
+
+    // Call checkSession on load
+    document.addEventListener('DOMContentLoaded', checkSession);
+
+</script>
+
+</body></html>

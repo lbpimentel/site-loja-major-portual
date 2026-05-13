@@ -1,0 +1,828 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A∴R∴L∴S∴ Major Manoel dos Santos Portugal Nº 4424 - Excelência no Rito Moderno</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Newsreader:ital,opsz,wght@0,6..72,200..800;1,6..72,200..800&family=Outfit:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    
+    <!-- EmailJS SDK -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+    <script type="text/javascript">
+        (function() {
+            emailjs.init("3_NB2T2Qn95kj4IUQ");
+        })();
+    </script>
+
+    <style>
+        :root {
+            --primary: #e9c349;
+            --secondary: #e9c349;
+            --background: #0a0a0a;
+            --surface: #141414;
+            --on-background: #ffffff;
+            --on-surface: #ffffff;
+            --on-surface-variant: #94a3b8;
+        }
+        body { font-family: 'Inter', sans-serif; background-color: var(--background); color: var(--on-background); }
+        .font-newsreader { font-family: 'Newsreader', serif; }
+        .glass-card {
+            background: rgba(20, 20, 20, 0.8);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 1rem;
+        }
+        .bg-logo-overlay {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80vw;
+            height: 80vw;
+            max-width: 70vh;
+            max-height: 70vh;
+            background-image: url('logo.png');
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            opacity: 0.15;
+            z-index: -1;
+            pointer-events: none;
+        }
+        @media (max-width: 768px) {
+            .bg-logo-overlay { width: 90vw; height: 90vw; opacity: 0.1; }
+            .nav-btn { padding: 10px; }
+            .nav-btn .material-symbols-outlined { font-size: 20px; }
+            .prev-btn { left: 10px; }
+            .next-btn { right: 10px; }
+        }
+        /* Calendar Theme Fixes */
+        .fc { background: white !important; border-radius: 12px; overflow: hidden; font-family: 'Inter', sans-serif; }
+        .fc-toolbar-title { font-family: 'Newsreader', serif !important; color: #111111 !important; font-size: 1.5rem !important; }
+        .fc-col-header-cell-cushion { color: #000000 !important; font-weight: 800 !important; text-transform: uppercase; font-size: 0.75rem; text-decoration: none !important; }
+        .fc-daygrid-day-number, .fc-daygrid-day-top a, .fc-day-other .fc-daygrid-day-number { color: #000000 !important; font-weight: 700 !important; opacity: 1 !important; padding: 8px !important; text-decoration: none !important; display: block !important; width: 100%; text-align: right; }
+        .fc-daygrid-day-top { text-align: right !important; }
+        .fc-daygrid-day-number:hover { color: #000000 !important; }
+        .fc-event { background-color: #fef3c7 !important; border: 1px solid #f59e0b !important; color: #000000 !important; font-weight: 700 !important; }
+        .fc-event-title, .fc-event-main { color: #000000 !important; }
+        .fc-button-primary { background-color: #f3f4f6 !important; border: none !important; color: #374151 !important; font-weight: 600 !important; }
+        .fc-button-primary:hover { background-color: #e5e7eb !important; }
+        .fc-day-today { background-color: #fffbeb !important; }
+        .fc-theme-standard td, .fc-theme-standard th { border-color: #e5e7eb !important; }
+        
+        /* Lightbox Styles */
+        #lightbox {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.9);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            backdrop-filter: blur(10px);
+        }
+        #lightbox img {
+            max-width: 90%;
+            max-height: 85vh;
+            object-fit: contain;
+            box-shadow: 0 0 50px rgba(0,0,0,0.8);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 8px;
+        }
+        .nav-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            color: white;
+            padding: 15px;
+            cursor: pointer;
+            border-radius: 50%;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .nav-btn:hover {
+            background: #e9c349;
+            color: black;
+            border-color: #e9c349;
+        }
+        .prev-btn { left: 30px; }
+        .next-btn { right: 30px; }
+
+        @media (max-width: 768px) {
+            h1.md\:text-8xl { font-size: 3rem !important; line-height: 1.1 !important; }
+            h2.text-5xl { font-size: 2.5rem !important; }
+            .py-32 { py: 12 !important; }
+            section { padding-left: 1.5rem !important; padding-right: 1.5rem !important; }
+            
+            /* Hero section tweaks */
+            #inicio { height: auto !important; min-height: 100vh; padding: 6rem 0 4rem 0 !important; }
+            #inicio p.text-xl { font-size: 1.1rem !important; }
+            
+            /* Buttons */
+            .flex-col.sm\:flex-row { width: 100%; gap: 1rem; }
+            .flex-col.sm\:flex-row a { width: 100%; text-align: center; padding: 1.25rem !important; }
+            
+            /* Navigation */
+            nav .font-newsreader.text-lg { font-size: 0.9rem !important; max-width: 180px !important; }
+        }
+    </style>
+    <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js'></script>
+</head>
+<body class="bg-background text-on-background selection:bg-secondary/30">
+<div class="bg-logo-overlay"></div>
+
+<!-- Top Navigation Bar -->
+<nav class="fixed top-0 w-full z-50 flex justify-between items-center px-6 md:px-12 py-4 md:py-5 bg-slate-950/70 backdrop-blur-2xl border-b border-white/10">
+    <a href="index.html" class="flex items-center gap-3 transition-transform hover:scale-105 active:scale-95">
+        <img src="logo.png" alt="Logo A∴R∴L∴S∴ Major Manoel dos Santos Portugal Nº 4424" class="h-8 w-auto drop-shadow-md">
+        <div class="font-newsreader text-base md:text-xl font-medium tracking-wide text-amber-500 truncate max-w-[200px] md:max-w-none">
+            A∴R∴L∴S∴ Major Manoel dos Santos Portugal Nº 4424
+        </div>
+    </a>
+    
+    <!-- Desktop Links -->
+    <div class="hidden lg:flex items-center gap-8">
+        <a class="font-newsreader text-sm uppercase tracking-widest text-slate-300 hover:text-amber-200 transition-colors" href="#inicio">Início</a>
+        <a class="font-newsreader text-sm uppercase tracking-widest text-slate-300 hover:text-amber-200 transition-colors" href="#valores">Valores</a>
+        <a class="font-newsreader text-sm uppercase tracking-widest text-slate-300 hover:text-amber-200 transition-colors" href="#veneraveis">Veneráveis</a>
+        <button class="font-newsreader text-sm uppercase tracking-widest text-slate-300 hover:text-amber-200 transition-colors" onclick="openAgenda()">Agenda</button>
+        <a class="font-newsreader text-sm uppercase tracking-widest text-slate-300 hover:text-amber-200 transition-colors" href="#galeria">Galeria</a>
+        <a class="font-newsreader text-sm uppercase tracking-widest text-slate-300 hover:text-amber-200 transition-colors" href="#contact">Contato</a>
+        
+        <!-- Dropdown Sobre Nós -->
+        <div class="relative group">
+            <button class="font-newsreader text-sm uppercase tracking-widest text-slate-300 hover:text-amber-200 transition-colors flex items-center gap-1">
+                Sobre nós <span class="material-symbols-outlined text-sm transition-transform duration-300 group-hover:rotate-180">expand_more</span>
+            </button>
+            <div class="absolute left-0 mt-6 w-48 bg-slate-900 border border-white/10 rounded-xl shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 transform origin-top-left -translate-y-2 group-hover:translate-y-0 before:content-[''] before:absolute before:-top-6 before:left-0 before:w-full before:h-6">
+                <div class="py-2 flex flex-col">
+                    <a href="historia.html" class="px-4 py-2 font-newsreader text-sm tracking-widest text-slate-300 hover:text-amber-500 hover:bg-white/5 transition-colors">História</a>
+                    <a href="patrono.html" class="px-4 py-2 font-newsreader text-sm tracking-widest text-slate-300 hover:text-amber-500 hover:bg-white/5 transition-colors">Patrono</a>
+                    <a href="timbre.html" class="px-4 py-2 font-newsreader text-sm tracking-widest text-slate-300 hover:text-amber-500 hover:bg-white/5 transition-colors">Timbre</a>
+                    <a href="#solidariedade" class="px-4 py-2 font-newsreader text-sm tracking-widest text-slate-300 hover:text-amber-500 hover:bg-white/5 transition-colors">Solidariedade</a>
+                </div>
+            </div>
+        </div>
+
+        <button onclick="openInterestModal()" class="font-newsreader text-sm uppercase tracking-widest text-amber-500 hover:text-amber-300 transition-colors border border-amber-500/20 px-4 py-1 rounded-full bg-amber-500/5">Quero ser Maçom</button>
+    </div>
+
+    <div class="flex items-center gap-4">
+        <a class="hidden sm:inline-block font-newsreader text-sm uppercase tracking-widest text-amber-500 hover:text-amber-300 transition-colors border border-amber-500/20 px-6 py-2 rounded-full bg-amber-500/5 text-center" href="login.html">
+            Portal do Membro
+        </a>
+        <button class="lg:hidden text-amber-500" onclick="toggleMobileMenu()">
+            <span class="material-symbols-outlined text-3xl">menu</span>
+        </button>
+    </div>
+</nav>
+
+<!-- Mobile Menu overlay -->
+<div id="mobileMenu" class="fixed inset-0 z-50 hidden flex flex-col bg-slate-950/98 backdrop-blur-3xl transform transition-transform duration-500 translate-x-full">
+    <div class="flex justify-between items-center px-6 py-5 border-b border-white/5">
+        <span class="font-newsreader text-amber-500 font-bold text-xl">Menu</span>
+        <button onclick="toggleMobileMenu()" class="text-amber-500">
+            <span class="material-symbols-outlined text-4xl">close</span>
+        </button>
+    </div>
+    <div class="flex flex-col gap-4 p-6 overflow-y-auto">
+        <a class="flex items-center gap-6 p-5 bg-white/5 rounded-2xl text-slate-200 border border-white/5 active:scale-95 transition-all" href="#inicio" onclick="toggleMobileMenu()">
+            <span class="material-symbols-outlined text-amber-500">home</span>
+            <span class="text-lg font-medium tracking-wide">Início</span>
+        </a>
+        <a class="flex items-center gap-6 p-5 bg-white/5 rounded-2xl text-slate-200 border border-white/5 active:scale-95 transition-all" href="#valores" onclick="toggleMobileMenu()">
+            <span class="material-symbols-outlined text-amber-500">verified</span>
+            <span class="text-lg font-medium tracking-wide">Nossos Valores</span>
+        </a>
+        <a class="flex items-center gap-6 p-5 bg-white/5 rounded-2xl text-slate-200 border border-white/5 active:scale-95 transition-all" href="#veneraveis" onclick="toggleMobileMenu()">
+            <span class="material-symbols-outlined text-amber-500">history_edu</span>
+            <span class="text-lg font-medium tracking-wide">Veneráveis</span>
+        </a>
+        <a class="flex items-center gap-6 p-5 bg-white/5 rounded-2xl text-slate-200 border border-white/5 active:scale-95 transition-all" href="#galeria" onclick="toggleMobileMenu()">
+            <span class="material-symbols-outlined text-amber-500">groups</span>
+            <span class="text-lg font-medium tracking-wide">Galeria</span>
+        </a>
+        <a class="flex items-center gap-6 p-5 bg-white/5 rounded-2xl text-slate-200 border border-white/5 active:scale-95 transition-all" href="#contact" onclick="toggleMobileMenu()">
+            <span class="material-symbols-outlined text-amber-500">mail</span>
+            <span class="text-lg font-medium tracking-wide">Contato</span>
+        </a>
+
+        <!-- Menu Mobile Sobre Nós -->
+        <button class="flex justify-between items-center w-full p-5 bg-white/5 rounded-2xl text-slate-200 border border-white/5 transition-all" onclick="document.getElementById('mobile-sobre').classList.toggle('hidden')">
+            <div class="flex items-center gap-6">
+                <span class="material-symbols-outlined text-amber-500">info</span>
+                <span class="text-lg font-medium tracking-wide">Sobre nós</span>
+            </div>
+            <span class="material-symbols-outlined text-amber-500">expand_more</span>
+        </button>
+        <div id="mobile-sobre" class="hidden flex-col gap-2 pl-16 pr-4">
+            <a href="historia.html" class="p-3 text-slate-300 hover:text-amber-500 font-medium" onclick="toggleMobileMenu()">História</a>
+            <a href="patrono.html" class="p-3 text-slate-300 hover:text-amber-500 font-medium" onclick="toggleMobileMenu()">Patrono</a>
+            <a href="timbre.html" class="p-3 text-slate-300 hover:text-amber-500 font-medium">Timbre</a>
+            <a href="#solidariedade" class="p-3 text-slate-300 hover:text-amber-500 font-medium" onclick="toggleMobileMenu()">Solidariedade</a>
+        </div>
+    </div>
+</div>
+
+<main>
+    <!-- Hero Section -->
+    <section id="inicio" class="relative h-screen w-full flex items-center justify-center overflow-hidden">
+        <!-- Background Overlay -->
+        <div class="absolute inset-0 z-0">
+            <div class="absolute inset-0 bg-gradient-to-b from-slate-950/80 via-slate-950/90 to-background"></div>
+            <img src="background.png" alt="Masonic Background" class="w-full h-full object-cover opacity-30 mix-blend-luminosity">
+        </div>
+
+        <div class="relative z-10 flex flex-col items-center justify-center text-center px-6 max-w-4xl mx-auto mt-20">
+            <span class="font-bold uppercase tracking-[0.4em] text-secondary mb-6 block drop-shadow-lg">Rito Moderno</span>
+            <h1 class="font-newsreader text-6xl md:text-8xl mb-8 leading-tight text-on-background drop-shadow-2xl">
+                Luz, Razão e <br/><span class="italic text-amber-400">Liberdade</span>
+            </h1>
+            <p class="text-xl md:text-2xl text-slate-300 font-light mb-12 max-w-3xl leading-relaxed drop-shadow-md">
+                Buscando a síntese entre os valores ancestrais e o pensamento contemporâneo em uma instituição dedicada ao aperfeiçoamento humano.
+            </p>
+            <div class="flex flex-col sm:flex-row gap-6 justify-center">
+                <a href="#contact" class="px-10 py-4 border border-secondary text-secondary font-bold uppercase tracking-widest hover:bg-secondary/10 transition-colors inline-block text-center">
+                    Entre em Contato
+                </a>
+            </div>
+        </div>
+
+        <!-- Scroll Indicator -->
+        <div class="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center animate-pulse opacity-60">
+            <span class="font-label-caps text-xs tracking-[0.3em] mb-2">Deslize</span>
+            <span class="material-symbols-outlined">expand_more</span>
+        </div>
+    </section>
+
+    <!-- The Three Pillars Section -->
+    <section id="valores" class="py-32 max-w-7xl mx-auto px-6">
+        <div class="text-center mb-24">
+            <h2 class="font-newsreader text-5xl mb-4">Os Três Pilares</h2>
+            <div class="h-1 w-24 bg-amber-500 mx-auto"></div>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-12">
+            <div class="glass-card p-12 text-center group hover:border-secondary/40 transition-all duration-500">
+                <div class="mb-8 inline-flex items-center justify-center w-20 h-20 border border-secondary/30 rounded-full group-hover:bg-secondary/5 transition-colors">
+                    <span class="material-symbols-outlined text-4xl text-secondary">menu_book</span>
+                </div>
+                <h3 class="font-newsreader text-2xl mb-6">Sabedoria</h3>
+                <p class="text-slate-400">O cultivo incessante do intelecto e a busca pela verdade através do estudo rigoroso do Rito Moderno.</p>
+            </div>
+            <div class="glass-card p-12 text-center group hover:border-secondary/40 transition-all duration-500">
+                <div class="mb-8 inline-flex items-center justify-center w-20 h-20 border border-secondary/30 rounded-full group-hover:bg-secondary/5 transition-colors">
+                    <span class="material-symbols-outlined text-4xl text-secondary">account_balance</span>
+                </div>
+                <h3 class="font-newsreader text-2xl mb-6">Estabilidade</h3>
+                <p class="text-slate-400">A preservação das tradições institucionais que fundamentam nossa conduta e nossa presença na sociedade.</p>
+            </div>
+            <div class="glass-card p-12 text-center group hover:border-secondary/40 transition-all duration-500">
+                <div class="mb-8 inline-flex items-center justify-center w-20 h-20 border border-secondary/30 rounded-full group-hover:bg-secondary/5 transition-colors">
+                    <span class="material-symbols-outlined text-4xl text-secondary">diversity_3</span>
+                </div>
+                <h3 class="font-newsreader text-2xl mb-6">Fraternidade</h3>
+                <p class="text-slate-400">O fortalecimento dos laços entre os membros, criando uma rede de apoio e crescimento mútuo inestimável.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Veneráveis Mestres Section -->
+    <section id="veneraveis" class="py-32 px-6 bg-slate-900/20">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center mb-24">
+                <span class="font-bold uppercase tracking-[0.4em] text-secondary mb-4 block">HISTÓRIA E TRADIÇÃO</span>
+                <h2 class="font-newsreader text-5xl mb-4 text-on-background">Galeria de Ex-Veneráveis</h2>
+                <div class="h-1 w-24 bg-amber-500 mx-auto"></div>
+            </div>
+            
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-12">
+                <!-- Marcelo -->
+                <div class="text-center group">
+                    <div class="relative w-48 h-48 mx-auto mb-6">
+                        <div class="absolute inset-0 rounded-full border-2 border-amber-500/30 group-hover:border-amber-500 transition-all duration-500 scale-110"></div>
+                        <div class="w-full h-full rounded-full overflow-hidden border-4 border-background shadow-2xl">
+                            <img src="marcelo.png" alt="Marcelo" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700">
+                        </div>
+                    </div>
+                    <h3 class="font-newsreader text-2xl text-on-background">Ir. Marcelo</h3>
+                    <p class="text-amber-500/60 font-label-caps text-xs tracking-widest mt-2 uppercase">Venerável Mestre</p>
+                    <p class="text-slate-500 text-xs mt-1">2022 — 2023</p>
+                </div>
+
+                <!-- Elton -->
+                <div class="text-center group">
+                    <div class="relative w-48 h-48 mx-auto mb-6">
+                        <div class="absolute inset-0 rounded-full border-2 border-amber-500/30 group-hover:border-amber-500 transition-all duration-500 scale-110"></div>
+                        <div class="w-full h-full rounded-full overflow-hidden border-4 border-background shadow-2xl">
+                            <img src="elton.png" alt="Elton" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700">
+                        </div>
+                    </div>
+                    <h3 class="font-newsreader text-2xl text-on-background">Ir. Elton</h3>
+                    <p class="text-amber-500/60 font-label-caps text-xs tracking-widest mt-2 uppercase">Venerável Mestre</p>
+                    <p class="text-slate-500 text-xs mt-1">2021 — 2022</p>
+                </div>
+
+                <!-- Cezar -->
+                <div class="text-center group">
+                    <div class="relative w-48 h-48 mx-auto mb-6">
+                        <div class="absolute inset-0 rounded-full border-2 border-amber-500/30 group-hover:border-amber-500 transition-all duration-500 scale-110"></div>
+                        <div class="w-full h-full rounded-full overflow-hidden border-4 border-background shadow-2xl">
+                            <img src="cezar.png" alt="Cezar" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700">
+                        </div>
+                    </div>
+                    <h3 class="font-newsreader text-2xl text-on-background">Ir. Cezar</h3>
+                    <p class="text-amber-500/60 font-label-caps text-xs tracking-widest mt-2 uppercase">Venerável Mestre</p>
+                    <p class="text-slate-500 text-xs mt-1">2020 — 2021</p>
+                </div>
+
+                <!-- Leonardo -->
+                <div class="text-center group">
+                    <div class="relative w-48 h-48 mx-auto mb-6">
+                        <div class="absolute inset-0 rounded-full border-2 border-amber-500/30 group-hover:border-amber-500 transition-all duration-500 scale-110"></div>
+                        <div class="w-full h-full rounded-full overflow-hidden border-4 border-background shadow-2xl">
+                            <img src="leonardo.png" alt="Leonardo" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700">
+                        </div>
+                    </div>
+                    <h3 class="font-newsreader text-2xl text-on-background">Ir. Leonardo</h3>
+                    <p class="text-amber-500/60 font-label-caps text-xs tracking-widest mt-2 uppercase">Venerável Mestre</p>
+                    <p class="text-slate-500 text-xs mt-1">2019 — 2020</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Quote Section -->
+    <section class="py-32 bg-slate-900/50">
+        <div class="max-w-4xl mx-auto px-6 text-center">
+            <span class="material-symbols-outlined text-5xl text-secondary/40 mb-8">format_quote</span>
+            <p class="font-newsreader text-4xl italic text-on-background leading-relaxed mb-8">
+                "Onde a tradição encontra o progresso, nasce a verdadeira evolução da consciência humana."
+            </p>
+            <p class="font-bold uppercase tracking-[0.3em] text-secondary">— REGULAMENTO GERAL</p>
+        </div>
+    </section>
+
+    <!-- Gallery Section -->
+    <section class="py-32 px-6" id="galeria">
+        <div class="max-w-7xl mx-auto">
+            <div class="flex justify-between items-end mb-16">
+                <div>
+                    <span class="font-bold uppercase tracking-[0.2em] text-secondary block mb-2">INSTITUCIONAL</span>
+                    <h2 class="font-newsreader text-5xl">Galeria de Fotos</h2>
+                </div>
+                <a class="text-secondary border-b border-secondary pb-1 hover:text-on-background hover:border-on-background transition-colors" href="https://www.instagram.com/lojamaconicamajorportugal_4424/" target="_blank">Ver Galeria Completa</a>
+            </div>
+            <div class="grid grid-cols-2 md:grid-cols-3 gap-6">
+                <div class="aspect-square glass-card overflow-hidden group relative cursor-pointer" onclick="openLightbox(0)">
+                    <div class="w-full h-full bg-cover bg-center transition-transform duration-500 group-hover:scale-110" style="background-image: url('img/galeria/foto1.jpg')"></div>
+                    <img src="img/galeria/foto1.jpg" class="hidden gallery-img-source">
+                </div>
+                <div class="aspect-square glass-card overflow-hidden group relative cursor-pointer" onclick="openLightbox(1)">
+                    <div class="w-full h-full bg-cover bg-center transition-transform duration-500 group-hover:scale-110" style="background-image: url('img/galeria/foto2.jpg')"></div>
+                    <img src="img/galeria/foto2.jpg" class="hidden gallery-img-source">
+                </div>
+                <div class="aspect-square glass-card overflow-hidden group relative cursor-pointer" onclick="openLightbox(2)">
+                    <div class="w-full h-full bg-cover bg-center transition-transform duration-500 group-hover:scale-110" style="background-image: url('img/galeria/foto3.jpg')"></div>
+                    <img src="img/galeria/foto3.jpg" class="hidden gallery-img-source">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section class="py-32 px-6 bg-slate-900/30" id="contact">
+        <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-20">
+            <div>
+                <h2 class="font-newsreader text-5xl mb-8 text-amber-500">Fale Conosco</h2>
+                <p class="text-slate-400 text-lg mb-12">Entre em contato para saber mais sobre nossa instituição ou agendar uma visita institucional.</p>
+                <div class="space-y-8">
+                    <div class="flex items-center gap-6 group">
+                        <div class="w-14 h-14 rounded-full border border-amber-500/30 flex items-center justify-center text-amber-500 group-hover:bg-amber-500 group-hover:text-black transition-all">
+                            <span class="material-symbols-outlined text-2xl">location_on</span>
+                        </div>
+                        <div>
+                            <p class="text-xs font-bold uppercase tracking-widest text-amber-500/60 mb-1">Localização</p>
+                            <p class="text-slate-200 text-sm">Av. Pref. Dulcídio Cardoso, 406 - Barra da Tijuca, Rio de Janeiro - RJ</p>
+                        </div>
+                    </div>
+                    
+                    <div class="flex items-center gap-6 group">
+                        <div class="w-14 h-14 rounded-full border border-amber-500/30 flex items-center justify-center text-amber-500 group-hover:bg-amber-500 group-hover:text-black transition-all">
+                            <span class="material-symbols-outlined text-2xl">mail</span>
+                        </div>
+                        <div>
+                            <p class="text-xs font-bold uppercase tracking-widest text-amber-500/60 mb-1">E-mail</p>
+                            <p class="text-slate-200">contato@majorportugal.org.br</p>
+                        </div>
+                    </div>
+                    
+                    <div class="flex items-center gap-6 group">
+                        <a href="https://www.instagram.com/lojamaconicamajorportugal_4424/" target="_blank" class="flex items-center gap-6">
+                            <div class="w-14 h-14 rounded-full border border-amber-500/30 flex items-center justify-center text-amber-500 group-hover:bg-amber-500 group-hover:text-black transition-all">
+                                <svg class="w-6 h-6 fill-current" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919-1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+                            </div>
+                            <div>
+                                <p class="text-xs font-bold uppercase tracking-widest text-amber-500/60 mb-1">Instagram</p>
+                                <p class="text-slate-200">Visite nosso Instagram</p>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="glass-card overflow-hidden h-[400px] border border-white/10 relative group">
+                <iframe 
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3671.693247070119!2d-43.3245228!3d-23.0125442!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x9bd0e98031d791%3A0xe546b7a54f02a64c!2sAv.%20Prefeito%20Dulc%C3%ADdio%20Cardoso%2C%20406%20-%20Barra%20da%20Tijuca%2C%20Rio%20de%20Janeiro%20-%20RJ!5e0!3m2!1spt-BR!2sbr!4v1716300000000!5m2!1spt-BR!2sbr" 
+                    width="100%" height="100%" style="border:0; filter: grayscale(1) invert(0.9) contrast(1.2);" allowfullscreen="" loading="lazy">
+                </iframe>
+                <div class="absolute inset-0 pointer-events-none border-2 border-amber-500/0 group-hover:border-amber-500/20 transition-all duration-500"></div>
+            </div>
+        </div>
+    </section>
+</main>
+
+<!-- Footer -->
+<footer class="py-16 border-t border-white/5 bg-slate-950/50">
+    <div class="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-8">
+        <div class="flex items-center gap-4">
+            <img src="logo.png" alt="Logo" class="h-10 w-auto opacity-50 grayscale hover:grayscale-0 hover:opacity-100 transition-all duration-500">
+            <div class="text-left">
+                <p class="text-slate-200 font-newsreader text-lg">A∴R∴L∴S∴ Major Manoel dos Santos Portugal Nº 4424</p>
+                <p class="text-slate-500 text-xs uppercase tracking-widest">GOB - Rito Moderno</p>
+            </div>
+        </div>
+        
+        <div class="text-center md:text-right">
+            <p class="text-slate-400 text-sm mb-2">&copy; 2026 Todos os direitos reservados.</p>
+            <p class="text-slate-500 text-[10px] uppercase tracking-[0.2em]">
+                Desenvolvido por <a href="mailto:leandrobessa@hotmail.com" class="text-amber-500/80 hover:text-amber-500 transition-colors cursor-pointer decoration-none" title="Enviar e-mail para Leandro Bessa Pimentel">LEANDRO BESSA PIMENTEL</a>
+            </p>
+        </div>
+    </div>
+    
+    <!-- Institutional Affiliation -->
+    <div class="max-w-7xl mx-auto px-6 mt-16 pt-12 border-t border-white/5 flex flex-col items-center text-center">
+        <div class="flex items-center gap-10 mb-6">
+            <a href="https://gob-rj.org.br/home" target="_blank" rel="noopener noreferrer" class="transition-transform hover:scale-110">
+                <img src="logo_gob_rj-2.png" alt="Grande Oriente do Brasil no Rio de Janeiro" class="h-20 w-auto opacity-40 hover:opacity-100 grayscale hover:grayscale-0 transition-all duration-500">
+            </a>
+            <a href="https://www.gob.org.br/" target="_blank" rel="noopener noreferrer" class="transition-transform hover:scale-110">
+                <img src="logo-gob-brasilia-df-selo.png" alt="Grande Oriente do Brasil" class="h-20 w-auto opacity-40 hover:opacity-100 grayscale hover:grayscale-0 transition-all duration-500">
+            </a>
+        </div>
+        <div class="space-y-1">
+            <p class="font-newsreader text-xl text-slate-300">Grande Oriente do Brasil no Rio de Janeiro</p>
+            <p class="text-[10px] text-amber-500/50 uppercase tracking-[0.4em] font-bold">Federado ao Grande Oriente do Brasil</p>
+        </div>
+    </div>
+</footer>
+
+<!-- Lightbox Modal -->
+<div id="lightbox" onclick="closeLightbox()">
+    <button class="nav-btn prev-btn" onclick="prevImg(event)">
+        <span class="material-symbols-outlined">chevron_left</span>
+    </button>
+    <img id="lightboxImg" src="" onclick="event.stopPropagation()">
+    <button class="nav-btn next-btn" onclick="nextImg(event)">
+        <span class="material-symbols-outlined">chevron_right</span>
+    </button>
+    <button class="absolute top-10 right-10 text-white hover:text-amber-500 transition-colors" onclick="closeLightbox()">
+        <span class="material-symbols-outlined text-4xl">close</span>
+    </button>
+</div>
+
+<!-- Agenda Modal -->
+<div id="agendaModal" class="fixed inset-0 z-[100] hidden flex items-center justify-center p-4 bg-black/95 backdrop-blur-md">
+    <div class="glass-card w-full max-w-5xl max-h-[90vh] overflow-y-auto p-6 md:p-12 relative border border-amber-500/30">
+        <button onclick="closeAgenda()" class="absolute top-6 right-6 text-slate-400 hover:text-amber-500 transition-colors">
+             <span class="material-symbols-outlined text-4xl">close</span>
+        </button>
+        
+        <div class="text-center mb-10">
+            <span class="font-bold uppercase tracking-[0.4em] text-secondary mb-4 block">COMPROMISSOS</span>
+            <h2 class="font-newsreader text-5xl mb-4 text-on-background">Agenda da Loja</h2>
+            <p class="text-xs text-amber-500/60 uppercase tracking-widest mb-6">A∴R∴L∴S∴ Major Manoel dos Santos Portugal Nº 4424</p>
+            <div class="h-1 w-24 bg-amber-500 mx-auto mb-6"></div>
+        </div>
+
+        <div class="bg-white rounded-xl p-4 shadow-2xl">
+            <div id="calendar"></div>
+        </div>
+
+        <div class="mt-8 grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-slate-300 border-t border-white/10 pt-8">
+            <div class="flex items-center gap-3">
+                <span class="w-4 h-4 rounded-full bg-amber-400 shadow-[0_0_10px_rgba(251,191,36,0.5)]"></span>
+                <span><b>Café da Manhã:</b> 09h00</span>
+            </div>
+            <div class="flex items-center gap-3">
+                <span class="w-4 h-4 rounded-full bg-secondary shadow-[0_0_10px_rgba(233,195,73,0.5)]"></span>
+                <span><b>Início da Sessão:</b> 09h30</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="/js/supabase-config.js"></script>
+<script>
+    let calendar;
+    let galleryImages = [];
+    let currentImgIndex = 0;
+
+    function toggleMobileMenu() {
+        const menu = document.getElementById('mobileMenu');
+        const isHidden = menu.classList.contains('hidden');
+        
+        if (isHidden) {
+            menu.classList.remove('hidden');
+            setTimeout(() => menu.classList.remove('translate-x-full'), 10);
+            document.body.style.overflow = 'hidden';
+        } else {
+            menu.classList.add('translate-x-full');
+            setTimeout(() => menu.classList.add('hidden'), 300);
+            document.body.style.overflow = 'auto';
+        }
+    }
+
+    function openAgenda() {
+        document.getElementById('agendaModal').classList.remove('hidden');
+        document.body.style.overflow = 'hidden';
+        if (!calendar) {
+            initCalendar();
+        } else {
+            calendar.render();
+        }
+    }
+
+    function closeAgenda() {
+        document.getElementById('agendaModal').classList.add('hidden');
+        document.body.style.overflow = 'auto';
+    }
+
+    async function initCalendar() {
+        const calendarEl = document.getElementById('calendar');
+        calendar = new FullCalendar.Calendar(calendarEl, {
+            initialView: 'dayGridMonth',
+            locale: 'pt-br',
+            headerToolbar: {
+                left: 'prev,next today',
+                center: 'title',
+                right: 'dayGridMonth,listWeek'
+            },
+            themeSystem: 'standard',
+            events: async function(info, successCallback, failureCallback) {
+                try {
+                    if (!window.supabaseClient) {
+                        console.warn("Supabase client not ready, retrying...");
+                        setTimeout(() => calendar.refetchEvents(), 500);
+                        return successCallback([]);
+                    }
+                    const { data, error } = await window.supabaseClient
+                        .from('calendar_events')
+                        .select('*');
+                    if (error) throw error;
+                    successCallback(data.map(event => ({
+                        id: event.id,
+                        title: event.description,
+                        start: event.event_date,
+                        extendedProps: { 
+                            time: event.event_time, 
+                            degree: event.degree, 
+                            attire: event.attire, 
+                            session: event.session_type 
+                        }
+                    })));
+                } catch (err) {
+                    console.error("Error loading events:", err);
+                    failureCallback(err);
+                }
+            },
+            eventClick: function(info) {
+                const props = info.event.extendedProps;
+                alert(`Sessão: ${props.session || '-'}\nAssunto: ${info.event.title}\nHorário: ${props.time || '-'}\nGrau: ${props.degree || '-'}\nTraje: ${props.attire || '-'}`);
+            }
+        });
+        calendar.render();
+    }
+
+    function initGallery() {
+        const images = document.querySelectorAll('.gallery-img-source');
+        galleryImages = Array.from(images).map(img => img.src);
+    }
+
+    window.openLightbox = function(index) {
+        if (galleryImages.length === 0) initGallery();
+        currentImgIndex = index;
+        const lb = document.getElementById('lightbox');
+        const img = document.getElementById('lightboxImg');
+        img.src = galleryImages[currentImgIndex];
+        lb.style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+    }
+
+    window.closeLightbox = function() {
+        const lb = document.getElementById('lightbox');
+        lb.style.display = 'none';
+        document.body.style.overflow = 'auto';
+    }
+
+    window.nextImg = function(e) {
+        if (e) e.stopPropagation();
+        currentImgIndex = (currentImgIndex + 1) % galleryImages.length;
+        document.getElementById('lightboxImg').src = galleryImages[currentImgIndex];
+    }
+
+    window.prevImg = function(e) {
+        if (e) e.stopPropagation();
+        currentImgIndex = (currentImgIndex - 1 + galleryImages.length) % galleryImages.length;
+        document.getElementById('lightboxImg').src = galleryImages[currentImgIndex];
+    }
+
+    // Keyboard Support
+    document.addEventListener('keydown', (e) => {
+        const lb = document.getElementById('lightbox');
+        if (lb && lb.style.display === 'flex') {
+            if (e.key === 'ArrowRight') nextImg();
+            if (e.key === 'ArrowLeft') prevImg();
+            if (e.key === 'Escape') closeLightbox();
+        }
+        if (e.key === 'Escape') closeAgenda();
+    });
+
+    // Quero ser Maçom Modal Logic
+    window.openInterestModal = function() {
+        document.getElementById('interestModal').classList.remove('hidden');
+        document.getElementById('interestModal').classList.add('flex');
+        document.body.style.overflow = 'hidden';
+    }
+
+    window.closeInterestModal = function() {
+        document.getElementById('interestModal').classList.add('hidden');
+        document.getElementById('interestModal').classList.remove('flex');
+        document.body.style.overflow = 'auto';
+    }
+
+    document.getElementById('interestForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        const btn = this.querySelector('button[type="submit"]');
+        const originalText = btn.innerHTML;
+        
+        btn.disabled = true;
+        btn.innerHTML = '<span class="animate-spin material-symbols-outlined text-sm">progress_activity</span> Enviando...';
+
+        const templateParams = {
+            nome: document.getElementById('cand_nome').value,
+            telefone: document.getElementById('cand_tel').value,
+            email: document.getElementById('cand_email').value,
+            idade: document.getElementById('cand_idade').value,
+            bairro: document.getElementById('cand_bairro').value,
+            indicado_por: document.getElementById('cand_indicado').value || 'Não indicado'
+        };
+
+        try {
+            // 1. Enviar E-mail via EmailJS (Premium/Branded)
+            const response = await emailjs.send(
+                'service_ael7cfa', 
+                '__ejs-test-mail-service__', 
+                templateParams
+            );
+
+            // 2. Salvar no Supabase (Em segundo plano)
+            if (window.supabaseClient) {
+                window.supabaseClient.from('candidatos_interesse').insert([{
+                    nome: templateParams.nome,
+                    telefone: templateParams.telefone,
+                    email: templateParams.email,
+                    idade: parseInt(templateParams.idade),
+                    bairro: templateParams.bairro,
+                    indicado_por: templateParams.indicado_por
+                }]).then(() => console.log("Dados salvos no Supabase"));
+            }
+
+            if (response.status === 200) {
+                alert('Seu registro de interesse foi enviado com sucesso! Em breve entraremos em contato.');
+                closeInterestModal();
+                this.reset();
+            } else {
+                throw new Error("Erro no serviço de e-mail");
+            }
+
+        } catch (err) {
+            console.error("Erro no envio:", err);
+            alert('Houve um problema ao enviar. Por favor, tente novamente ou entre em contato direto por e-mail.');
+        } finally {
+            btn.disabled = false;
+            btn.innerHTML = originalText;
+        }
+    });
+
+    document.addEventListener('DOMContentLoaded', () => {
+        initGallery();
+
+        // Phone Masking Logic
+        const telInput = document.getElementById('cand_tel');
+        if (telInput) {
+            telInput.addEventListener('input', (e) => {
+                let value = e.target.value.replace(/\D/g, "");
+                if (value.length > 11) value = value.slice(0, 11);
+                
+                let formatted = "";
+                if (value.length > 0) {
+                    formatted = "(" + value.slice(0, 2);
+                    if (value.length > 2) {
+                        formatted += ") " + value.slice(2, 7);
+                        if (value.length > 7) {
+                            formatted += "-" + value.slice(7);
+                        }
+                    }
+                }
+                e.target.value = formatted;
+            });
+        }
+    });
+</script>
+
+<!-- Quero ser Maçom Modal -->
+<div id="interestModal" class="fixed inset-0 z-[100] hidden items-center justify-center p-4 bg-black/90 backdrop-blur-md overflow-y-auto">
+    <div class="glass-card w-full max-w-4xl overflow-hidden relative animate-in zoom-in duration-300">
+        <!-- Close Button -->
+        <button onclick="closeInterestModal()" class="absolute top-6 right-6 text-slate-400 hover:text-amber-500 transition-colors z-10">
+            <span class="material-symbols-outlined text-3xl">close</span>
+        </button>
+
+        <div class="flex flex-col md:flex-row h-full">
+            <!-- Left Info Panel -->
+            <div class="md:w-1/3 bg-amber-500 p-8 md:p-12 text-black flex flex-col justify-center">
+                <h2 class="font-newsreader text-4xl font-bold leading-tight mb-6">Maçonaria não se vende pela internet ou pela TV.</h2>
+                <p class="text-lg font-medium opacity-90 leading-relaxed">Se estiver preparado levaremos ela até você. O primeiro passo é preencher o formulário de registro de interesse.</p>
+                <div class="mt-12 flex justify-center opacity-20 text-black">
+                    <svg viewBox="0 0 100 100" class="w-32 h-32 fill-current">
+                        <path d="M50 5 L10 95 L15 95 L50 15 L85 95 L90 95 L50 5 Z M10 40 L50 80 L90 40 L90 45 L50 85 L10 45 L10 40 Z"></path>
+                    </svg>
+                </div>
+            </div>
+
+            <!-- Form Panel -->
+            <div class="md:w-2/3 p-8 md:p-12 bg-slate-900/50">
+                <div class="mb-8">
+                    <h3 class="font-newsreader text-3xl text-amber-500 mb-2">Registro de Interesse</h3>
+                    <p class="text-slate-400 text-sm leading-relaxed">A Maçonaria é uma instituição tricentenária que reúne milhões de membros ao redor do mundo. Nossos encontros visam transformar homens bons em homens ainda melhores, em um ambiente com pensamentos diversos onde reina o respeito mutuo e a liberdade absoluta de consciência.</p>
+                </div>
+
+                <form id="interestForm" class="space-y-5">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                        <div class="space-y-1">
+                            <label class="text-[10px] uppercase tracking-widest text-slate-500 font-bold ml-1">Nome completo *</label>
+                            <input type="text" name="Nome" id="cand_nome" required class="w-full bg-white/5 border border-white/10 rounded-xl p-3 outline-none focus:border-amber-500/50 transition-all text-sm">
+                        </div>
+                        <div class="space-y-1">
+                            <label class="text-[10px] uppercase tracking-widest text-slate-500 font-bold ml-1">Telefone com DDD *</label>
+                            <input type="tel" name="Telefone" id="cand_tel" required class="w-full bg-white/5 border border-white/10 rounded-xl p-3 outline-none focus:border-amber-500/50 transition-all text-sm">
+                        </div>
+                        <div class="space-y-1">
+                            <label class="text-[10px] uppercase tracking-widest text-slate-500 font-bold ml-1">E-mail *</label>
+                            <input type="email" name="Email" id="cand_email" required class="w-full bg-white/5 border border-white/10 rounded-xl p-3 outline-none focus:border-amber-500/50 transition-all text-sm">
+                        </div>
+                        <div class="space-y-1">
+                            <label class="text-[10px] uppercase tracking-widest text-slate-500 font-bold ml-1">Idade *</label>
+                            <input type="number" name="Idade" id="cand_idade" required class="w-full bg-white/5 border border-white/10 rounded-xl p-3 outline-none focus:border-amber-500/50 transition-all text-sm">
+                        </div>
+                        <div class="space-y-1">
+                            <label class="text-[10px] uppercase tracking-widest text-slate-500 font-bold ml-1">Bairro em que reside *</label>
+                            <input type="text" name="Bairro" id="cand_bairro" required class="w-full bg-white/5 border border-white/10 rounded-xl p-3 outline-none focus:border-amber-500/50 transition-all text-sm">
+                        </div>
+                        <div class="space-y-1">
+                            <label class="text-[10px] uppercase tracking-widest text-slate-500 font-bold ml-1">Indicado por alguém da loja?</label>
+                            <input type="text" name="Indicado Por" id="cand_indicado" placeholder="Nome do Irmão (Opcional)" class="w-full bg-white/5 border border-white/10 rounded-xl p-3 outline-none focus:border-amber-500/50 transition-all text-sm">
+                        </div>
+                    </div>
+
+                    <div class="pt-4 border-t border-white/5 mt-6">
+                        <div class="flex items-start gap-3 mb-6">
+                            <div class="mt-1">
+                                <span class="material-symbols-outlined text-amber-500 text-lg">gavel</span>
+                            </div>
+                            <p class="text-[10px] text-slate-500 leading-relaxed uppercase tracking-wider">
+                                <span class="text-amber-500 font-bold">Aviso Legal:</span> Ao clicar em ENVIAR, você declara estar de acordo com os termos de privacidade e autoriza o contato da nossa instituição para fins de sindicância e convite.
+                            </p>
+                        </div>
+                        <button type="submit" class="w-full bg-amber-500 text-black font-bold py-4 rounded-xl hover:brightness-110 active:scale-[0.98] transition-all uppercase tracking-[0.2em] text-xs">
+                            Enviar Registro de Interesse
+                        </button>
+                    </div>
+                </form>
+            </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

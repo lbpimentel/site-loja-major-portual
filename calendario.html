@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calendário da Loja - A∴R∴L∴S∴ Major Manoel dos Santos Portugal Nº 4424</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;0,6..72,700;1,6..72,400&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #e9c349;
+            --secondary: #e9c349;
+            --background: #0a0a0a;
+            --surface: #141414;
+            --on-background: #ffffff;
+            --on-surface: #ffffff;
+            --on-surface-variant: #94a3b8;
+            --outline-variant: #1e293b;
+        }
+        body { font-family: 'Inter', sans-serif; background-color: var(--background); color: var(--on-background); }
+        .font-newsreader { font-family: 'Newsreader', serif; }
+        .glass-card {
+            background: rgba(20, 20, 20, 0.8);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 1rem;
+        }
+        #calendar {
+            background: #ffffff !important;
+            color: #1a1a1a !important;
+            border-radius: 1rem;
+            padding: 1.5rem;
+            border: 1px solid rgba(0,0,0,0.05);
+            font-family: 'Inter', sans-serif;
+            min-height: 650px;
+        }
+        .fc .fc-toolbar-title { font-family: 'Newsreader', serif; color: #111111 !important; font-size: 1.5rem !important; }
+        .fc .fc-button-primary {
+            background-color: transparent !important;
+            border: 1px solid #e5e7eb !important;
+            color: #4b5563 !important;
+            text-transform: capitalize !important;
+            font-size: 0.875rem !important;
+            padding: 0.5rem 1rem !important;
+        }
+        .fc .fc-button-primary:hover { background-color: #f9fafb !important; }
+        .fc .fc-col-header-cell-cushion {
+            font-size: 0.75rem !important;
+            color: #111111 !important;
+            text-transform: uppercase !important;
+            letter-spacing: 0.05em !important;
+            padding: 12px 0 !important;
+            text-decoration: none !important;
+            font-weight: 700 !important;
+        }
+        .fc-theme-standard td, .fc-theme-standard th { border-color: #f3f4f6 !important; }
+        .fc-daygrid-day-number {
+            font-size: 0.85rem !important;
+            color: #000000 !important;
+            padding: 8px !important;
+            text-decoration: none !important;
+            font-weight: 500 !important;
+        }
+        .fc-day-today { background-color: #fffbeb !important; }
+        .fc-day-today .fc-daygrid-day-number {
+            background: #f59e0b;
+            color: white !important;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 4px;
+        }
+        .fc-event {
+            background-color: #fef3c7 !important;
+            border: 1px solid #f59e0b !important;
+            color: #000000 !important;
+            padding: 2px 6px !important;
+            font-size: 0.75rem !important;
+            border-radius: 4px !important;
+            margin: 1px 4px !important;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .fc-event:hover { filter: brightness(0.95); }
+        .fc-event-title, .fc-event-time { 
+            font-weight: 700 !important; 
+            color: #000000 !important; 
+        }
+        .bg-logo-overlay {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 70vh;
+            height: 70vh;
+            background-image: url('logo.png');
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            opacity: 0.15;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        @media (max-width: 768px) {
+            h1.text-4xl, .text-3xl { font-size: 1.75rem !important; }
+            main { padding: 1rem !important; padding-top: 5.5rem !important; }
+            header { flex-direction: column; align-items: flex-start !important; gap: 1rem; }
+            .text-right { text-align: left !important; }
+            
+            /* Calendar mobile tweaks */
+            #calendar { min-height: 450px !important; padding: 0.5rem !important; border-radius: 0.75rem !important; }
+            .fc .fc-toolbar { flex-direction: column; gap: 1rem; align-items: center; }
+            .fc .fc-toolbar-title { font-size: 1rem !important; }
+            .fc .fc-button-group { width: 100%; display: flex; }
+            .fc .fc-button { flex: 1; justify-content: center; }
+            
+            .glass-card { padding: 1.25rem !important; }
+        }
+    </style>
+    <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js'></script>
+</head>
+<body class="bg-background text-on-background min-h-screen">
+    <div class="bg-logo-overlay"></div>    <!-- MOBILE TOP BAR -->
+    <nav class="lg:hidden fixed top-0 w-full z-50 flex justify-between items-center px-6 py-4 bg-slate-950/90 backdrop-blur-xl border-b border-white/10">
+        <div class="flex items-center gap-3">
+            <img src="logo.png" alt="Logo" class="h-8 w-auto">
+            <span class="font-newsreader text-amber-500 font-bold">Major Manoel</span>
+        </div>
+        <button onclick="toggleMobileMenu()" class="text-amber-500">
+            <span class="material-symbols-outlined text-3xl">menu</span>
+        </button>
+    </nav>
+
+    <!-- MOBILE MENU OVERLAY -->
+    <div id="mobileMenu" class="fixed inset-0 z-[60] hidden flex flex-col bg-slate-950/98 backdrop-blur-2xl p-8 transform transition-transform duration-500 translate-x-full">
+        <div class="flex justify-between items-center mb-12">
+            <div class="flex items-center gap-3">
+                <img src="logo.png" alt="Logo" class="h-8">
+                <span class="font-newsreader text-amber-500 font-bold text-lg">Menu Principal</span>
+            </div>
+            <button onclick="toggleMobileMenu()" class="text-amber-500 w-12 h-12 flex items-center justify-center">
+                <span class="material-symbols-outlined text-4xl">close</span>
+            </button>
+        </div>
+        <div class="flex flex-col gap-4">
+            <a class="flex items-center gap-6 p-5 bg-white/5 rounded-2xl text-slate-200 border border-white/5 active:scale-95 transition-all" href="dashboard.html">
+                <span class="material-symbols-outlined text-amber-500">dashboard</span>
+                <span class="text-lg font-medium tracking-wide">Painel Principal</span>
+            </a>
+            <a class="flex items-center gap-6 p-5 bg-white/5 rounded-2xl text-slate-200 border border-white/5 active:scale-95 transition-all" href="biblioteca.html">
+                <span class="material-symbols-outlined text-amber-500">auto_stories</span>
+                <span class="text-lg font-medium tracking-wide">Biblioteca Digital</span>
+            </a>
+            <a class="flex items-center gap-6 p-5 bg-white/5 rounded-2xl text-slate-200 border border-white/5 active:scale-95 transition-all" href="fraternidade.html">
+                <span class="material-symbols-outlined text-amber-500">groups</span>
+                <span class="text-lg font-medium tracking-wide">Galeria de Fotos</span>
+            </a>
+            <a class="flex items-center gap-6 p-5 bg-white/5 rounded-2xl text-amber-500 border border-amber-500/10 active:scale-95 transition-all" href="calendario.html">
+                <span class="material-symbols-outlined text-amber-500">calendar_month</span>
+                <span class="text-lg font-medium tracking-wide">Calendário</span>
+            </a>
+            <a class="flex items-center gap-6 p-5 bg-white/5 rounded-2xl text-slate-200 border border-white/5 active:scale-95 transition-all" href="tesouraria.html">
+                <span class="material-symbols-outlined text-amber-500">account_balance_wallet</span>
+                <span class="text-lg font-medium tracking-wide">Tesouraria</span>
+            </a>
+            <button onclick="logout()" class="flex items-center gap-6 p-5 bg-red-500/10 rounded-2xl text-red-400 border border-red-500/10 active:scale-95 transition-all mt-8">
+                <span class="material-symbols-outlined">logout</span>
+                <span class="text-lg font-medium tracking-wide uppercase">Sair do Portal</span>
+            </button>
+        </div>
+        <div class="mt-auto text-center pb-8 px-6">
+            <p class="text-slate-600 text-[10px] uppercase tracking-widest mb-4">A∴R∴L∴S∴ Major Manoel dos Santos Portugal Nº 4424</p>
+            
+            <!-- Institutional Affiliation (Mobile) -->
+            <div class="pt-6 border-t border-white/5 flex flex-col items-center">
+                <div class="flex items-center gap-6 mb-3">
+                    <a href="https://gob-rj.org.br/home" target="_blank" rel="noopener noreferrer" class="transition-transform hover:scale-105">
+                        <img src="logo_gob_rj-2.png" alt="GOB-RJ" class="h-10 w-auto opacity-30">
+                    </a>
+                    <a href="https://www.gob.org.br/" target="_blank" rel="noopener noreferrer" class="transition-transform hover:scale-105">
+                        <img src="logo-gob-brasilia-df-selo.png" alt="GOB" class="h-10 w-auto opacity-30">
+                    </a>
+                </div>
+                <div class="space-y-0.5">
+                    <p class="font-newsreader text-[10px] text-slate-400">Grande Oriente do Brasil no Rio de Janeiro</p>
+                    <p class="text-[7px] text-amber-500/30 uppercase tracking-widest font-bold">Federado ao Grande Oriente do Brasil</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SIDE NAVBAR (Desktop) -->
+    <nav class="hidden lg:flex fixed left-0 top-0 h-screen flex-col bg-slate-950/95 backdrop-blur-lg w-72 border-r border-white/10 shadow-2xl z-50">
+        <div class="p-8 flex flex-col items-center text-center">
+            <h1 class="text-amber-500 font-bold font-newsreader text-lg leading-tight tracking-tight">A∴R∴L∴S∴ Major Manoel dos Santos Portugal Nº 4424</h1>
+            <p class="text-slate-500 text-[10px] uppercase tracking-[0.2em] mt-2">Nº 4424 - GOB - Rito Moderno</p>
+        </div>
+
+        <div class="flex-1 px-4 py-6 space-y-2">
+            <a href="dashboard.html" class="flex items-center gap-4 px-6 py-4 text-slate-400 hover:text-amber-500 hover:bg-white/5 rounded-xl transition-all group">
+                <span class="material-symbols-outlined">dashboard</span>
+                <span class="font-medium">Painel Principal</span>
+            </a>
+            <a href="tesouraria.html" class="flex items-center gap-4 px-6 py-4 text-slate-400 hover:text-amber-500 hover:bg-white/5 rounded-xl transition-all group">
+                <span class="material-symbols-outlined">account_balance_wallet</span>
+                <span class="font-medium">Tesouraria</span>
+            </a>
+            <a href="biblioteca.html" class="flex items-center gap-4 px-6 py-4 text-slate-400 hover:text-amber-500 hover:bg-white/5 rounded-xl transition-all">
+                <span class="material-symbols-outlined">auto_stories</span>
+                <span class="font-medium">Biblioteca Digital</span>
+            </a>
+            <a href="fraternidade.html" class="flex items-center gap-4 px-6 py-4 text-slate-400 hover:text-amber-500 hover:bg-white/5 rounded-xl transition-all">
+                <span class="material-symbols-outlined">local_library</span>
+                <span class="font-medium">Galeria de Fotos</span>
+            </a>
+            <a href="calendario.html" class="flex items-center gap-4 px-6 py-4 bg-amber-500/10 text-amber-500 rounded-xl transition-all">
+                <span class="material-symbols-outlined">calendar_month</span>
+                <span class="font-medium">Calendário de Sessões</span>
+            </a>
+        </div>
+
+        <div class="p-6 border-t border-white/5">
+            <div class="flex items-center gap-4 p-4 bg-white/5 rounded-2xl mb-4">
+                <div class="w-10 h-10 rounded-full bg-amber-500 flex items-center justify-center text-black font-bold" id="navInitial">M</div>
+                <div class="flex-1">
+                    <p class="text-sm font-bold text-slate-200" id="navName">Membro</p>
+                    <p class="text-[10px] text-slate-500 uppercase tracking-widest">Portal Ativo</p>
+                </div>
+            </div>
+            <button onclick="logout()" class="w-full flex items-center justify-center gap-2 py-3 text-slate-500 hover:text-red-400 transition-colors text-sm font-bold uppercase tracking-widest group">
+                <span class="material-symbols-outlined text-xl group-hover:rotate-12 transition-transform">logout</span>
+                Sair do Portal
+            </button>
+            
+            <!-- Institutional Affiliation (Desktop) -->
+            <div class="mt-6 pt-6 border-t border-white/5 flex flex-col items-center">
+                <div class="flex items-center gap-6 mb-3">
+                    <a href="https://gob-rj.org.br/home" target="_blank" rel="noopener noreferrer" class="transition-transform hover:scale-105">
+                        <img src="logo_gob_rj-2.png" alt="GOB-RJ" class="h-10 w-auto opacity-20 hover:opacity-100 grayscale hover:grayscale-0 transition-all duration-500">
+                    </a>
+                    <a href="https://www.gob.org.br/" target="_blank" rel="noopener noreferrer" class="transition-transform hover:scale-105">
+                        <img src="logo-gob-brasilia-df-selo.png" alt="GOB" class="h-10 w-auto opacity-20 hover:opacity-100 grayscale hover:grayscale-0 transition-all duration-500">
+                    </a>
+                </div>
+                <div class="space-y-0.5">
+                    <p class="font-newsreader text-[10px] text-slate-400">Grande Oriente do Brasil no Rio de Janeiro</p>
+                    <p class="text-[7px] text-amber-500/30 uppercase tracking-widest font-bold">Federado ao Grande Oriente do Brasil</p>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- MAIN CONTENT -->
+    <main class="lg:ml-72 p-6 md:p-12 pt-24 lg:pt-12">
+        <header class="mb-12 flex justify-between items-end">
+            <div>
+                <h2 id="welcomeText" class="font-h2 text-3xl text-on-background">Calendário da Loja</h2>
+                <div class="w-24 h-1 bg-amber-500 mt-4"></div>
+            </div>
+            <div class="text-right">
+                <p id="currentDate" class="text-amber-500 text-xs font-bold uppercase tracking-widest">Carregando data...</p>
+                <p class="text-slate-500 text-[10px] mt-1">Oriente do Rio de Janeiro</p>
+            </div>
+        </header>
+
+        <section class="space-y-8">
+            <div class="glass-card p-8 shadow-sm">
+                <div class="flex justify-between items-center mb-8 border-b border-white/5 pb-4">
+                    <div>
+                        <h2 class="text-2xl text-on-background uppercase tracking-wider">Calendário de Atividades</h2>
+                        <p class="text-sm text-on-tertiary-container mt-1">Sessões Ordinárias e Magnas - Or:. do Rio de Janeiro</p>
+                    </div>
+                    <button id="addEventBtn" class="hidden bg-amber-500 text-black px-4 py-2 text-xs font-bold uppercase tracking-widest hover:brightness-110 transition-all flex items-center gap-2">
+                        <span class="material-symbols-outlined text-sm">add</span> Novo Evento
+                    </button>
+                </div>
+                
+                <div id="calendar" class="w-full"></div>
+                
+                <div class="mt-8 grid grid-cols-1 md:grid-cols-2 gap-4 text-xs text-slate-400 border-t border-white/5 pt-6">
+                    <div class="flex items-center gap-2">
+                        <span class="w-3 h-3 rounded-full bg-amber-400"></span>
+                        <span><b>Café da Manhã:</b> 09h00</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <span class="w-3 h-3 rounded-full bg-amber-500"></span>
+                        <span><b>Início da Sessão:</b> 09h30</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Modal de Evento -->
+    <div id="eventModal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-[100] flex items-center justify-center p-4">
+        <div class="glass-card max-w-md w-full p-8 shadow-2xl relative z-[101]">
+            <h3 id="modalTitle" class="text-xl font-bold text-on-background mb-6">Novo Evento</h3>
+            <form id="eventForm" class="space-y-4">
+                <input type="hidden" id="eventId">
+                <div>
+                    <label class="block text-xs uppercase tracking-widest text-slate-400 mb-1">Data</label>
+                    <input type="date" id="event_date" required class="w-full bg-zinc-900 border border-zinc-800 text-white p-2 focus:border-amber-500 outline-none">
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs uppercase tracking-widest text-slate-400 mb-1">Hora</label>
+                        <input type="text" id="event_time" placeholder="09h30" class="w-full bg-zinc-900 border border-zinc-800 text-white p-2 focus:border-amber-500 outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-xs uppercase tracking-widest text-slate-400 mb-1">Grau</label>
+                        <input type="text" id="event_degree" placeholder="1" class="w-full bg-zinc-900 border border-zinc-800 text-white p-2 focus:border-amber-500 outline-none">
+                    </div>
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs uppercase tracking-widest text-slate-400 mb-1">Traje</label>
+                        <input type="text" id="attire" placeholder="Bal:." class="w-full bg-zinc-900 border border-zinc-800 text-white p-2 focus:border-amber-500 outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-xs uppercase tracking-widest text-slate-400 mb-1">Sessão</label>
+                        <input type="text" id="session_type" placeholder="Ord:." class="w-full bg-zinc-900 border border-zinc-800 text-white p-2 focus:border-amber-500 outline-none">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-xs uppercase tracking-widest text-slate-400 mb-1">Assunto / Descrição</label>
+                    <textarea id="description" required class="w-full bg-zinc-900 border border-zinc-800 text-white p-2 focus:border-amber-500 outline-none" rows="3"></textarea>
+                </div>
+                <div class="flex gap-4 pt-4">
+                    <button type="button" onclick="closeEventModal()" class="flex-1 px-4 py-3 border border-zinc-800 text-white text-xs uppercase tracking-widest hover:bg-white/5 transition-colors">Cancelar</button>
+                    <button type="submit" class="flex-1 bg-amber-500 text-black px-4 py-3 text-xs font-bold uppercase tracking-widest hover:brightness-110 transition-colors">Salvar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="/js/supabase-config.js"></script>
+    <script>
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobileMenu');
+            const isHidden = menu.classList.contains('hidden');
+            
+            if (isHidden) {
+                menu.classList.remove('hidden');
+                setTimeout(() => menu.classList.remove('translate-x-full'), 10);
+                document.body.style.overflow = 'hidden';
+            } else {
+                menu.classList.add('translate-x-full');
+                setTimeout(() => menu.classList.add('hidden'), 300);
+                document.body.style.overflow = 'auto';
+            }
+        }
+
+        let calendar;
+        let isAdmin = false;
+
+        async function checkSession() {
+            const { data: { session } } = await window.supabaseClient.auth.getSession();
+            if (!session) { window.location.href = 'login.html'; return; }
+
+            const navName = document.getElementById('navName');
+            const navInitial = document.getElementById('navInitial');
+            if (navName) {
+                const firstName = session.user.user_metadata?.full_name?.split(' ')[0] || "Irmão";
+                navName.textContent = "Ir. " + firstName;
+                if (navInitial) navInitial.textContent = firstName.charAt(0);
+            }
+
+            const { data: profile } = await window.supabaseClient.from('profiles').select('role, position').eq('id', session.user.id).single();
+            if (profile && (profile.role === 'admin' || profile.position === 'Secretário' || profile.position === 'Venerável Mestre')) {
+                isAdmin = true;
+                const adminLink = document.getElementById('adminMenuLink');
+                if (adminLink) adminLink.classList.remove('hidden');
+                const addBtn = document.getElementById('addEventBtn');
+                if (addBtn) addBtn.classList.remove('hidden');
+            }
+
+            // Set Current Date
+            const currentDateEl = document.getElementById('currentDate');
+            if (currentDateEl) {
+                const options = { day: '2-digit', month: 'long', year: 'numeric' };
+                currentDateEl.textContent = new Date().toLocaleDateString('pt-BR', options);
+            }
+
+            loadCalendarEvents();
+        }
+
+        async function loadCalendarEvents() {
+            const calendarEl = document.getElementById('calendar');
+            if (!calendarEl) return;
+
+            if (!calendar) {
+                calendar = new FullCalendar.Calendar(calendarEl, {
+                    initialView: 'dayGridMonth',
+                    locale: 'pt-br',
+                    height: 'auto',
+                    headerToolbar: { left: 'prev,next today', center: 'title', right: '' },
+                    buttonText: { today: 'Hoje' },
+                    dateClick: function(info) { if (isAdmin) openNewEventModal(info.dateStr); },
+                    eventClick: function(info) {
+                        if (isAdmin) editEvent(info.event.id);
+                        else showEventDetails(info.event);
+                    }
+                });
+                calendar.render();
+            }
+
+            const { data: events, error } = await window.supabaseClient.from('calendar_events').select('*');
+            if (error) { console.error('Erro:', error); return; }
+
+            const fcEvents = events.map(event => ({
+                id: event.id,
+                title: event.description,
+                start: event.event_date,
+                extendedProps: { time: event.event_time, degree: event.degree, attire: event.attire, session: event.session_type }
+            }));
+
+            calendar.removeAllEvents();
+            calendar.addEventSource(fcEvents);
+        }
+
+        function openNewEventModal(date) {
+            document.getElementById('eventForm').reset();
+            document.getElementById('eventId').value = '';
+            document.getElementById('event_date').value = date;
+            document.getElementById('modalTitle').textContent = 'Novo Evento';
+            document.getElementById('eventModal').classList.remove('hidden');
+        }
+
+        window.closeEventModal = function() { document.getElementById('eventModal').classList.add('hidden'); }
+
+        document.getElementById('eventForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const id = document.getElementById('eventId').value;
+            const eventData = {
+                event_date: document.getElementById('event_date').value,
+                event_time: document.getElementById('event_time').value,
+                degree: document.getElementById('event_degree').value,
+                attire: document.getElementById('attire').value,
+                session_type: document.getElementById('session_type').value,
+                description: document.getElementById('description').value
+            };
+
+            let result;
+            if (id) result = await window.supabaseClient.from('calendar_events').update(eventData).eq('id', id);
+            else result = await window.supabaseClient.from('calendar_events').insert([eventData]);
+
+            if (result.error) alert("Erro: " + result.error.message);
+            else { closeEventModal(); loadCalendarEvents(); }
+        });
+
+        window.editEvent = async function(id) {
+            const { data: event } = await window.supabaseClient.from('calendar_events').select('*').eq('id', id).single();
+            if (event) {
+                document.getElementById('eventId').value = event.id;
+                document.getElementById('event_date').value = event.event_date;
+                document.getElementById('event_time').value = event.event_time;
+                document.getElementById('event_degree').value = event.degree;
+                document.getElementById('attire').value = event.attire;
+                document.getElementById('session_type').value = event.session_type;
+                document.getElementById('description').value = event.description;
+                document.getElementById('modalTitle').textContent = 'Editar Evento';
+                document.getElementById('eventModal').classList.remove('hidden');
+            }
+        }
+
+        function showEventDetails(event) {
+            const props = event.extendedProps;
+            alert(`Sessão: ${props.session || '-'}\nAssunto: ${event.title}\nHorário: ${props.time || '-'}\nGrau: ${props.degree || '-'}\nTraje: ${props.attire || '-'}`);
+        }
+
+        document.addEventListener('DOMContentLoaded', checkSession);
+    </script>
+</body>
+</html>

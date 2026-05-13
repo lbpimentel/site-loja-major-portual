@@ -1,0 +1,45 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&family=Roboto+Mono:wght@400;500&family=Inter:wght@400;500;600&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Montserrat", sans-serif;
+  --font-mono: "Roboto Mono", monospace;
+
+  --color-matte-black: #1A1A1A;
+  --color-aged-gold: #C5A059;
+  --color-gunmetal: #4A4A4A;
+  --color-gold-hover: #D6B67D;
+}
+
+@layer base {
+  body {
+    @apply bg-matte-black text-gray-200 font-sans selection:bg-aged-gold/30 selection:text-white;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-display font-bold uppercase tracking-tighter;
+  }
+}
+
+.textured-bg {
+  background-image: 
+    linear-gradient(rgba(26, 26, 26, 0.92), rgba(26, 26, 26, 0.92)),
+    url('https://www.transparenttextures.com/patterns/carbon-fibre.png');
+}
+
+.steel-bg {
+  background-image: 
+    linear-gradient(rgba(26, 26, 26, 0.85), rgba(26, 26, 26, 0.85)),
+    url('https://www.transparenttextures.com/patterns/brushed-alum.png');
+}
+
+.gold-gradient {
+  background: linear-gradient(135deg, #C5A059 0%, #E2C48E 50%, #C5A059 100%);
+}
+
+.gold-text-gradient {
+  background: linear-gradient(135deg, #C5A059 0%, #F4E4C1 50%, #C5A059 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}

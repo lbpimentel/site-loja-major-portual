@@ -688,22 +688,30 @@
 
         try {
             // 1. Enviar E-mail via EmailJS (Premium/Branded)
+            // IMPORTANTE: Troque '__ejs-test-mail-service__' pelo seu Template ID real (ex: 'template_abc123')
             const response = await emailjs.send(
                 'service_ael7cfa', 
-                '__ejs-test-mail-service__', 
+                'template_g2lhxaq', 
                 templateParams
             );
 
-            // 2. Salvar no Supabase (Em segundo plano)
+            // 2. Salvar no Supabase (Aguardando resposta para evitar falsos positivos)
             if (window.supabaseClient) {
-                window.supabaseClient.from('candidatos_interesse').insert([{
+                const { error: dbError } = await window.supabaseClient.from('candidatos_interesse').insert([{
                     nome: templateParams.nome,
                     telefone: templateParams.telefone,
                     email: templateParams.email,
                     idade: parseInt(templateParams.idade),
                     bairro: templateParams.bairro,
                     indicado_por: templateParams.indicado_por
-                }]).then(() => console.log("Dados salvos no Supabase"));
+                }]);
+                
+                if (dbError) {
+                    console.error("Erro no Supabase:", dbError);
+                    throw new Error("Erro ao salvar no banco de dados. Verifique as Políticas (RLS) do Supabase.");
+                } else {
+                    console.log("Dados salvos no Supabase com sucesso!");
+                }
             }
 
             if (response.status === 200) {

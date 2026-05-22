@@ -669,70 +669,73 @@
         document.body.style.overflow = 'auto';
     }
 
-    document.getElementById('interestForm').addEventListener('submit', async function(e) {
-        e.preventDefault();
-        const btn = this.querySelector('button[type="submit"]');
-        const originalText = btn.innerHTML;
-        
-        btn.disabled = true;
-        btn.innerHTML = '<span class="animate-spin material-symbols-outlined text-sm">progress_activity</span> Enviando...';
-
-        const templateParams = {
-            nome: document.getElementById('cand_nome').value,
-            telefone: document.getElementById('cand_tel').value,
-            email: document.getElementById('cand_email').value,
-            idade: document.getElementById('cand_idade').value,
-            bairro: document.getElementById('cand_bairro').value,
-            indicado_por: document.getElementById('cand_indicado').value || 'Não indicado'
-        };
-
-        try {
-            // 1. Enviar E-mail via EmailJS (Premium/Branded)
-            // IMPORTANTE: Troque '__ejs-test-mail-service__' pelo seu Template ID real (ex: 'template_abc123')
-            const response = await emailjs.send(
-                'service_ael7cfa', 
-                'template_g2lhxaq', 
-                templateParams
-            );
-
-            // 2. Salvar no Supabase (Aguardando resposta para evitar falsos positivos)
-            if (window.supabaseClient) {
-                const { error: dbError } = await window.supabaseClient.from('candidatos_interesse').insert([{
-                    nome: templateParams.nome,
-                    telefone: templateParams.telefone,
-                    email: templateParams.email,
-                    idade: parseInt(templateParams.idade),
-                    bairro: templateParams.bairro,
-                    indicado_por: templateParams.indicado_por
-                }]);
-                
-                if (dbError) {
-                    console.error("Erro no Supabase:", dbError);
-                    throw new Error("Erro ao salvar no banco de dados. Verifique as Políticas (RLS) do Supabase.");
-                } else {
-                    console.log("Dados salvos no Supabase com sucesso!");
-                }
-            }
-
-            if (response.status === 200) {
-                alert('Seu registro de interesse foi enviado com sucesso! Em breve entraremos em contato.');
-                closeInterestModal();
-                this.reset();
-            } else {
-                throw new Error("Erro no serviço de e-mail");
-            }
-
-        } catch (err) {
-            console.error("Erro no envio:", err);
-            alert('Houve um problema ao enviar. Por favor, tente novamente ou entre em contato direto por e-mail.');
-        } finally {
-            btn.disabled = false;
-            btn.innerHTML = originalText;
-        }
-    });
-
     document.addEventListener('DOMContentLoaded', () => {
         initGallery();
+
+        const form = document.getElementById('interestForm');
+        if (form) {
+            form.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                const btn = this.querySelector('button[type="submit"]');
+                const originalText = btn.innerHTML;
+                
+                btn.disabled = true;
+                btn.innerHTML = '<span class="animate-spin material-symbols-outlined text-sm">progress_activity</span> Enviando...';
+
+                const templateParams = {
+                    nome: document.getElementById('cand_nome').value,
+                    telefone: document.getElementById('cand_tel').value,
+                    email: document.getElementById('cand_email').value,
+                    idade: document.getElementById('cand_idade').value,
+                    bairro: document.getElementById('cand_bairro').value,
+                    indicado_por: document.getElementById('cand_indicado').value || 'Não indicado'
+                };
+
+                try {
+                    // 1. Enviar E-mail via EmailJS (Premium/Branded)
+                    // IMPORTANTE: Troque '__ejs-test-mail-service__' pelo seu Template ID real (ex: 'template_abc123')
+                    const response = await emailjs.send(
+                        'service_ael7cfa', 
+                        'template_g2lhxaq', 
+                        templateParams
+                    );
+
+                    // 2. Salvar no Supabase (Aguardando resposta para evitar falsos positivos)
+                    if (window.supabaseClient) {
+                        const { error: dbError } = await window.supabaseClient.from('candidatos_interesse').insert([{
+                            nome: templateParams.nome,
+                            telefone: templateParams.telefone,
+                            email: templateParams.email,
+                            idade: parseInt(templateParams.idade),
+                            bairro: templateParams.bairro,
+                            indicado_por: templateParams.indicado_por
+                        }]);
+                        
+                        if (dbError) {
+                            console.error("Erro no Supabase:", dbError);
+                            throw new Error("Erro ao salvar no banco de dados. Verifique as Políticas (RLS) do Supabase.");
+                        } else {
+                            console.log("Dados salvos no Supabase com sucesso!");
+                        }
+                    }
+
+                    if (response.status === 200) {
+                        alert('Seu registro de interesse foi enviado com sucesso! Em breve entraremos em contato.');
+                        closeInterestModal();
+                        this.reset();
+                    } else {
+                        throw new Error("Erro no serviço de e-mail");
+                    }
+
+                } catch (err) {
+                    console.error("Erro no envio:", err);
+                    alert('Houve um problema ao enviar. Por favor, tente novamente ou entre em contato direto por e-mail.');
+                } finally {
+                    btn.disabled = false;
+                    btn.innerHTML = originalText;
+                }
+            });
+        }
 
         // Phone Masking Logic
         const telInput = document.getElementById('cand_tel');

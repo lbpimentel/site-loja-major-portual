@@ -588,9 +588,10 @@
 
 <div id="adminSection" class="hidden space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
     <!-- Admin Tabs -->
-    <div class="flex gap-12 border-b border-white/5 mb-8">
-        <button onclick="showAdminTab('pending')" id="tabPending" class="pb-4 text-secondary border-b-2 border-secondary font-label-caps text-xs uppercase tracking-widest transition-all">Aprovações</button>
-        <button onclick="showAdminTab('roster')" id="tabRoster" class="pb-4 text-on-tertiary-container hover:text-on-background font-label-caps text-xs uppercase tracking-widest transition-all">Quadro de Membros</button>
+    <div class="flex gap-12 border-b border-white/5 mb-8 overflow-x-auto">
+        <button onclick="showAdminTab('pending')" id="tabPending" class="pb-4 whitespace-nowrap text-secondary border-b-2 border-secondary font-label-caps text-xs uppercase tracking-widest transition-all">Aprovações</button>
+        <button onclick="showAdminTab('roster')" id="tabRoster" class="pb-4 whitespace-nowrap text-on-tertiary-container hover:text-on-background font-label-caps text-xs uppercase tracking-widest transition-all">Quadro de Membros</button>
+        <button onclick="showAdminTab('interests')" id="tabInterests" class="pb-4 whitespace-nowrap text-on-tertiary-container hover:text-on-background font-label-caps text-xs uppercase tracking-widest transition-all flex items-center gap-2">Registros de Interesse <span id="interestBadge" class="hidden bg-secondary text-black text-[9px] font-bold px-1.5 py-0.5 rounded-full">0</span></button>
     </div>
 
     <!-- PENDING APPROVALS TAB -->
@@ -649,6 +650,124 @@
                     <!-- Dinâmico -->
                 </tbody>
             </table>
+        </div>
+    </div>
+
+    <!-- REGISTROS DE INTERESSE TAB -->
+    <div id="interestsTabContent" class="hidden glass-card p-8 shadow-sm">
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8 border-b border-white/5 pb-6">
+            <div>
+                <h2 class="font-h2 text-2xl text-on-background">Registros de Interesse</h2>
+                <p class="text-xs text-on-tertiary-container mt-1">Candidatos que preencheram o formulário "Quero ser Maçom"</p>
+            </div>
+            <div class="flex items-center gap-3 w-full md:w-auto">
+                <div class="relative flex-1 md:w-72">
+                    <span class="material-symbols-outlined absolute left-3 top-2.5 text-on-tertiary-container text-xl">search</span>
+                    <input type="text" id="interestSearch" onkeyup="filterInterests()" placeholder="Buscar candidato..." class="w-full bg-surface border border-outline-variant text-on-background pl-10 pr-4 py-2 text-sm focus:border-secondary outline-none rounded-sm transition-all">
+                </div>
+                <button onclick="loadInterests()" class="text-xs font-label-caps uppercase tracking-widest text-secondary hover:underline flex items-center gap-1 whitespace-nowrap">
+                    <span class="material-symbols-outlined text-sm">refresh</span> Atualizar
+                </button>
+            </div>
+        </div>
+
+        <!-- Resumo em cards -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8" id="interestStats">
+            <div class="bg-surface-container border border-white/5 rounded-lg p-4 text-center">
+                <p class="text-2xl font-bold text-secondary" id="statTotal">—</p>
+                <p class="text-xs text-on-tertiary-container uppercase tracking-widest mt-1">Total</p>
+            </div>
+            <div class="bg-surface-container border border-white/5 rounded-lg p-4 text-center">
+                <p class="text-2xl font-bold text-amber-400" id="statNew">—</p>
+                <p class="text-xs text-on-tertiary-container uppercase tracking-widest mt-1">Novos (7 dias)</p>
+            </div>
+            <div class="bg-surface-container border border-white/5 rounded-lg p-4 text-center">
+                <p class="text-2xl font-bold text-green-400" id="statContacted">—</p>
+                <p class="text-xs text-on-tertiary-container uppercase tracking-widest mt-1">Contatados</p>
+            </div>
+            <div class="bg-surface-container border border-white/5 rounded-lg p-4 text-center">
+                <p class="text-2xl font-bold text-slate-400" id="statPending">—</p>
+                <p class="text-xs text-on-tertiary-container uppercase tracking-widest mt-1">Aguardando</p>
+            </div>
+        </div>
+
+        <div class="overflow-x-auto">
+            <table class="w-full text-left text-on-background">
+                <thead>
+                    <tr class="text-xs font-label-caps uppercase text-on-tertiary-container tracking-widest border-b border-white/5">
+                        <th class="py-4 pr-4">Nome</th>
+                        <th class="py-4 pr-4">Telefone</th>
+                        <th class="py-4 pr-4">Bairro</th>
+                        <th class="py-4 pr-4">Idade</th>
+                        <th class="py-4 pr-4">Indicado por</th>
+                        <th class="py-4 pr-4">Status</th>
+                        <th class="py-4 text-right">Ação</th>
+                    </tr>
+                </thead>
+                <tbody id="interestsTableBody" class="divide-y divide-white/5 text-sm">
+                    <!-- Dinâmico -->
+                </tbody>
+            </table>
+            <div id="emptyInterestState" class="py-16 text-center text-on-tertiary-container hidden">
+                <span class="material-symbols-outlined text-5xl mb-3 block opacity-40">person_search</span>
+                <p class="text-sm">Nenhum registro de interesse encontrado.</p>
+            </div>
+            <div id="loadingInterestState" class="py-16 text-center text-on-tertiary-container">
+                <span class="material-symbols-outlined text-5xl mb-3 block animate-spin opacity-40">progress_activity</span>
+                <p class="text-sm">Carregando registros...</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de Detalhes do Candidato -->
+<div id="interestDetailModal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-[150] flex items-center justify-center p-4">
+    <div class="glass-card max-w-lg w-full p-8 shadow-2xl border border-white/10 relative">
+        <button onclick="closeInterestModal()" class="absolute top-4 right-4 text-on-tertiary-container hover:text-secondary transition-colors">
+            <span class="material-symbols-outlined">close</span>
+        </button>
+        <div class="flex items-center gap-4 mb-6">
+            <div class="w-14 h-14 rounded-full bg-secondary/20 border border-secondary/30 flex items-center justify-center">
+                <span id="interestDetailInitial" class="text-secondary font-bold text-xl">L</span>
+            </div>
+            <div>
+                <h3 id="interestDetailName" class="text-xl font-bold text-on-background">Nome do Candidato</h3>
+                <p id="interestDetailEmail" class="text-xs text-secondary">email@email.com</p>
+            </div>
+        </div>
+        <div class="grid grid-cols-2 gap-4 mb-6">
+            <div class="bg-surface-container rounded-lg p-4">
+                <p class="text-xs text-on-tertiary-container uppercase tracking-widest mb-1">Telefone</p>
+                <p id="interestDetailPhone" class="text-on-background font-medium">—</p>
+            </div>
+            <div class="bg-surface-container rounded-lg p-4">
+                <p class="text-xs text-on-tertiary-container uppercase tracking-widest mb-1">Idade</p>
+                <p id="interestDetailAge" class="text-on-background font-medium">—</p>
+            </div>
+            <div class="bg-surface-container rounded-lg p-4">
+                <p class="text-xs text-on-tertiary-container uppercase tracking-widest mb-1">Bairro</p>
+                <p id="interestDetailNeighborhood" class="text-on-background font-medium">—</p>
+            </div>
+            <div class="bg-surface-container rounded-lg p-4">
+                <p class="text-xs text-on-tertiary-container uppercase tracking-widest mb-1">Indicado por</p>
+                <p id="interestDetailReferral" class="text-on-background font-medium">—</p>
+            </div>
+        </div>
+        <div class="mb-6">
+            <p class="text-xs text-on-tertiary-container uppercase tracking-widest mb-2">Status do Contato</p>
+            <div class="flex gap-3">
+                <button onclick="setInterestStatus('pending')" id="statusBtnPending" class="flex-1 py-2 text-xs font-bold uppercase tracking-widest border border-white/10 rounded-lg hover:border-secondary/40 transition-all">Aguardando</button>
+                <button onclick="setInterestStatus('contacted')" id="statusBtnContacted" class="flex-1 py-2 text-xs font-bold uppercase tracking-widest border border-white/10 rounded-lg hover:border-green-500/40 transition-all">Contatado</button>
+                <button onclick="setInterestStatus('rejected')" id="statusBtnRejected" class="flex-1 py-2 text-xs font-bold uppercase tracking-widest border border-white/10 rounded-lg hover:border-red-500/40 transition-all">Descartado</button>
+            </div>
+        </div>
+        <div class="flex gap-3">
+            <a id="interestDetailWhatsapp" href="#" target="_blank" class="flex-1 flex items-center justify-center gap-2 bg-green-600 hover:bg-green-500 text-white py-3 text-xs font-bold uppercase tracking-widest rounded-lg transition-all">
+                <span class="material-symbols-outlined text-sm">chat</span> WhatsApp
+            </a>
+            <a id="interestDetailEmailLink" href="#" class="flex-1 flex items-center justify-center gap-2 bg-secondary hover:brightness-110 text-black py-3 text-xs font-bold uppercase tracking-widest rounded-lg transition-all">
+                <span class="material-symbols-outlined text-sm">mail</span> E-mail
+            </a>
         </div>
     </div>
 </div>
@@ -1270,23 +1389,189 @@
     window.showAdminTab = function(tab) {
         const pendingTab = document.getElementById('pendingTabContent');
         const rosterTab = document.getElementById('rosterTabContent');
+        const interestsTab = document.getElementById('interestsTabContent');
         const tabPendingBtn = document.getElementById('tabPending');
         const tabRosterBtn = document.getElementById('tabRoster');
+        const tabInterestsBtn = document.getElementById('tabInterests');
+        const activeClass = ['text-secondary', 'border-b-2', 'border-secondary'];
+        const inactiveClass = ['text-on-tertiary-container'];
+
+        [pendingTab, rosterTab, interestsTab].forEach(el => el && el.classList.add('hidden'));
+        [tabPendingBtn, tabRosterBtn, tabInterestsBtn].forEach(btn => {
+            if (btn) { btn.classList.remove(...activeClass); btn.classList.add(...inactiveClass); }
+        });
 
         if (tab === 'pending') {
             pendingTab.classList.remove('hidden');
-            rosterTab.classList.add('hidden');
-            tabPendingBtn.classList.add('text-secondary', 'border-b-2', 'border-secondary');
-            tabPendingBtn.classList.remove('text-on-tertiary-container');
-            tabRosterBtn.classList.remove('text-secondary', 'border-b-2', 'border-secondary');
-            tabRosterBtn.classList.add('text-on-tertiary-container');
-        } else {
-            pendingTab.classList.add('hidden');
+            tabPendingBtn.classList.add(...activeClass); tabPendingBtn.classList.remove(...inactiveClass);
+        } else if (tab === 'roster') {
             rosterTab.classList.remove('hidden');
-            tabRosterBtn.classList.add('text-secondary', 'border-b-2', 'border-secondary');
-            tabRosterBtn.classList.remove('text-on-tertiary-container');
-            tabPendingBtn.classList.remove('text-secondary', 'border-b-2', 'border-secondary');
-            tabPendingBtn.classList.add('text-on-tertiary-container');
+            tabRosterBtn.classList.add(...activeClass); tabRosterBtn.classList.remove(...inactiveClass);
+            loadAllMembers();
+        } else if (tab === 'interests') {
+            interestsTab.classList.remove('hidden');
+            tabInterestsBtn.classList.add(...activeClass); tabInterestsBtn.classList.remove(...inactiveClass);
+            loadInterests();
+        }
+    };
+
+    // ==============================
+    // REGISTROS DE INTERESSE
+    // ==============================
+    let allInterests = [];
+    let currentInterestId = null;
+
+    window.loadInterests = async function() {
+        const tbody = document.getElementById('interestsTableBody');
+        const emptyState = document.getElementById('emptyInterestState');
+        const loadingState = document.getElementById('loadingInterestState');
+        if (!tbody) return;
+
+        loadingState.classList.remove('hidden');
+        emptyState.classList.add('hidden');
+        tbody.innerHTML = '';
+
+        const { data, error } = await window.supabaseClient
+            .from('candidatos_interesse')
+            .select('*')
+            .order('id', { ascending: false });
+
+        loadingState.classList.add('hidden');
+
+        if (error || !data) {
+            console.error('Erro ao carregar registros:', error);
+            emptyState.classList.remove('hidden');
+            return;
+        }
+
+        allInterests = data;
+        renderInterests(data);
+
+        // Stats
+        const now = new Date();
+        const sevenDaysAgo = new Date(now - 7 * 24 * 60 * 60 * 1000);
+        const novos = data.filter(d => d.created_at && new Date(d.created_at) >= sevenDaysAgo).length;
+        const contatados = data.filter(d => d.status === 'contacted').length;
+        const aguardando = data.filter(d => !d.status || d.status === 'pending').length;
+
+        document.getElementById('statTotal').textContent = data.length;
+        document.getElementById('statNew').textContent = novos;
+        document.getElementById('statContacted').textContent = contatados;
+        document.getElementById('statPending').textContent = aguardando;
+
+        // Badge na aba
+        if (aguardando > 0) {
+            const badge = document.getElementById('interestBadge');
+            badge.textContent = aguardando;
+            badge.classList.remove('hidden');
+        }
+    };
+
+    function renderInterests(data) {
+        const tbody = document.getElementById('interestsTableBody');
+        const emptyState = document.getElementById('emptyInterestState');
+
+        if (!data || data.length === 0) {
+            tbody.innerHTML = '';
+            emptyState.classList.remove('hidden');
+            return;
+        }
+        emptyState.classList.add('hidden');
+
+        const statusMap = {
+            'pending': '<span class="px-2 py-1 rounded-full text-[10px] font-bold uppercase bg-amber-500/10 text-amber-400">Aguardando</span>',
+            'contacted': '<span class="px-2 py-1 rounded-full text-[10px] font-bold uppercase bg-green-500/10 text-green-400">Contatado</span>',
+            'rejected': '<span class="px-2 py-1 rounded-full text-[10px] font-bold uppercase bg-red-500/10 text-red-400">Descartado</span>',
+        };
+
+        tbody.innerHTML = data.map(c => `
+            <tr class="border-b border-white/5 hover:bg-white/5 transition-colors cursor-pointer" onclick="openInterestDetail(${c.id})">
+                <td class="py-4 pr-4">
+                    <div class="flex items-center gap-3">
+                        <div class="w-8 h-8 rounded-full bg-secondary/10 flex items-center justify-center text-secondary font-bold text-xs flex-shrink-0">${(c.nome || '?').charAt(0).toUpperCase()}</div>
+                        <div>
+                            <p class="font-medium text-on-background">${c.nome || '—'}</p>
+                            <p class="text-xs text-on-tertiary-container">${c.email || '—'}</p>
+                        </div>
+                    </div>
+                </td>
+                <td class="py-4 pr-4 text-on-tertiary-container">${c.telefone || '—'}</td>
+                <td class="py-4 pr-4 text-on-tertiary-container">${c.bairro || '—'}</td>
+                <td class="py-4 pr-4 text-on-tertiary-container">${c.idade || '—'}</td>
+                <td class="py-4 pr-4 text-on-tertiary-container">${c.indicado_por || '—'}</td>
+                <td class="py-4 pr-4">${statusMap[c.status || 'pending'] || statusMap['pending']}</td>
+                <td class="py-4 text-right">
+                    <button class="text-xs font-label-caps text-secondary hover:underline uppercase tracking-widest" onclick="event.stopPropagation(); openInterestDetail(${c.id})">Detalhes</button>
+                </td>
+            </tr>
+        `).join('');
+    }
+
+    window.filterInterests = function() {
+        const query = document.getElementById('interestSearch').value.toLowerCase();
+        const filtered = allInterests.filter(c =>
+            (c.nome || '').toLowerCase().includes(query) ||
+            (c.email || '').toLowerCase().includes(query) ||
+            (c.bairro || '').toLowerCase().includes(query) ||
+            (c.telefone || '').toLowerCase().includes(query)
+        );
+        renderInterests(filtered);
+    };
+
+    window.openInterestDetail = function(id) {
+        const c = allInterests.find(x => x.id === id);
+        if (!c) return;
+        currentInterestId = id;
+
+        document.getElementById('interestDetailInitial').textContent = (c.nome || '?').charAt(0).toUpperCase();
+        document.getElementById('interestDetailName').textContent = c.nome || '—';
+        document.getElementById('interestDetailEmail').textContent = c.email || '—';
+        document.getElementById('interestDetailPhone').textContent = c.telefone || '—';
+        document.getElementById('interestDetailAge').textContent = c.idade ? c.idade + ' anos' : '—';
+        document.getElementById('interestDetailNeighborhood').textContent = c.bairro || '—';
+        document.getElementById('interestDetailReferral').textContent = c.indicado_por || '—';
+
+        // WhatsApp link
+        const phone = (c.telefone || '').replace(/\D/g, '');
+        document.getElementById('interestDetailWhatsapp').href = phone ? `https://wa.me/55${phone}` : '#';
+        document.getElementById('interestDetailEmailLink').href = c.email ? `mailto:${c.email}` : '#';
+
+        // Status buttons
+        const status = c.status || 'pending';
+        ['pending', 'contacted', 'rejected'].forEach(s => {
+            const btn = document.getElementById(`statusBtn${s.charAt(0).toUpperCase() + s.slice(1)}`);
+            btn.classList.remove('bg-secondary/20', 'text-secondary', 'bg-green-500/20', 'text-green-400', 'bg-red-500/20', 'text-red-400', 'border-secondary/50', 'border-green-500/50', 'border-red-500/50');
+        });
+        const activeColors = { pending: ['bg-amber-500/20', 'text-amber-400', 'border-amber-500/50'], contacted: ['bg-green-500/20', 'text-green-400', 'border-green-500/50'], rejected: ['bg-red-500/20', 'text-red-400', 'border-red-500/50'] };
+        const activeBtn = document.getElementById(`statusBtn${status.charAt(0).toUpperCase() + status.slice(1)}`);
+        if (activeBtn) activeBtn.classList.add(...activeColors[status]);
+
+        document.getElementById('interestDetailModal').classList.remove('hidden');
+    };
+
+    window.closeInterestModal = function() {
+        document.getElementById('interestDetailModal').classList.add('hidden');
+        currentInterestId = null;
+    };
+
+    window.setInterestStatus = async function(status) {
+        if (!currentInterestId) return;
+        const { error } = await window.supabaseClient
+            .from('candidatos_interesse')
+            .update({ status })
+            .eq('id', currentInterestId);
+        if (!error) {
+            const idx = allInterests.findIndex(x => x.id === currentInterestId);
+            if (idx !== -1) allInterests[idx].status = status;
+            closeInterestModal();
+            renderInterests(allInterests);
+            // Atualiza stats
+            const contatados = allInterests.filter(d => d.status === 'contacted').length;
+            const aguardando = allInterests.filter(d => !d.status || d.status === 'pending').length;
+            document.getElementById('statContacted').textContent = contatados;
+            document.getElementById('statPending').textContent = aguardando;
+        } else {
+            alert('Erro ao atualizar status. Verifique as permissões do Supabase.');
         }
     };
 

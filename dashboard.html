@@ -895,11 +895,10 @@
     });
 
 
-    // Link Admin (Configurações na nova nav será usado para Admin)
-    const adminMenuLink = document.querySelector('a:has(span[data-icon="settings_honorary"])');
+    // Link Admin
+    const adminMenuLink = document.getElementById('adminMenuLink');
     if (adminMenuLink) {
-        // Inicialmente oculto, revelado apenas para admins
-        adminMenuLink.style.display = 'none';
+        adminMenuLink.classList.add('hidden');
         adminMenuLink.addEventListener('click', (e) => {
             e.preventDefault();
             showSection('adminSection');
@@ -1127,7 +1126,10 @@
             const btnNewAnnouncement = document.getElementById('btnNewAnnouncement');
             if(btnNewAnnouncement) btnNewAnnouncement.classList.remove('hidden');
             
-            if(adminMenuLink) adminMenuLink.style.display = 'flex';
+            if(adminMenuLink) {
+                adminMenuLink.classList.remove('hidden');
+                adminMenuLink.classList.add('flex');
+            }
             const addEventBtn = document.getElementById('addEventBtn');
             if(addEventBtn) addEventBtn.classList.remove('hidden');
             document.querySelectorAll('.admin-col').forEach(el => el.classList.remove('hidden'));

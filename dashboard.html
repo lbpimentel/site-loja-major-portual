@@ -1634,14 +1634,22 @@
     };
 
     window.openEditMemberModal = async (id) => {
-        const { data: m } = await window.supabaseClient.from('profiles').select('*').eq('id', id).single();
-        if (m) {
-            document.getElementById('editMemberId').value = m.id;
-            document.getElementById('editMemberName').value = m.full_name;
-            document.getElementById('editMemberCim').value = m.cim || '';
-            document.getElementById('editMemberPosition').value = m.position || 'Mestre';
-            document.getElementById('editMemberRole').value = m.role || 'user';
-            document.getElementById('editMemberModal').classList.remove('hidden');
+        try {
+            const { data: m, error } = await window.supabaseClient.from('profiles').select('*').eq('id', id).single();
+            if (error) {
+                alert("Erro ao buscar dados do membro: " + error.message);
+                return;
+            }
+            if (m) {
+                document.getElementById('editMemberId').value = m.id;
+                document.getElementById('editMemberName').value = m.full_name;
+                document.getElementById('editMemberCim').value = m.cim || '';
+                document.getElementById('editMemberPosition').value = m.position || 'Mestre';
+                document.getElementById('editMemberRole').value = m.role || 'user';
+                document.getElementById('editMemberModal').classList.remove('hidden');
+            }
+        } catch (err) {
+            alert("Erro inesperado: " + err.message);
         }
     };
 

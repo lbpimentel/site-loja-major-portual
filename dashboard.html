@@ -1487,7 +1487,7 @@
         };
 
         tbody.innerHTML = data.map(c => `
-            <tr class="border-b border-white/5 hover:bg-white/5 transition-colors cursor-pointer" onclick="openInterestDetail(${c.id})">
+            <tr class="border-b border-white/5 hover:bg-white/5 transition-colors cursor-pointer" onclick="openInterestDetail('${c.id}')">
                 <td class="py-4 pr-4">
                     <div class="flex items-center gap-3">
                         <div class="w-8 h-8 rounded-full bg-secondary/10 flex items-center justify-center text-secondary font-bold text-xs flex-shrink-0">${(c.nome || '?').charAt(0).toUpperCase()}</div>
@@ -1503,7 +1503,7 @@
                 <td class="py-4 pr-4 text-on-tertiary-container">${c.indicado_por || '—'}</td>
                 <td class="py-4 pr-4">${statusMap[c.status || 'pending'] || statusMap['pending']}</td>
                 <td class="py-4 text-right">
-                    <button class="text-xs font-label-caps text-secondary hover:underline uppercase tracking-widest" onclick="event.stopPropagation(); openInterestDetail(${c.id})">Detalhes</button>
+                    <button class="text-xs font-label-caps text-secondary hover:underline uppercase tracking-widest" onclick="event.stopPropagation(); openInterestDetail('${c.id}')">Detalhes</button>
                 </td>
             </tr>
         `).join('');

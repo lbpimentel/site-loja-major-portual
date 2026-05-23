@@ -182,33 +182,38 @@
                 <span class="material-symbols-outlined text-4xl">close</span>
             </button>
         </div>
-        <div class="flex flex-col gap-4">
-            <a class="flex items-center gap-6 p-5 bg-white/5 rounded-2xl text-slate-200 border border-white/5 active:scale-95 transition-all" href="dashboard.html">
+                <div class="flex flex-col gap-4">
+            <a class="flex items-center gap-6 p-5 bg-white/5 text-slate-200 border-white/5 rounded-2xl active:scale-95 transition-all border" href="dashboard.html">
                 <span class="material-symbols-outlined text-amber-500">dashboard</span>
                 <span class="text-lg font-medium tracking-wide">Painel Principal</span>
             </a>
-            <a class="flex items-center gap-6 p-5 bg-white/5 rounded-2xl text-amber-500 border border-amber-500/10 active:scale-95 transition-all" href="biblioteca.html">
+            <a class="flex items-center gap-6 p-5 bg-amber-500/10 text-amber-500 border-amber-500/10 rounded-2xl active:scale-95 transition-all border" href="biblioteca.html">
                 <span class="material-symbols-outlined text-amber-500">auto_stories</span>
                 <span class="text-lg font-medium tracking-wide">Biblioteca Digital</span>
             </a>
-            <a class="flex items-center gap-6 p-5 bg-white/5 rounded-2xl text-slate-200 border border-white/5 active:scale-95 transition-all" href="fraternidade.html">
-                <span class="material-symbols-outlined text-amber-500">groups</span>
+            <a class="flex items-center gap-6 p-5 bg-white/5 text-slate-200 border-white/5 rounded-2xl active:scale-95 transition-all border" href="fraternidade.html">
+                <span class="material-symbols-outlined text-amber-500">local_library</span>
                 <span class="text-lg font-medium tracking-wide">Galeria de Fotos</span>
             </a>
-            <a class="flex items-center gap-6 p-5 bg-white/5 rounded-2xl text-slate-200 border border-white/5 active:scale-95 transition-all" href="calendario.html">
+            <a class="flex items-center gap-6 p-5 bg-white/5 text-slate-200 border-white/5 rounded-2xl active:scale-95 transition-all border" href="calendario.html">
                 <span class="material-symbols-outlined text-amber-500">calendar_month</span>
-                <span class="text-lg font-medium tracking-wide">Calendário</span>
+                <span class="text-lg font-medium tracking-wide">Calendário de Sessões</span>
             </a>
-            <a class="flex items-center gap-6 p-5 bg-white/5 rounded-2xl text-slate-200 border border-white/5 active:scale-95 transition-all" href="tesouraria.html">
+            <a class="flex items-center gap-6 p-5 bg-white/5 text-slate-200 border-white/5 rounded-2xl active:scale-95 transition-all border" href="tesouraria.html">
                 <span class="material-symbols-outlined text-amber-500">account_balance_wallet</span>
                 <span class="text-lg font-medium tracking-wide">Tesouraria</span>
+            </a>
+            <!-- Admin Link Mobile -->
+            <a id="adminMenuLinkMobile" href="#" class="hidden items-center gap-6 p-5 bg-white/5 rounded-2xl text-slate-200 border border-white/5 active:scale-95 transition-all">
+                <span class="material-symbols-outlined text-amber-500">admin_panel_settings</span>
+                <span class="text-lg font-medium tracking-wide">Administração</span>
             </a>
             <button onclick="logout()" class="flex items-center gap-6 p-5 bg-red-500/10 rounded-2xl text-red-400 border border-red-500/10 active:scale-95 transition-all mt-8">
                 <span class="material-symbols-outlined">logout</span>
                 <span class="text-lg font-medium tracking-wide uppercase">Sair do Portal</span>
             </button>
         </div>
-        <div class="mt-auto text-center pb-8 px-6">
+<div class="mt-auto text-center pb-8 px-6">
             <p class="text-slate-600 text-[10px] uppercase tracking-widest mb-4">A∴R∴L∴S∴ Major Manoel dos Santos Portugal Nº 4424</p>
             
             <!-- Institutional Affiliation (Mobile) -->
@@ -236,26 +241,31 @@
             <p class="text-slate-500 text-[10px] uppercase tracking-[0.2em] mt-2">Nº 4424 - GOB - Rito Moderno</p>
         </div>
 
-        <div class="flex-1 px-4 py-6 space-y-2">
+                <div class="flex-1 px-4 py-6 space-y-2">
             <a href="dashboard.html" class="flex items-center gap-4 px-6 py-4 text-slate-400 hover:text-amber-500 hover:bg-white/5 rounded-xl transition-all group">
                 <span class="material-symbols-outlined">dashboard</span>
                 <span class="font-medium">Painel Principal</span>
+            </a>
+            <a href="biblioteca.html" class="flex items-center gap-4 px-6 py-4 bg-amber-500/10 text-amber-500 rounded-xl transition-all group">
+                <span class="material-symbols-outlined">auto_stories</span>
+                <span class="font-medium">Biblioteca Digital</span>
+            </a>
+            <a href="fraternidade.html" class="flex items-center gap-4 px-6 py-4 text-slate-400 hover:text-amber-500 hover:bg-white/5 rounded-xl transition-all group">
+                <span class="material-symbols-outlined">local_library</span>
+                <span class="font-medium">Galeria de Fotos</span>
+            </a>
+            <a href="calendario.html" class="flex items-center gap-4 px-6 py-4 text-slate-400 hover:text-amber-500 hover:bg-white/5 rounded-xl transition-all group">
+                <span class="material-symbols-outlined">calendar_month</span>
+                <span class="font-medium">Calendário de Sessões</span>
             </a>
             <a href="tesouraria.html" class="flex items-center gap-4 px-6 py-4 text-slate-400 hover:text-amber-500 hover:bg-white/5 rounded-xl transition-all group">
                 <span class="material-symbols-outlined">account_balance_wallet</span>
                 <span class="font-medium">Tesouraria</span>
             </a>
-            <a href="biblioteca.html" class="flex items-center gap-4 px-6 py-4 bg-amber-500/10 text-amber-500 rounded-xl transition-all">
-                <span class="material-symbols-outlined">auto_stories</span>
-                <span class="font-medium">Biblioteca Digital</span>
-            </a>
-            <a href="fraternidade.html" class="flex items-center gap-4 px-6 py-4 text-slate-400 hover:text-amber-500 hover:bg-white/5 rounded-xl transition-all">
-                <span class="material-symbols-outlined">local_library</span>
-                <span class="font-medium">Galeria de Fotos</span>
-            </a>
-            <a href="calendario.html" class="flex items-center gap-4 px-6 py-4 text-slate-400 hover:text-amber-500 hover:bg-white/5 rounded-xl transition-all">
-                <span class="material-symbols-outlined">calendar_month</span>
-                <span class="font-medium">Calendário de Sessões</span>
+            <!-- Admin Link (Hidden by default) -->
+            <a id="adminMenuLink" href="#" class="hidden items-center gap-4 px-6 py-4 text-slate-400 hover:text-amber-500 hover:bg-white/5 rounded-xl transition-all group">
+                <span class="material-symbols-outlined">admin_panel_settings</span>
+                <span class="font-medium">Administração</span>
             </a>
         </div>
 

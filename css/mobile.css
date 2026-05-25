@@ -1,10 +1,10 @@
 /**
  * mobile.css - Correções de responsividade para Android e iOS
- * Incluir em todas as páginas: <link rel="stylesheet" href="/css/mobile.css">
+ * Incluído em todas as páginas via <link rel="stylesheet" href="/css/mobile.css">
  */
 
 /* =============================================
-   1. RESET GLOBAL iOS/Android
+   1. RESET GLOBAL iOS/Android (sem afetar desktop)
    ============================================= */
 
 /* Prevent iOS text size adjustment after orientation change */
@@ -13,150 +13,83 @@ html {
     text-size-adjust: 100%;
 }
 
-/* Use dynamic viewport height (100dvh) - corrige bug do Safari com barra de endereço */
-body {
-    min-height: 100dvh;
-    /* Safe area para notch do iPhone e barra home */
-    padding-bottom: env(safe-area-inset-bottom, 0px);
-}
-
-/* iOS Safari: webkit-backdrop-filter em todos os elementos com blur */
-.glass-card,
-nav[class*="backdrop"],
-[class*="backdrop-blur"],
-[class*="backdrop_blur"] {
-    -webkit-backdrop-filter: blur(12px);
-}
-
-/* Prevent iOS auto-zoom in inputs (font-size < 16px causa zoom) */
-input, select, textarea {
-    font-size: 16px !important;
-    -webkit-appearance: none;
-    appearance: none;
-    border-radius: 0;
-}
-
-/* Touch targets mínimos de 44x44px (Apple HIG) */
-button, a, [role="button"] {
-    min-height: 44px;
-    min-width: 44px;
-}
-
-/* Prevent horizontal scroll */
+/* Prevent horizontal scroll em qualquer breakpoint */
 html, body {
     overflow-x: hidden;
     max-width: 100vw;
 }
 
-/* Smooth momentum scrolling no iOS */
-.overflow-y-auto, .overflow-auto, [style*="overflow"] {
-    -webkit-overflow-scrolling: touch;
+/* Safe area para notch do iPhone e barra home */
+body {
+    padding-bottom: env(safe-area-inset-bottom, 0px);
 }
 
-/* =============================================
-   2. MODAIS - Correções universais mobile
-   ============================================= */
+/* iOS: dvh corrige bug do Safari com barra de endereço */
+.min-h-screen { min-height: 100dvh; }
 
-/* Todos os modais: altura máxima com scroll interno */
-[id$="Modal"] > div,
-[id$="modal"] > div,
-.modal-content {
-    max-height: 90dvh;
-    overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
-}
-
-/* iOS: fix para position:fixed dentro de transform */
+/* iOS Safari: webkit-backdrop-filter */
 @supports (-webkit-touch-callout: none) {
-    [id$="Modal"],
-    [id$="modal"] {
-        position: fixed;
+    .backdrop-blur-sm  { -webkit-backdrop-filter: blur(4px); }
+    .backdrop-blur     { -webkit-backdrop-filter: blur(8px); }
+    .backdrop-blur-md  { -webkit-backdrop-filter: blur(12px); }
+    .backdrop-blur-lg  { -webkit-backdrop-filter: blur(16px); }
+    .backdrop-blur-xl  { -webkit-backdrop-filter: blur(24px); }
+    .backdrop-blur-2xl { -webkit-backdrop-filter: blur(40px); }
+    .backdrop-blur-3xl { -webkit-backdrop-filter: blur(64px); }
+    .glass-card        { -webkit-backdrop-filter: blur(40px); }
+    .min-h-screen      { min-height: 100dvh; }
+}
+
+/* Smooth momentum scrolling no iOS */
+.overflow-y-auto, .overflow-auto {
+    -webkit-overflow-scrolling: touch;
+}
+
+/* =============================================
+   2. MODAIS - Correções para mobile APENAS
+   ============================================= */
+@media (max-width: 1023px) {
+    /* Menu mobile overlay */
+    #mobileMenu {
+        height: 100dvh !important;
+        overflow-y: auto;
         -webkit-overflow-scrolling: touch;
+    }
+
+    /* Top bar mobile: safe area para notch do iPhone */
+    nav.lg\:hidden {
+        padding-top: max(1rem, env(safe-area-inset-top, 1rem)) !important;
+    }
+}
+
+@media (max-width: 768px) {
+    /* Todos os modais: altura máxima com scroll interno */
+    [id$="Modal"] > div,
+    [id$="modal"] > div,
+    .modal-content {
+        max-height: 90dvh !important;
+        overflow-y: auto !important;
+        -webkit-overflow-scrolling: touch !important;
+    }
+
+    /* iOS: prevent auto-zoom em inputs (font-size < 16px causa zoom no iOS) */
+    input, select, textarea {
+        font-size: 16px !important;
+        -webkit-appearance: none;
+        appearance: none;
+    }
+
+    /* Touch targets mínimos APENAS em mobile (não afeta desktop) */
+    button, [role="button"] {
+        min-height: 44px;
     }
 }
 
 /* =============================================
-   3. MEDIA QUERIES - Breakpoints principais
+   3. PORTAL DO MEMBRO - Visível no menu mobile
    ============================================= */
-
-/* --- Pequeno (< 480px | iPhone SE, Galaxy A) --- */
-@media (max-width: 480px) {
-    /* Navegação lateral: ocultar por padrão */
-    nav.lg\:flex { display: none !important; }
-    
-    /* Conteúdo principal: sem margem da sidebar */
-    main.lg\:ml-72 {
-        margin-left: 0 !important;
-        padding: 1rem !important;
-        padding-top: 5.5rem !important;
-    }
-
-    /* Cabeçalhos de página */
-    header.mb-12 {
-        flex-direction: column !important;
-        align-items: flex-start !important;
-        gap: 0.75rem !important;
-        margin-bottom: 1.5rem !important;
-    }
-
-    /* Cards: padding reduzido */
-    .glass-card { padding: 1.25rem !important; }
-
-    /* Botões: largura total em mobile */
-    .flex.flex-wrap.items-center.gap-3 {
-        width: 100%;
-    }
-    .flex.flex-wrap.items-center.gap-3 > button,
-    .flex.flex-wrap.items-center.gap-3 > a {
-        flex: 1;
-        justify-content: center;
-        text-align: center;
-    }
-
-    /* Tabelas: scroll horizontal */
-    table {
-        display: block;
-        overflow-x: auto;
-        -webkit-overflow-scrolling: touch;
-        white-space: nowrap;
-    }
-    
-    /* Grids: forçar coluna única */
-    .grid-cols-2, .grid-cols-3, .md\:grid-cols-2, .md\:grid-cols-3,
-    .lg\:grid-cols-2, .lg\:grid-cols-3, .lg\:grid-cols-4 {
-        grid-template-columns: 1fr !important;
-    }
-
-    /* Textos grandes: escalar para mobile */
-    .text-4xl { font-size: 1.75rem !important; }
-    .text-5xl { font-size: 2rem !important; }
-    .text-3xl { font-size: 1.5rem !important; }
-
-    /* Modais: largura total */
-    [id$="Modal"] > div,
-    [id$="modal"] > div {
-        width: 95vw !important;
-        margin: auto !important;
-        padding: 1.25rem !important;
-    }
-}
-
-/* --- Médio (481px - 768px | Android médio, iPhone Plus) --- */
-@media (min-width: 481px) and (max-width: 768px) {
-    main.lg\:ml-72 {
-        margin-left: 0 !important;
-        padding: 1.5rem !important;
-        padding-top: 5.5rem !important;
-    }
-    
-    .glass-card { padding: 1.5rem !important; }
-
-    table {
-        display: block;
-        overflow-x: auto;
-        -webkit-overflow-scrolling: touch;
-    }
-}
+/* O link "Portal do Membro" fica oculto em xs pelo Tailwind (hidden sm:inline-block)
+   mas deve estar disponível pelo menu overlay — ver HTML de cada página */
 
 /* =============================================
    4. CALENDÁRIO (FullCalendar) mobile
@@ -165,6 +98,7 @@ html, body {
     #calendar {
         min-height: 420px !important;
         font-size: 0.75rem !important;
+        padding: 0.5rem !important;
     }
     .fc .fc-toolbar {
         flex-direction: column !important;
@@ -190,6 +124,12 @@ html, body {
     }
 }
 
+@media (max-width: 480px) {
+    #calendar { min-height: 360px !important; font-size: 0.65rem !important; }
+    .fc .fc-button { padding: 0.25rem 0.4rem !important; font-size: 0.65rem !important; }
+    .fc-event { font-size: 0.6rem !important; }
+}
+
 /* =============================================
    5. GALERIA - Grid responsivo
    ============================================= */
@@ -208,22 +148,15 @@ html, body {
     }
     .prev-btn { left: 8px !important; padding: 8px !important; }
     .next-btn { right: 8px !important; padding: 8px !important; }
+    /* Touch: botão excluir sempre visível (sem hover em touch) */
+    .gallery-item .delete-overlay { opacity: 1 !important; }
 }
 
 /* =============================================
-   6. DASHBOARD - Bento Grid mobile
+   6. DASHBOARD - Tabelas com scroll
    ============================================= */
-@media (max-width: 640px) {
-    /* Bento grid: forçar 1 coluna */
-    .grid.grid-cols-2.md\:grid-cols-4,
-    .grid.grid-cols-1.md\:grid-cols-2.lg\:grid-cols-4 {
-        grid-template-columns: 1fr 1fr !important;
-    }
-    
-    /* Cards de métricas menores */
-    .metric-card { padding: 1rem !important; }
-
-    /* Tabela de membros com scroll */
+@media (max-width: 768px) {
+    /* Tabela de membros com scroll horizontal */
     #membersTable, #pendingTable {
         display: block;
         overflow-x: auto;
@@ -232,76 +165,43 @@ html, body {
 }
 
 /* =============================================
-   7. FORMULÁRIOS mobile (cadastro, login)
+   7. FORMULÁRIOS (cadastro, login)
    ============================================= */
 @media (max-width: 768px) {
     /* Grid de 2 colunas em formulários → 1 coluna */
     form .grid.grid-cols-2 {
         grid-template-columns: 1fr !important;
     }
-    
-    /* Padding do main em páginas de auth */
-    main.min-h-screen.flex.flex-col.items-center {
-        padding: 1rem !important;
-        padding-top: 2rem !important;
-        justify-content: flex-start !important;
-    }
+}
 
-    /* Card de login/cadastro */
-    .glass-card.p-10 {
-        padding: 1.5rem !important;
+/* =============================================
+   8. TESOURARIA - Tabela financeira
+   ============================================= */
+@media (max-width: 768px) {
+    table {
+        display: block;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        max-width: 100%;
     }
 }
 
 /* =============================================
-   8. NAVBAR LATERAL - Safe area e shadow
+   9. TIPOGRAFIA mobile
    ============================================= */
-@media (max-width: 1023px) {
-    /* Sidebar: oculta em mobile */
-    nav.hidden.lg\:flex {
-        display: none !important;
-    }
-    
-    /* Top bar mobile: safe area para notch */
-    nav.lg\:hidden {
-        padding-top: max(1rem, env(safe-area-inset-top, 1rem)) !important;
-    }
-    
-    /* Menu mobile overlay: usar dvh */
-    #mobileMenu {
-        height: 100dvh !important;
-    }
+@media (max-width: 480px) {
+    /* Escala de textos para telas muito pequenas */
+    .text-5xl { font-size: 2rem !important; line-height: 1.2 !important; }
+    .text-4xl { font-size: 1.75rem !important; }
+    .text-3xl { font-size: 1.5rem !important; }
+    /* Seções: padding vertical reduzido */
+    .py-32 { padding-top: 4rem !important; padding-bottom: 4rem !important; }
+    .py-20 { padding-top: 3rem !important; padding-bottom: 3rem !important; }
 }
 
 /* =============================================
-   9. iOS SAFARI - Correções específicas
+   10. ANDROID - Fix específico
    ============================================= */
-
-/* Fix: botões com position:sticky em iOS */
-@supports (-webkit-touch-callout: none) {
-    /* Usar 100dvh em vez de 100vh */
-    .min-h-screen {
-        min-height: 100dvh;
-    }
-    
-    /* Fix: backdrop-filter no Safari */
-    .backdrop-blur-xl { -webkit-backdrop-filter: blur(24px); }
-    .backdrop-blur-2xl { -webkit-backdrop-filter: blur(40px); }
-    .backdrop-blur-3xl { -webkit-backdrop-filter: blur(64px); }
-    .backdrop-blur-sm { -webkit-backdrop-filter: blur(4px); }
-    
-    /* Fix: overflow em modais com teclado virtual */
-    .fixed.inset-0 {
-        position: fixed;
-        inset: 0;
-    }
-}
-
-/* =============================================
-   10. ANDROID - Correções específicas
-   ============================================= */
-
-/* Android: Fix para border-radius em alguns inputs */
 @media screen and (-webkit-min-device-pixel-ratio: 0) and (min-resolution: 0.001dpcm) {
     input[type="text"],
     input[type="email"],

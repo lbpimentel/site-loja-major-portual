@@ -168,7 +168,7 @@
 </div>
 <div class="relative">
 <input class="w-full bg-transparent border-0 border-b border-outline-variant py-3 focus:ring-0 focus:border-secondary transition-all text-on-background placeholder:text-on-tertiary-container/50 font-body-md" id="password" name="password" placeholder="••••••••" type="password"/>
-<span class="material-symbols-outlined absolute right-0 top-3 text-on-tertiary-container/50 text-xl cursor-pointer hover:text-secondary transition-colors">visibility_off</span>
+<span id="togglePassword" class="material-symbols-outlined absolute right-0 top-3 text-on-tertiary-container/50 text-xl cursor-pointer hover:text-secondary transition-colors">visibility_off</span>
 </div>
 </div>
 <!-- Actions -->
@@ -178,7 +178,7 @@
                         </button>
 <div class="mt-4 text-center text-red-500 text-sm hidden" id="errorMessage"></div>
 <div class="flex items-center justify-between">
-<a class="font-label-caps text-[10px] text-on-tertiary-container hover:text-secondary transition-colors tracking-widest uppercase" href="#">Esqueceu a senha?</a>
+<a id="forgotPassword" class="font-label-caps text-[10px] text-on-tertiary-container hover:text-secondary transition-colors tracking-widest uppercase" href="#">Esqueceu a senha?</a>
 <div class="h-1 w-1 bg-outline-variant rounded-full"></div>
 <a class="font-label-caps text-[10px] text-on-tertiary-container hover:text-secondary transition-colors tracking-widest uppercase" href="cadastro.html">Solicitar Ingresso</a>
 </div>
@@ -223,9 +223,65 @@
 <div class="w-12 h-[1px] bg-secondary"></div>
 </div>
 </main>
+
+<!-- Recuperar Senha Modal -->
+<div id="resetPasswordModal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-black/95 backdrop-blur-md">
+    <div class="glass-card w-full max-w-[440px] p-10 rounded-lg shadow-2xl relative border border-secondary/20">
+        <!-- Close Button -->
+        <button id="closeResetModal" class="absolute top-6 right-6 text-slate-400 hover:text-secondary transition-colors">
+            <span class="material-symbols-outlined text-2xl">close</span>
+        </button>
+
+        <div class="text-center mb-8">
+            <div class="inline-block mb-4">
+                <span class="material-symbols-outlined text-secondary text-5xl">lock_reset</span>
+            </div>
+            <h2 class="font-h2 text-2xl text-on-background mb-2">Recuperar Senha</h2>
+            <p class="font-label-caps text-[10px] text-on-tertiary-container/70 uppercase tracking-widest">Portal do Membro</p>
+        </div>
+
+        <form id="resetForm" class="space-y-6">
+            <div class="relative group">
+                <label class="block font-label-caps text-label-caps text-on-tertiary-container mb-3 uppercase" for="resetEmail">E-mail Cadastrado</label>
+                <div class="relative">
+                    <input class="w-full bg-transparent border-0 border-b border-outline-variant py-3 focus:ring-0 focus:border-secondary transition-all text-on-background placeholder:text-on-tertiary-container/50 font-body-md" id="resetEmail" name="resetEmail" placeholder="membro@majorportugal.org.br" type="email" required/>
+                    <span class="material-symbols-outlined absolute right-0 top-3 text-on-tertiary-container/50 text-xl">mail</span>
+                </div>
+            </div>
+
+            <div class="pt-4 flex flex-col gap-4">
+                <button class="w-full bg-secondary text-black font-label-caps text-label-caps py-4 px-8 rounded-sm hover:bg-secondary-fixed transition-all duration-300 transform hover:scale-[1.02] active:scale-95 shadow-lg shadow-secondary/10 uppercase" type="submit">
+                    Enviar Link de Redefinição
+                </button>
+                <div class="text-center text-xs hidden p-4 rounded-lg mt-2 border" id="resetMessage"></div>
+            </div>
+        </form>
+    </div>
+</div>
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="/js/supabase-config.js"></script>
 <script>
+    // Alternar visibilidade da senha
+    const passwordInput = document.getElementById('password');
+    const togglePassword = document.getElementById('togglePassword');
+
+    togglePassword.addEventListener('click', () => {
+        const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+        passwordInput.setAttribute('type', type);
+        
+        // Alternar o ícone e cor para feedback visual premium
+        if (type === 'password') {
+            togglePassword.textContent = 'visibility_off';
+            togglePassword.classList.remove('text-secondary');
+            togglePassword.classList.add('text-on-tertiary-container/50');
+        } else {
+            togglePassword.textContent = 'visibility';
+            togglePassword.classList.add('text-secondary');
+            togglePassword.classList.remove('text-on-tertiary-container/50');
+        }
+    });
+
     const loginForm = document.getElementById('loginForm');
     const errorMessage = document.getElementById('errorMessage');
 
@@ -245,16 +301,28 @@
 
             // Lógica de Login Duplo (Email ou CIM)
             if (!identifier.includes('@')) {
-                const { data: profileData, error: cimError } = await window.supabaseClient
-                    .from('profiles')
-                    .select('email')
-                    .eq('cim', identifier)
-                    .maybeSingle();
-                
-                if (profileData && profileData.email) {
-                    loginEmail = profileData.email;
-                } else {
-                    throw new Error('CIM não encontrado. Por favor, use seu e-mail cadastrado.');
+                try {
+                    const { data: profileData, error: cimError } = await window.supabaseClient
+                        .from('profiles')
+                        .select('email')
+                        .eq('cim', identifier)
+                        .maybeSingle();
+                    
+                    if (cimError) {
+                        // Código 42703 = Undefined Column no PostgreSQL (coluna email ausente)
+                        if (cimError.code === '42703') {
+                            throw new Error('O login por CIM está temporariamente inativo no banco de dados (coluna "email" ausente em "profiles"). Por favor, faça login com seu e-mail.');
+                        }
+                        throw cimError;
+                    }
+                    
+                    if (profileData && profileData.email) {
+                        loginEmail = profileData.email;
+                    } else {
+                        throw new Error('CIM não encontrado. Por favor, use seu e-mail cadastrado ou verifique com o administrador.');
+                    }
+                } catch (err) {
+                    throw err;
                 }
             }
 
@@ -281,6 +349,67 @@
         } catch (error) {
             errorMessage.textContent = error.message;
             errorMessage.classList.remove('hidden');
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = originalText;
+        }
+    });
+
+    // Lógica do Modal de Recuperação de Senha
+    const forgotPasswordLink = document.getElementById('forgotPassword');
+    const resetPasswordModal = document.getElementById('resetPasswordModal');
+    const closeResetModal = document.getElementById('closeResetModal');
+    const resetForm = document.getElementById('resetForm');
+    const resetMessage = document.getElementById('resetMessage');
+
+    forgotPasswordLink.addEventListener('click', (e) => {
+        e.preventDefault();
+        resetPasswordModal.classList.remove('hidden');
+        resetMessage.classList.add('hidden');
+        resetForm.reset();
+    });
+
+    closeResetModal.addEventListener('click', () => {
+        resetPasswordModal.classList.add('hidden');
+    });
+
+    resetPasswordModal.addEventListener('click', (e) => {
+        if (e.target === resetPasswordModal) {
+            resetPasswordModal.classList.add('hidden');
+        }
+    });
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+            resetPasswordModal.classList.add('hidden');
+        }
+    });
+
+    resetForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        resetMessage.classList.add('hidden');
+        const email = document.getElementById('resetEmail').value.trim();
+        const submitBtn = resetForm.querySelector('button[type="submit"]');
+        const originalText = submitBtn.innerHTML;
+
+        try {
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<span class="animate-spin material-symbols-outlined text-sm">progress_activity</span> Enviando...';
+
+            const { error } = await window.supabaseClient.auth.resetPasswordForEmail(email, {
+                redirectTo: window.location.origin + '/login.html',
+            });
+
+            if (error) throw error;
+
+            resetMessage.innerHTML = "<b>E-mail enviado!</b><br>Instruções de redefinição de senha foram enviadas para o seu e-mail.";
+            resetMessage.className = "text-center text-xs p-4 bg-secondary/10 text-secondary border-secondary/20 rounded-lg mt-2 block";
+            resetMessage.classList.remove('hidden');
+            resetForm.reset();
+        } catch (error) {
+            resetMessage.textContent = error.message;
+            resetMessage.className = "text-center text-xs p-4 bg-red-500/10 text-red-400 border-red-500/20 rounded-lg mt-2 block";
+            resetMessage.classList.remove('hidden');
+        } finally {
             submitBtn.disabled = false;
             submitBtn.innerHTML = originalText;
         }

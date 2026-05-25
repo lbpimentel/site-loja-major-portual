@@ -634,9 +634,14 @@
     <div id="rosterTabContent" class="hidden glass-card p-8 shadow-sm">
         <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-8 border-b border-white/5 pb-6">
             <h2 class="font-h2 text-2xl text-on-background">Gestão do Quadro</h2>
-            <div class="relative w-full md:w-80">
-                <span class="material-symbols-outlined absolute left-3 top-2.5 text-on-tertiary-container text-xl">search</span>
-                <input type="text" id="memberSearch" onkeyup="filterMembers()" placeholder="Buscar irmão..." class="w-full bg-surface border border-outline-variant text-on-background pl-10 pr-4 py-2 text-sm focus:border-secondary outline-none rounded-sm transition-all">
+            <div class="flex flex-col md:flex-row items-center gap-4 w-full md:w-auto">
+                <div class="relative w-full md:w-80">
+                    <span class="material-symbols-outlined absolute left-3 top-2.5 text-on-tertiary-container text-xl">search</span>
+                    <input type="text" id="memberSearch" onkeyup="filterMembers()" placeholder="Buscar irmão..." class="w-full bg-surface border border-outline-variant text-on-background pl-10 pr-4 py-2 text-sm focus:border-secondary outline-none rounded-sm transition-all">
+                </div>
+                <button onclick="openAddMemberModal()" class="bg-secondary text-black hover:brightness-110 px-4 py-2 text-xs font-label-caps uppercase tracking-widest flex items-center gap-2 whitespace-nowrap transition-all rounded-sm font-bold shadow-[0_0_15px_rgba(233,195,73,0.1)]">
+                    <span class="material-symbols-outlined text-sm font-bold">person_add</span> Novo Membro
+                </button>
             </div>
         </div>
         
@@ -821,6 +826,73 @@
             <div class="flex gap-4 pt-4">
                 <button type="button" onclick="closeEditMemberModal()" class="flex-1 px-4 py-3 border border-outline-variant text-on-background text-xs font-label-caps uppercase tracking-widest hover:bg-white/5">Cancelar</button>
                 <button type="submit" class="flex-1 bg-secondary text-black px-4 py-3 text-xs font-label-caps uppercase tracking-widest hover:brightness-110 font-bold">Salvar Alterações</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Modal de Cadastro de Novo Membro -->
+<div id="addMemberModal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-[150] flex items-center justify-center p-4">
+    <div class="glass-card max-w-md w-full p-8 shadow-2xl border border-white/10 relative animate-in zoom-in duration-300">
+        <button onclick="closeAddMemberModal()" class="absolute top-4 right-4 text-on-tertiary-container hover:text-secondary transition-colors">
+            <span class="material-symbols-outlined">close</span>
+        </button>
+        <h3 class="text-xl font-bold text-on-background mb-2">Cadastrar Novo Membro</h3>
+        <p class="text-xs text-secondary mb-6 uppercase tracking-widest">Área Restrita: Administração</p>
+        <form id="addMemberForm" class="space-y-4">
+            <div>
+                <label class="block text-xs font-label-caps uppercase tracking-widest text-on-tertiary-container mb-1">Nome Completo</label>
+                <input type="text" id="addMemberName" required class="w-full bg-surface border border-outline-variant text-on-background p-3 focus:border-secondary outline-none text-sm" placeholder="Nome do Irmão">
+            </div>
+            <div>
+                <label class="block text-xs font-label-caps uppercase tracking-widest text-on-tertiary-container mb-1">E-mail Oficial</label>
+                <input type="email" id="addMemberEmail" required class="w-full bg-surface border border-outline-variant text-on-background p-3 focus:border-secondary outline-none text-sm" placeholder="email@irmandade.org.br">
+            </div>
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-xs font-label-caps uppercase tracking-widest text-on-tertiary-container mb-1">Nº do CIM</label>
+                    <input type="text" id="addMemberCim" class="w-full bg-surface border border-outline-variant text-on-background p-3 focus:border-secondary outline-none text-sm" placeholder="123456">
+                </div>
+                <div>
+                    <label class="block text-xs font-label-caps uppercase tracking-widest text-on-tertiary-container mb-1">Grau</label>
+                    <select id="addMemberDegree" class="w-full bg-surface border border-outline-variant text-on-background p-3 focus:border-secondary outline-none text-sm">
+                        <option value="Mestre">Mestre</option>
+                        <option value="Companheiro">Companheiro</option>
+                        <option value="Aprendiz">Aprendiz</option>
+                    </select>
+                </div>
+            </div>
+            <div id="addMemberPositionField" class="hidden">
+                <label class="block text-xs font-label-caps uppercase tracking-widest text-on-tertiary-container mb-1">Cargo / Função em Loja</label>
+                <select id="addMemberPosition" class="w-full bg-surface border border-outline-variant text-on-background p-3 focus:border-secondary outline-none text-sm">
+                    <option value="">Nenhum (Apenas Mestre)</option>
+                    <option value="Venerável Mestre">Venerável Mestre</option>
+                    <option value="1º Vigilante">1º Vigilante</option>
+                    <option value="2º Vigilante">2º Vigilante</option>
+                    <option value="Orador">Orador</option>
+                    <option value="Secretário">Secretário</option>
+                    <option value="Tesoureiro">Tesoureiro</option>
+                    <option value="Chanceler">Chanceler</option>
+                    <option value="Mestre de Cerimônias">Mestre de Cerimônias</option>
+                    <option value="Hospitalário">Hospitalário</option>
+                </select>
+            </div>
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-xs font-label-caps uppercase tracking-widest text-on-tertiary-container mb-1">Nível de Acesso</label>
+                    <select id="addMemberRole" class="w-full bg-surface border border-outline-variant text-on-background p-3 focus:border-secondary outline-none text-sm">
+                        <option value="user">Membro</option>
+                        <option value="admin">Administrador</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-xs font-label-caps uppercase tracking-widest text-on-tertiary-container mb-1">Senha Inicial</label>
+                    <input type="text" id="addMemberPassword" required class="w-full bg-surface border border-outline-variant text-on-background p-3 focus:border-secondary outline-none text-sm" placeholder="mudar123">
+                </div>
+            </div>
+            <div class="flex gap-4 pt-4">
+                <button type="button" onclick="closeAddMemberModal()" class="flex-1 px-4 py-3 border border-outline-variant text-on-background text-xs font-label-caps uppercase tracking-widest hover:bg-white/5">Cancelar</button>
+                <button type="submit" id="btnAddMemberSubmit" class="flex-1 bg-secondary text-black px-4 py-3 text-xs font-label-caps uppercase tracking-widest hover:brightness-110 font-bold">Salvar Membro</button>
             </div>
         </form>
     </div>
@@ -1046,9 +1118,9 @@
         tableBody.innerHTML = members.map(member => `
             <tr class="border-b border-white/5 hover:bg-white/5">
                 <td class="py-4">${member.full_name}</td>
-                <td class="py-4">${member.cim}</td>
-                <td class="py-4">${member.degree}</td>
-                <td class="py-4 text-on-tertiary-container">${member.email || '-'}</td>
+                <td class="py-4">${member.cim || '-'}</td>
+                <td class="py-4">${member.degree || '-'}</td>
+                <td class="py-4 text-on-tertiary-container">${member.email || '<span class="text-amber-500/50 text-[10px]">pendente</span>'}</td>
                 <td class="py-4 text-right">
                     <button onclick="approveMember('${member.id}')" class="bg-secondary text-on-secondary px-3 py-1 text-xs font-label-caps uppercase hover:brightness-110 mr-2">Aprovar</button>
                     <button onclick="rejectMember('${member.id}')" class="border border-error text-error px-3 py-1 text-xs font-label-caps uppercase hover:bg-error/10">Rejeitar</button>
@@ -1058,9 +1130,25 @@
     }
 
     window.approveMember = async function(id) {
-        const { error } = await window.supabaseClient.from('profiles').update({ is_approved: true }).eq('id', id);
-        if (error) alert("Erro: " + error.message);
-        else loadPendingMembers();
+        // Busca o email do Auth para gravar no perfil (habilita login por CIM)
+        try {
+            const { data: authUser } = await window.supabaseClient.auth.admin
+                ? window.supabaseClient.auth.admin.getUserById(id).catch(() => ({ data: null }))
+                : { data: null };
+            const emailFromAuth = authUser?.user?.email || null;
+
+            const updateData = { is_approved: true };
+            if (emailFromAuth) updateData.email = emailFromAuth;
+
+            const { error } = await window.supabaseClient.from('profiles').update(updateData).eq('id', id);
+            if (error) alert("Erro: " + error.message);
+            else loadPendingMembers();
+        } catch (err) {
+            // Fallback simples sem email
+            const { error } = await window.supabaseClient.from('profiles').update({ is_approved: true }).eq('id', id);
+            if (error) alert("Erro: " + error.message);
+            else loadPendingMembers();
+        }
     };
 
     window.rejectMember = async function(id) {
@@ -1122,9 +1210,17 @@
         // Check Admin
         const { data: profile } = await window.supabaseClient
             .from('profiles')
-            .select('role, position')
+            .select('role, position, email')
             .eq('id', session.user.id)
             .single();
+
+        // Auto-sincronizar email do Auth no perfil (garante login por CIM)
+        if (session.user.email && (!profile || !profile.email)) {
+            await window.supabaseClient
+                .from('profiles')
+                .update({ email: session.user.email })
+                .eq('id', session.user.id);
+        }
         
         if (profile && (profile.role === 'admin' || profile.position === 'Secretário' || profile.position === 'Venerável Mestre' || profile.position === 'Orador')) {
             isAdmin = true;
@@ -1614,7 +1710,8 @@
                     </span>
                 </td>
                 <td class="py-4 text-right">
-                    <button onclick="openEditMemberModal('${m.id}')" class="material-symbols-outlined text-slate-500 hover:text-secondary transition-colors text-xl">manage_accounts</button>
+                    <button onclick="openEditMemberModal('${m.id}')" class="material-symbols-outlined text-slate-500 hover:text-secondary transition-colors text-xl mr-2" title="Editar Perfil">manage_accounts</button>
+                    <button onclick="deleteApprovedMember('${m.id}', '${m.full_name}')" class="material-symbols-outlined text-slate-500 hover:text-red-400 transition-colors text-xl" title="Excluir Membro">delete</button>
                 </td>
             </tr>
         `).join('');
@@ -1676,6 +1773,186 @@
         else {
             closeEditMemberModal();
             loadAllMembers();
+        }
+    };
+
+    // --- LÓGICA DO CRUD DE NOVOS MEMBROS (ADMINISTRAÇÃO) ---
+    const addMemberDegree = document.getElementById('addMemberDegree');
+    const addMemberPositionField = document.getElementById('addMemberPositionField');
+    const addMemberPosition = document.getElementById('addMemberPosition');
+
+    if (addMemberDegree && addMemberPositionField) {
+        addMemberDegree.addEventListener('change', () => {
+            if (addMemberDegree.value === 'Mestre') {
+                addMemberPositionField.classList.remove('hidden');
+            } else {
+                addMemberPositionField.classList.add('hidden');
+                if (addMemberPosition) addMemberPosition.value = '';
+            }
+        });
+    }
+
+    window.openAddMemberModal = () => {
+        document.getElementById('addMemberForm').reset();
+        document.getElementById('addMemberPassword').value = 'mudar123';
+        if (addMemberPositionField) addMemberPositionField.classList.add('hidden');
+        document.getElementById('addMemberModal').classList.remove('hidden');
+    };
+
+    window.closeAddMemberModal = () => {
+        document.getElementById('addMemberModal').classList.add('hidden');
+    };
+
+    document.getElementById('addMemberForm').onsubmit = async (e) => {
+        e.preventDefault();
+        
+        const submitBtn = document.getElementById('btnAddMemberSubmit');
+        const originalText = submitBtn.textContent;
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Cadastrando...';
+
+        const name = document.getElementById('addMemberName').value;
+        const email = document.getElementById('addMemberEmail').value;
+        const cim = document.getElementById('addMemberCim').value;
+        const degree = document.getElementById('addMemberDegree').value;
+        const position = document.getElementById('addMemberPosition').value;
+        const role = document.getElementById('addMemberRole').value;
+        const password = document.getElementById('addMemberPassword').value;
+
+        try {
+            // Criar cliente Supabase temporário isolado para não deslogar o administrador
+            const supabaseUrl = window.SUPABASE_URL || (typeof SUPABASE_URL !== 'undefined' ? SUPABASE_URL : '');
+            const supabaseKey = window.SUPABASE_KEY || (typeof SUPABASE_KEY !== 'undefined' ? SUPABASE_KEY : '');
+            
+            const tempSupabase = window.supabase.createClient(supabaseUrl, supabaseKey, {
+                auth: { persistSession: false, autoRefreshToken: false }
+            });
+
+            // SignUp do novo usuário no Auth
+            const { data: signUpData, error: signUpError } = await tempSupabase.auth.signUp({
+                email: email,
+                password: password,
+                options: {
+                    data: {
+                        full_name: name,
+                        cim: cim,
+                        degree: degree,
+                        position: position
+                    }
+                }
+            });
+
+            if (signUpError) {
+                alert("Erro ao criar login de acesso: " + signUpError.message);
+                submitBtn.disabled = false;
+                submitBtn.textContent = originalText;
+                return;
+            }
+
+            const newUserId = signUpData.user?.id;
+            if (newUserId) {
+                // Tenta atualizar o perfil incluindo o email (caso a coluna exista em profiles)
+                let { error: profileError } = await window.supabaseClient
+                    .from('profiles')
+                    .update({
+                        full_name: name,
+                        cim: cim,
+                        degree: degree,
+                        position: position,
+                        role: role,
+                        is_approved: true,
+                        email: email
+                    })
+                    .eq('id', newUserId);
+
+                // Se falhar com código 42703 (coluna inexistente), tenta atualizar sem o e-mail
+                if (profileError && profileError.code === '42703') {
+                    const { error: retryError } = await window.supabaseClient
+                        .from('profiles')
+                        .update({
+                            full_name: name,
+                            cim: cim,
+                            degree: degree,
+                            position: position,
+                            role: role,
+                            is_approved: true
+                        })
+                        .eq('id', newUserId);
+                    profileError = retryError;
+                }
+
+                if (profileError) {
+                    // Tenta o upsert incluindo o email
+                    let { error: upsertError } = await window.supabaseClient
+                        .from('profiles')
+                        .upsert({
+                            id: newUserId,
+                            full_name: name,
+                            cim: cim,
+                            degree: degree,
+                            position: position,
+                            role: role,
+                            is_approved: true,
+                            email: email
+                        });
+
+                    // Se falhar com 42703, tenta o upsert sem o e-mail
+                    if (upsertError && upsertError.code === '42703') {
+                        const { error: retryUpsert } = await window.supabaseClient
+                            .from('profiles')
+                            .upsert({
+                                id: newUserId,
+                                full_name: name,
+                                cim: cim,
+                                degree: degree,
+                                position: position,
+                                role: role,
+                                is_approved: true
+                            });
+                        upsertError = retryUpsert;
+                    }
+
+                    if (upsertError) {
+                        alert("Usuário de autenticação criado, mas erro ao configurar perfil: " + upsertError.message);
+                    } else {
+                        alert("Membro cadastrado e ativado com sucesso!");
+                        closeAddMemberModal();
+                        loadAllMembers();
+                    }
+                } else {
+                    alert("Membro cadastrado e ativado com sucesso!");
+                    closeAddMemberModal();
+                    loadAllMembers();
+                }
+            } else {
+                // Se signUpError for nulo mas newUserId for nulo, significa que o e-mail já existe no Supabase Auth
+                alert("Erro: Este e-mail já está cadastrado no sistema. Por favor, utilize outro e-mail.");
+            }
+        } catch (err) {
+            alert("Erro inesperado durante o cadastro: " + err.message);
+        } finally {
+            submitBtn.disabled = false;
+            submitBtn.textContent = originalText;
+        }
+    };
+
+    window.deleteApprovedMember = async function(id, name) {
+        if (!confirm(`Tem certeza que deseja excluir o membro "${name}" permanentemente do portal?\nEsta ação removerá também seus dados de acesso.`)) return;
+        
+        try {
+            const { error } = await window.supabaseClient
+                .from('profiles')
+                .delete()
+                .eq('id', id);
+
+            if (error) {
+                alert("Erro ao excluir membro: " + error.message);
+            } else {
+                alert("Membro excluído com sucesso!");
+                loadAllMembers();
+            }
+        } catch (err) {
+            alert("Erro inesperado ao excluir: " + err.message);
         }
     };
 

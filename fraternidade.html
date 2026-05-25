@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fraternidade - Portal Major Manoel</title>
+    <title>Galeria de Fotos - Portal Major Manoel</title>
+    <meta name="description" content="Galeria de fotos das sessões e momentos de fraternidade da A∴R∴L∴S∴ Major Manoel dos Santos Portugal Nº 4424.">
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;0,6..72,700;1,6..72,400&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
@@ -90,22 +91,86 @@
         .prev-btn { left: 30px; }
         .next-btn { right: 30px; }
 
+        /* Gallery item wrapper with delete overlay */
+        .gallery-item {
+            position: relative;
+        }
+        .gallery-item .delete-overlay {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            opacity: 0;
+            transition: opacity 0.2s ease;
+            z-index: 10;
+        }
+        .gallery-item:hover .delete-overlay {
+            opacity: 1;
+        }
+        .delete-btn {
+            background: rgba(239, 68, 68, 0.85);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            backdrop-filter: blur(4px);
+            transition: all 0.2s;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.5);
+        }
+        .delete-btn:hover {
+            background: rgb(220, 38, 38);
+            transform: scale(1.1);
+        }
+
+        /* Upload modal tab toggle */
+        .upload-tab {
+            transition: all 0.2s;
+        }
+        .upload-tab.active {
+            background: rgba(233, 195, 73, 0.15);
+            border-color: rgba(233, 195, 73, 0.5);
+            color: #e9c349;
+        }
+
+        /* Drop zone */
+        #dropZone {
+            transition: all 0.3s;
+        }
+        #dropZone.dragover {
+            border-color: #e9c349;
+            background: rgba(233, 195, 73, 0.05);
+        }
+
+        /* Progress bar */
+        #uploadProgressBar {
+            transition: width 0.3s ease;
+        }
+
+        /* Gallery loading shimmer */
+        .shimmer {
+            background: linear-gradient(90deg, #1a1a1a 25%, #252525 50%, #1a1a1a 75%);
+            background-size: 200% 100%;
+            animation: shimmer 1.5s infinite;
+        }
+        @keyframes shimmer {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+
         @media (max-width: 768px) {
             main { margin-left: 0 !important; padding: 1rem !important; padding-top: 5.5rem !important; }
             header { flex-direction: column; align-items: flex-start !important; gap: 1rem; }
             .text-right { text-align: left !important; }
-            
-            /* Gallery Grid: Single column for mobile impact */
             #galleryGrid { grid-template-columns: 1fr !important; gap: 1rem !important; }
-            
-            /* Lightbox adjustments */
             #lightbox img { max-width: 95%; max-height: 70vh; }
             .nav-btn { padding: 8px; background: rgba(0,0,0,0.6); border-color: rgba(255,255,255,0.2); }
             .prev-btn { left: 10px; }
             .next-btn { right: 10px; }
-            
             .glass-card { padding: 1.25rem !important; }
-            #welcomeText { font-size: 1.75rem !important; }
         }
     </style>
 </head>
@@ -134,8 +199,8 @@
                 <span class="material-symbols-outlined text-4xl">close</span>
             </button>
         </div>
-                <div class="flex flex-col gap-4">
-            <a class="flex items-center gap-6 p-5 bg-white/5 text-slate-200 border-white/5 rounded-2xl active:scale-95 transition-all border" href="dashboard.html">
+        <div class="flex flex-col gap-4">
+            <a id="dashboardMenuLinkMobile" class="flex items-center gap-6 p-5 bg-white/5 text-slate-200 border-white/5 rounded-2xl active:scale-95 transition-all border" href="dashboard.html">
                 <span class="material-symbols-outlined text-amber-500">dashboard</span>
                 <span class="text-lg font-medium tracking-wide">Painel Principal</span>
             </a>
@@ -156,7 +221,7 @@
                 <span class="text-lg font-medium tracking-wide">Tesouraria</span>
             </a>
             <!-- Admin Link Mobile -->
-            <a id="adminMenuLinkMobile" href="#" class="hidden items-center gap-6 p-5 bg-white/5 rounded-2xl text-slate-200 border border-white/5 active:scale-95 transition-all">
+            <a id="adminMenuLinkMobile" href="dashboard.html?section=admin" class="hidden items-center gap-6 p-5 bg-white/5 rounded-2xl text-slate-200 border border-white/5 active:scale-95 transition-all">
                 <span class="material-symbols-outlined text-amber-500">admin_panel_settings</span>
                 <span class="text-lg font-medium tracking-wide">Administração</span>
             </a>
@@ -165,10 +230,8 @@
                 <span class="text-lg font-medium tracking-wide uppercase">Sair do Portal</span>
             </button>
         </div>
-<div class="mt-auto text-center pb-8 px-6">
+        <div class="mt-auto text-center pb-8 px-6">
             <p class="text-slate-600 text-[10px] uppercase tracking-widest mb-4">A∴R∴L∴S∴ Major Manoel dos Santos Portugal Nº 4424</p>
-            
-            <!-- Institutional Affiliation (Mobile) -->
             <div class="pt-6 border-t border-white/5 flex flex-col items-center">
                 <div class="flex items-center gap-6 mb-3">
                     <a href="https://gob-rj.org.br/home" target="_blank" rel="noopener noreferrer" class="transition-transform hover:scale-105">
@@ -190,11 +253,11 @@
     <nav class="hidden lg:flex fixed left-0 top-0 h-screen flex-col bg-slate-950/95 backdrop-blur-xl w-72 border-r border-white/10 shadow-2xl z-50">
         <div class="p-8 flex flex-col items-center text-center">
             <h1 class="text-amber-500 font-bold font-newsreader text-lg leading-tight tracking-tight">A∴R∴L∴S∴ Major Manoel dos Santos Portugal Nº 4424</h1>
-            <p class="text-slate-500 text-[10px] uppercase tracking-[0.2em] mt-2">Nº 4424 - GOB - Rito Moderno</p>
+            <p class="text-slate-500 text-[10px] uppercase tracking-[0.2em] mt-2">GOB - Rito Moderno</p>
         </div>
 
-                <div class="flex-1 px-4 py-6 space-y-2">
-            <a href="dashboard.html" class="flex items-center gap-4 px-6 py-4 text-slate-400 hover:text-amber-500 hover:bg-white/5 rounded-xl transition-all group">
+        <div class="flex-1 px-4 py-6 space-y-2">
+            <a id="dashboardMenuLink" href="dashboard.html" class="flex items-center gap-4 px-6 py-4 text-slate-400 hover:text-amber-500 hover:bg-white/5 rounded-xl transition-all group">
                 <span class="material-symbols-outlined">dashboard</span>
                 <span class="font-medium">Painel Principal</span>
             </a>
@@ -215,42 +278,47 @@
                 <span class="font-medium">Tesouraria</span>
             </a>
             <!-- Admin Link (Hidden by default) -->
-            <a id="adminMenuLink" href="#" class="hidden items-center gap-4 px-6 py-4 text-slate-400 hover:text-amber-500 hover:bg-white/5 rounded-xl transition-all group">
+            <a id="adminMenuLinkDesktop" href="dashboard.html?section=admin" class="hidden items-center gap-4 px-6 py-4 text-slate-400 hover:text-amber-500 hover:bg-white/5 rounded-xl transition-all group">
                 <span class="material-symbols-outlined">admin_panel_settings</span>
                 <span class="font-medium">Administração</span>
             </a>
         </div>
-        <div class="p-6 border-t border-white/10 flex items-center gap-4">
-            <div class="w-10 h-10 rounded-full overflow-hidden border border-amber-500/30">
-                <div class="w-full h-full bg-amber-500 flex items-center justify-center text-black font-bold" id="navInitial">P</div>
+
+        <div class="p-6 border-t border-white/5">
+            <div class="flex items-center gap-4 p-4 bg-white/5 rounded-2xl mb-4">
+                <div class="w-10 h-10 rounded-full bg-amber-500 flex items-center justify-center text-black font-bold" id="navInitial">M</div>
+                <div class="flex-1">
+                    <p class="text-sm font-bold text-slate-200" id="navName">Membro</p>
+                    <p class="text-[10px] text-slate-500 uppercase tracking-widest" id="navPosition">Portal Ativo</p>
+                </div>
             </div>
-            <div>
-                <p class="text-on-background font-medium text-sm" id="navName">Ir. Portugal</p>
-                <p class="text-slate-500 text-[10px] uppercase tracking-widest" id="navPosition">Mestre Maçom</p>
-            </div>
-        </div>
-        
-        <!-- Institutional Affiliation (Desktop) -->
-        <div class="p-6 border-t border-white/10 flex flex-col items-center text-center">
-            <div class="flex items-center gap-6 mb-3">
-                <a href="https://gob-rj.org.br/home" target="_blank" rel="noopener noreferrer" class="transition-transform hover:scale-105">
-                    <img src="logo_gob_rj-2.png" alt="GOB-RJ" class="h-8 w-auto opacity-20 hover:opacity-100 grayscale hover:grayscale-0 transition-all duration-500">
-                </a>
-                <a href="https://www.gob.org.br/" target="_blank" rel="noopener noreferrer" class="transition-transform hover:scale-105">
-                    <img src="logo-gob-brasilia-df-selo.png" alt="GOB" class="h-8 w-auto opacity-20 hover:opacity-100 grayscale hover:grayscale-0 transition-all duration-500">
-                </a>
-            </div>
-            <div class="space-y-0.5">
-                <p class="font-newsreader text-[10px] text-slate-400">Grande Oriente do Brasil no Rio de Janeiro</p>
-                <p class="text-[7px] text-amber-500/30 uppercase tracking-widest font-bold">Federado ao Grande Oriente do Brasil</p>
+            <button onclick="logout()" class="w-full flex items-center justify-center gap-2 py-3 text-slate-500 hover:text-red-400 transition-colors text-sm font-bold uppercase tracking-widest group">
+                <span class="material-symbols-outlined text-xl group-hover:rotate-12 transition-transform">logout</span>
+                Sair do Portal
+            </button>
+            
+            <!-- Institutional Affiliation (Desktop) -->
+            <div class="mt-6 pt-6 border-t border-white/5 flex flex-col items-center">
+                <div class="flex items-center gap-6 mb-3">
+                    <a href="https://gob-rj.org.br/home" target="_blank" rel="noopener noreferrer" class="transition-transform hover:scale-105">
+                        <img src="logo_gob_rj-2.png" alt="GOB-RJ" class="h-10 w-auto opacity-20 hover:opacity-100 grayscale hover:grayscale-0 transition-all duration-500">
+                    </a>
+                    <a href="https://www.gob.org.br/" target="_blank" rel="noopener noreferrer" class="transition-transform hover:scale-105">
+                        <img src="logo-gob-brasilia-df-selo.png" alt="GOB" class="h-10 w-auto opacity-20 hover:opacity-100 grayscale hover:grayscale-0 transition-all duration-500">
+                    </a>
+                </div>
+                <div class="space-y-0.5">
+                    <p class="font-newsreader text-[10px] text-slate-400">Grande Oriente do Brasil no Rio de Janeiro</p>
+                    <p class="text-[7px] text-amber-500/30 uppercase tracking-widest font-bold">Federado ao Grande Oriente do Brasil</p>
+                </div>
             </div>
         </div>
     </nav>
 
-    <main class="ml-72 min-h-screen p-12">
+    <main class="lg:ml-72 min-h-screen p-6 lg:p-12 pt-24 lg:pt-12">
         <header class="mb-12 flex justify-between items-end">
             <div>
-                <h2 class="font-h2 text-3xl text-on-background">Fraternidade</h2>
+                <h2 class="font-newsreader text-3xl text-on-background" id="welcomeText">Galeria de Fotos</h2>
                 <div class="w-24 h-1 bg-amber-500 mt-4"></div>
             </div>
             <div class="text-right">
@@ -261,44 +329,28 @@
 
         <section class="space-y-8">
             <div class="glass-card p-8 shadow-sm">
-                <div class="flex justify-between items-center mb-8 border-b border-white/5 pb-4">
+                <div class="flex flex-wrap justify-between items-center gap-4 mb-8 border-b border-white/5 pb-4">
                     <div>
                         <h2 class="text-2xl text-on-background uppercase tracking-wider text-amber-500">Galeria de Fotos</h2>
-                        <p class="text-sm text-on-tertiary-container mt-1">Registros de Sessões e Momentos de Fraternidade</p>
+                        <p class="text-sm text-slate-400 mt-1">Registros de Sessões e Momentos de Fraternidade</p>
                     </div>
-                    <a href="https://www.instagram.com/" target="_blank" class="bg-amber-500/10 text-amber-500 px-4 py-2 text-xs font-bold uppercase tracking-widest hover:bg-amber-500 hover:text-black transition-all flex items-center gap-2 border border-amber-500/30">
-                        <span class="material-symbols-outlined text-sm">photo_camera</span> Ver no Instagram
-                    </a>
+                    <div class="flex flex-wrap items-center gap-3">
+                        <!-- Botão apenas para admin -->
+                        <button id="btnAddPhoto" onclick="openUploadPhotoModal()" class="hidden px-4 py-2 text-xs font-bold uppercase tracking-widest flex items-center gap-2 border transition-all rounded-sm" style="background:#e9c349;color:#000;border-color:rgba(233,195,73,0.5);">
+                            <span class="material-symbols-outlined text-sm" style="color:#000;">add_a_photo</span> Incluir Fotos
+                        </button>
+                        <a href="https://www.instagram.com/" target="_blank" class="bg-amber-500/10 text-amber-500 px-4 py-2 text-xs font-bold uppercase tracking-widest hover:bg-amber-500 hover:text-black transition-all flex items-center gap-2 border border-amber-500/30 rounded-sm">
+                            <span class="material-symbols-outlined text-sm">photo_camera</span> Ver no Instagram
+                        </a>
+                    </div>
                 </div>
                 
+                <!-- Gallery Grid -->
                 <div id="galleryGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    <!-- Hardcoded for Vite to bundle -->
-                    <div class="aspect-[4/3] overflow-hidden rounded-lg border border-white/5 group bg-slate-900">
-                        <img src="img/galeria/foto1.jpg" class="w-full h-full object-cover gallery-img" onclick="openLightbox(0)">
-                    </div>
-                    <div class="aspect-[4/3] overflow-hidden rounded-lg border border-white/5 group bg-slate-900">
-                        <img src="img/galeria/foto2.jpg" class="w-full h-full object-cover gallery-img" onclick="openLightbox(1)">
-                    </div>
-                    <div class="aspect-[4/3] overflow-hidden rounded-lg border border-white/5 group bg-slate-900">
-                        <img src="img/galeria/foto3.jpg" class="w-full h-full object-cover gallery-img" onclick="openLightbox(2)">
-                    </div>
-                    <div class="aspect-[4/3] overflow-hidden rounded-lg border border-white/5 group bg-slate-900">
-                        <img src="img/galeria/foto6.jpg" class="w-full h-full object-cover gallery-img" onclick="openLightbox(3)">
-                    </div>
-                    <div class="aspect-[4/3] overflow-hidden rounded-lg border border-white/5 group bg-slate-900">
-                        <img src="img/galeria/foto7.jpg" class="w-full h-full object-cover gallery-img" onclick="openLightbox(4)">
-                    </div>
-                    <div class="aspect-[4/3] overflow-hidden rounded-lg border border-white/5 group bg-slate-900">
-                        <img src="img/galeria/foto8.jpg" class="w-full h-full object-cover gallery-img" onclick="openLightbox(5)">
-                    </div>
-                    <div class="aspect-[4/3] overflow-hidden rounded-lg border border-white/5 group bg-slate-900">
-                        <img src="img/galeria/foto10.jpg" class="w-full h-full object-cover gallery-img" onclick="openLightbox(6)">
-                    </div>
-                    <div class="aspect-[4/3] overflow-hidden rounded-lg border border-white/5 group bg-slate-900">
-                        <img src="img/galeria/foto11.jpg" class="w-full h-full object-cover gallery-img" onclick="openLightbox(7)">
-                    </div>
-                    <div class="aspect-[4/3] overflow-hidden rounded-lg border border-white/5 group bg-slate-900">
-                        <img src="img/galeria/foto12.jpg" class="w-full h-full object-cover gallery-img" onclick="openLightbox(8)">
+                    <!-- Loading state -->
+                    <div id="galleryLoading" class="col-span-3 py-16 text-center text-slate-500">
+                        <span class="material-symbols-outlined text-5xl mb-3 block animate-spin opacity-40">progress_activity</span>
+                        <p class="text-sm">Carregando galeria...</p>
                     </div>
                 </div>
             </div>
@@ -320,19 +372,530 @@
         <button class="absolute top-10 right-10 text-white hover:text-amber-500 transition-colors" onclick="closeLightbox()">
             <span class="material-symbols-outlined text-4xl">close</span>
         </button>
+        
+        <!-- Caption -->
+        <div class="absolute bottom-8 left-1/2 -translate-x-1/2 text-center text-white/70 text-sm px-6" id="lightboxCaption"></div>
+    </div>
+
+    <!-- Modal de Upload de Fotos (Admin Only) -->
+    <div id="uploadPhotoModal" class="hidden fixed inset-0 bg-black/85 backdrop-blur-sm z-[150] flex items-center justify-center p-4">
+        <div class="glass-card max-w-lg w-full p-8 shadow-2xl border border-white/10 relative animate-in zoom-in duration-300">
+            <button onclick="closeUploadPhotoModal()" class="absolute top-4 right-4 text-slate-400 hover:text-amber-500 transition-colors">
+                <span class="material-symbols-outlined text-2xl">close</span>
+            </button>
+            <h3 class="text-xl font-bold text-on-background mb-1">Incluir Nova Foto</h3>
+            <p class="text-xs text-amber-500 uppercase tracking-widest mb-6">Área Restrita: Administração</p>
+
+            <!-- Toggle: Local vs Link Externo -->
+            <div class="flex gap-2 mb-6 p-1 bg-surface rounded-lg border border-white/5">
+                <button id="tabLocal" onclick="switchUploadTab('local')" class="upload-tab active flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-md text-xs font-bold uppercase tracking-widest border border-transparent transition-all">
+                    <span class="material-symbols-outlined text-sm">computer</span> Arquivo Local
+                </button>
+                <button id="tabExternal" onclick="switchUploadTab('external')" class="upload-tab flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-md text-xs font-bold uppercase tracking-widest border border-transparent text-slate-400 transition-all">
+                    <span class="material-symbols-outlined text-sm">link</span> Link Externo
+                </button>
+            </div>
+
+            <form id="uploadPhotoForm" class="space-y-4">
+                <!-- Painel Upload Local -->
+                <div id="localUploadPanel">
+                    <div id="dropZone" class="border-2 border-dashed border-white/10 rounded-xl p-8 text-center cursor-pointer hover:border-amber-500/40 transition-all"
+                         onclick="document.getElementById('photoFileInput').click()"
+                         ondragover="handleDragOver(event)"
+                         ondragleave="handleDragLeave(event)"
+                         ondrop="handleDrop(event)">
+                        <div id="dropZoneContent">
+                            <span class="material-symbols-outlined text-4xl text-amber-500/50 block mb-3">cloud_upload</span>
+                            <p class="text-sm text-slate-400 mb-1">Arraste e solte ou clique para selecionar</p>
+                            <p class="text-xs text-slate-600">JPG, PNG, GIF, WEBP — Máx. 5MB</p>
+                        </div>
+                        <div id="previewContainer" class="hidden">
+                            <img id="imagePreview" src="" class="max-h-48 mx-auto rounded-lg object-contain border border-white/10">
+                            <p id="previewFileName" class="text-xs text-amber-500 mt-2"></p>
+                        </div>
+                    </div>
+                    <input type="file" id="photoFileInput" accept="image/*" class="hidden" onchange="handleFileSelect(event)">
+                </div>
+
+                <!-- Painel Link Externo -->
+                <div id="externalUploadPanel" class="hidden">
+                    <div class="space-y-3">
+                        <div>
+                            <label class="block text-xs font-bold uppercase tracking-widest text-slate-400 mb-1">URL da Imagem</label>
+                            <input type="url" id="photoUrlInput" placeholder="https://drive.google.com/... ou https://sharepoint.com/..." class="w-full bg-surface border border-white/10 text-on-background p-3 focus:border-amber-500 outline-none text-sm rounded-lg transition-colors" oninput="previewExternalUrl(this.value)">
+                        </div>
+                        <div id="externalPreviewContainer" class="hidden rounded-xl overflow-hidden border border-white/10">
+                            <img id="externalPreview" src="" class="w-full max-h-48 object-cover" onerror="this.parentElement.classList.add('hidden')">
+                        </div>
+                        <p class="text-[10px] text-slate-600 leading-relaxed">
+                            ✓ Google Drive: Usar link de compartilhamento público<br>
+                            ✓ SharePoint: Usar link direto da imagem<br>
+                            ✓ OneDrive: Usar link de incorporação
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Caption / Legenda -->
+                <div>
+                    <label class="block text-xs font-bold uppercase tracking-widest text-slate-400 mb-1">Legenda (Opcional)</label>
+                    <input type="text" id="photoCaptionInput" placeholder="Ex: Sessão Ordinária de Julho de 2024" class="w-full border border-white/10 p-3 focus:border-amber-500 outline-none text-sm rounded-lg transition-colors" style="background:#ffffff; color:#000000;">
+                </div>
+
+                <!-- Progress Bar -->
+                <div id="uploadProgress" class="hidden">
+                    <div class="flex justify-between text-xs text-slate-400 mb-1">
+                        <span id="uploadProgressLabel">Processando...</span>
+                        <span id="uploadProgressPercent">0%</span>
+                    </div>
+                    <div class="w-full bg-white/5 rounded-full h-2">
+                        <div id="uploadProgressBar" class="bg-amber-500 h-2 rounded-full" style="width: 0%"></div>
+                    </div>
+                </div>
+
+                <!-- Buttons -->
+                <div class="flex gap-4 pt-4">
+                    <button type="button" onclick="closeUploadPhotoModal()" class="flex-1 px-4 py-3 border border-white/10 text-slate-400 text-xs font-bold uppercase tracking-widest hover:bg-white/5 transition-colors rounded-lg">Cancelar</button>
+                    <button type="submit" id="btnUploadSubmit" class="flex-1 bg-amber-500 text-black px-4 py-3 text-xs font-bold uppercase tracking-widest hover:brightness-110 transition-colors rounded-lg flex items-center justify-center gap-2">
+                        <span class="material-symbols-outlined text-sm">save</span> Salvar Foto
+                    </button>
+                </div>
+            </form>
+        </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="/js/supabase-config.js"></script>
     <script>
-        // Get images from the DOM to avoid 404s after bundling
-        let galleryImages = [];
+        // ============================
+        // STATE
+        // ============================
+        let isAdmin = false;
+        let galleryImages = []; // { src, caption, id, isStatic }
         let currentImgIndex = 0;
+        let currentUploadTab = 'local';
+        let selectedFile = null;
 
+        // Static images (always displayed, cannot be deleted)
+        const staticImages = [
+            { src: 'img/galeria/foto1.jpg', caption: '', isStatic: true },
+            { src: 'img/galeria/foto2.jpg', caption: '', isStatic: true },
+            { src: 'img/galeria/foto3.jpg', caption: '', isStatic: true },
+            { src: 'img/galeria/foto6.jpg', caption: '', isStatic: true },
+            { src: 'img/galeria/foto7.jpg', caption: '', isStatic: true },
+            { src: 'img/galeria/foto8.jpg', caption: '', isStatic: true },
+            { src: 'img/galeria/foto10.jpg', caption: '', isStatic: true },
+            { src: 'img/galeria/foto11.jpg', caption: '', isStatic: true },
+            { src: 'img/galeria/foto12.jpg', caption: '', isStatic: true }
+        ];
+
+        // ============================
+        // GALLERY LOAD & RENDER
+        // ============================
+        async function loadGallery() {
+            const grid = document.getElementById('galleryGrid');
+            const loading = document.getElementById('galleryLoading');
+
+            let dynamicPhotos = [];
+
+            // Try to load from Supabase
+            try {
+                if (window.supabaseClient) {
+                    const { data, error } = await window.supabaseClient
+                        .from('gallery_photos')
+                        .select('*')
+                        .order('created_at', { ascending: false });
+
+                    if (!error && data) {
+                        dynamicPhotos = data.map(row => ({
+                            id: row.id,
+                            src: row.url,
+                            caption: row.description || '',
+                            isStatic: false
+                        }));
+                    } else if (error && error.code !== '42P01') {
+                        // Table doesn't exist: fallback to localStorage
+                        console.warn('gallery_photos table not found, using localStorage fallback:', error.code);
+                    }
+                }
+            } catch (err) {
+                console.warn('Supabase load error, using localStorage fallback:', err);
+            }
+
+            // Fallback: Load from localStorage
+            if (dynamicPhotos.length === 0) {
+                try {
+                    const stored = JSON.parse(localStorage.getItem('gallery_photos_local') || '[]');
+                    dynamicPhotos = stored;
+                } catch (e) {
+                    dynamicPhotos = [];
+                }
+            }
+
+            // Combine: dynamic first, then static
+            galleryImages = [...dynamicPhotos, ...staticImages];
+
+            // Render
+            if (loading) loading.remove();
+            renderGallery();
+        }
+
+        function renderGallery() {
+            const grid = document.getElementById('galleryGrid');
+            if (!grid) return;
+
+            // Remove loading placeholder if present
+            const loading = document.getElementById('galleryLoading');
+            if (loading) loading.remove();
+
+            if (galleryImages.length === 0) {
+                grid.innerHTML = `<div class="col-span-3 py-16 text-center text-slate-500">
+                    <span class="material-symbols-outlined text-5xl mb-3 block opacity-40">photo_library</span>
+                    <p class="text-sm">Nenhuma foto na galeria.</p>
+                </div>`;
+                return;
+            }
+
+            grid.innerHTML = galleryImages.map((img, index) => `
+                <div class="gallery-item aspect-[4/3] overflow-hidden rounded-lg border border-white/5 group bg-slate-900 relative">
+                    <img src="${img.src}" 
+                         class="w-full h-full object-cover gallery-img" 
+                         onclick="openLightbox(${index})"
+                         onerror="this.parentElement.classList.add('hidden')"
+                         loading="lazy">
+                    ${isAdmin && !img.isStatic ? `
+                        <div class="delete-overlay">
+                            <button class="delete-btn" onclick="event.stopPropagation(); deletePhoto('${img.id}', ${index})" title="Excluir foto">
+                                <span class="material-symbols-outlined text-sm">delete</span>
+                            </button>
+                        </div>
+                    ` : ''}
+                    ${img.caption ? `
+                        <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-3 opacity-0 group-hover:opacity-100 transition-opacity">
+                            <p class="text-xs text-white/90 truncate">${img.caption}</p>
+                        </div>
+                    ` : ''}
+                </div>
+            `).join('');
+        }
+
+        // ============================
+        // LIGHTBOX
+        // ============================
+        window.openLightbox = function(index) {
+            currentImgIndex = index;
+            const lb = document.getElementById('lightbox');
+            const img = document.getElementById('lightboxImg');
+            const caption = document.getElementById('lightboxCaption');
+            img.src = galleryImages[currentImgIndex].src;
+            if (caption) caption.textContent = galleryImages[currentImgIndex].caption || '';
+            lb.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        };
+
+        window.closeLightbox = function() {
+            const lb = document.getElementById('lightbox');
+            lb.style.display = 'none';
+            document.body.style.overflow = 'auto';
+        };
+
+        window.nextImg = function(e) {
+            if (e) e.stopPropagation();
+            currentImgIndex = (currentImgIndex + 1) % galleryImages.length;
+            const img = document.getElementById('lightboxImg');
+            const caption = document.getElementById('lightboxCaption');
+            img.src = galleryImages[currentImgIndex].src;
+            if (caption) caption.textContent = galleryImages[currentImgIndex].caption || '';
+        };
+
+        window.prevImg = function(e) {
+            if (e) e.stopPropagation();
+            currentImgIndex = (currentImgIndex - 1 + galleryImages.length) % galleryImages.length;
+            const img = document.getElementById('lightboxImg');
+            const caption = document.getElementById('lightboxCaption');
+            img.src = galleryImages[currentImgIndex].src;
+            if (caption) caption.textContent = galleryImages[currentImgIndex].caption || '';
+        };
+
+        document.addEventListener('keydown', (e) => {
+            const lb = document.getElementById('lightbox');
+            if (lb && lb.style.display === 'flex') {
+                if (e.key === 'ArrowRight') nextImg();
+                if (e.key === 'ArrowLeft') prevImg();
+                if (e.key === 'Escape') closeLightbox();
+            }
+        });
+
+        // ============================
+        // UPLOAD MODAL
+        // ============================
+        window.openUploadPhotoModal = function() {
+            document.getElementById('uploadPhotoForm').reset();
+            selectedFile = null;
+            document.getElementById('previewContainer').classList.add('hidden');
+            document.getElementById('dropZoneContent').classList.remove('hidden');
+            document.getElementById('externalPreviewContainer').classList.add('hidden');
+            document.getElementById('uploadProgress').classList.add('hidden');
+            switchUploadTab('local');
+            document.getElementById('uploadPhotoModal').classList.remove('hidden');
+        };
+
+        window.closeUploadPhotoModal = function() {
+            document.getElementById('uploadPhotoModal').classList.add('hidden');
+        };
+
+        window.switchUploadTab = function(tab) {
+            currentUploadTab = tab;
+            const tabLocal = document.getElementById('tabLocal');
+            const tabExternal = document.getElementById('tabExternal');
+            const localPanel = document.getElementById('localUploadPanel');
+            const externalPanel = document.getElementById('externalUploadPanel');
+
+            if (tab === 'local') {
+                tabLocal.classList.add('active');
+                tabExternal.classList.remove('active');
+                tabExternal.classList.add('text-slate-400');
+                tabLocal.classList.remove('text-slate-400');
+                localPanel.classList.remove('hidden');
+                externalPanel.classList.add('hidden');
+            } else {
+                tabExternal.classList.add('active');
+                tabLocal.classList.remove('active');
+                tabLocal.classList.add('text-slate-400');
+                tabExternal.classList.remove('text-slate-400');
+                externalPanel.classList.remove('hidden');
+                localPanel.classList.add('hidden');
+            }
+        };
+
+        // File selection
+        window.handleFileSelect = function(event) {
+            const file = event.target.files[0];
+            if (file) processFile(file);
+        };
+
+        window.handleDragOver = function(event) {
+            event.preventDefault();
+            document.getElementById('dropZone').classList.add('dragover');
+        };
+
+        window.handleDragLeave = function(event) {
+            document.getElementById('dropZone').classList.remove('dragover');
+        };
+
+        window.handleDrop = function(event) {
+            event.preventDefault();
+            document.getElementById('dropZone').classList.remove('dragover');
+            const file = event.dataTransfer.files[0];
+            if (file && file.type.startsWith('image/')) processFile(file);
+        };
+
+        function processFile(file) {
+            if (file.size > 5 * 1024 * 1024) {
+                alert('Arquivo muito grande. O tamanho máximo é 5MB.');
+                return;
+            }
+            selectedFile = file;
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                document.getElementById('imagePreview').src = e.target.result;
+                document.getElementById('previewFileName').textContent = file.name;
+                document.getElementById('previewContainer').classList.remove('hidden');
+                document.getElementById('dropZoneContent').classList.add('hidden');
+            };
+            reader.readAsDataURL(file);
+        }
+
+        window.previewExternalUrl = function(url) {
+            const container = document.getElementById('externalPreviewContainer');
+            const img = document.getElementById('externalPreview');
+            if (url && url.startsWith('http')) {
+                img.src = url;
+                container.classList.remove('hidden');
+            } else {
+                container.classList.add('hidden');
+            }
+        };
+
+        // Progress UI helper
+        function setProgress(label, percent) {
+            document.getElementById('uploadProgress').classList.remove('hidden');
+            document.getElementById('uploadProgressLabel').textContent = label;
+            document.getElementById('uploadProgressPercent').textContent = percent + '%';
+            document.getElementById('uploadProgressBar').style.width = percent + '%';
+        }
+
+        // Form submit
+        document.getElementById('uploadPhotoForm').onsubmit = async function(e) {
+            e.preventDefault();
+
+            // Ler legenda ANTES de qualquer reset ou disable
+            const captionInput = document.getElementById('photoCaptionInput');
+            const caption = captionInput ? captionInput.value.trim() : '';
+
+            const submitBtn = document.getElementById('btnUploadSubmit');
+            submitBtn.disabled = true;
+            submitBtn.style.opacity = '0.7';
+            submitBtn.innerHTML = '<span class="material-symbols-outlined text-sm" style="animation:spin 1s linear infinite;display:inline-block;">progress_activity</span> Salvando...';
+
+            setProgress('Preparando imagem...', 10);
+
+            try {
+                let imageUrl = '';
+
+                if (currentUploadTab === 'local') {
+                    if (!selectedFile) {
+                        alert('Por favor, selecione um arquivo de imagem.');
+                        submitBtn.disabled = false;
+                        submitBtn.style.opacity = '';
+                        submitBtn.innerHTML = '<span class="material-symbols-outlined text-sm">save</span> Salvar Foto';
+                        document.getElementById('uploadProgress').classList.add('hidden');
+                        return;
+                    }
+                    // Converter para Base64
+                    setProgress('Convertendo imagem...', 30);
+                    imageUrl = await new Promise((resolve, reject) => {
+                        const reader = new FileReader();
+                        reader.onload = (ev) => resolve(ev.target.result);
+                        reader.onerror = reject;
+                        reader.readAsDataURL(selectedFile);
+                    });
+                } else {
+                    imageUrl = document.getElementById('photoUrlInput').value.trim();
+                    if (!imageUrl) {
+                        alert('Por favor, insira uma URL válida.');
+                        submitBtn.disabled = false;
+                        submitBtn.style.opacity = '';
+                        submitBtn.innerHTML = '<span class="material-symbols-outlined text-sm">save</span> Salvar Foto';
+                        document.getElementById('uploadProgress').classList.add('hidden');
+                        return;
+                    }
+                }
+
+                setProgress('Salvando no banco de dados...', 60);
+
+                const newPhoto = {
+                    url: imageUrl,
+                    description: caption,
+                    created_at: new Date().toISOString()
+                };
+
+                // Tentar salvar no Supabase
+                let savedId = null;
+                let usedLocalStorage = false;
+
+                if (window.supabaseClient) {
+                    try {
+                        const { data, error } = await window.supabaseClient
+                            .from('gallery_photos')
+                            .insert([newPhoto])
+                            .select()
+                            .single();
+
+                        if (error) {
+                            // Captura todos os erros de tabela inexistente (42P01, schema cache, PGRST...)
+                            const isTableError = 
+                                error.code === '42P01' ||
+                                (error.message && error.message.toLowerCase().includes('gallery_photos')) ||
+                                (error.message && error.message.toLowerCase().includes('schema cache')) ||
+                                (error.message && error.message.toLowerCase().includes('relation')) ||
+                                (error.code && error.code.startsWith('PGRST'));
+
+                            if (isTableError) {
+                                console.warn('Tabela gallery_photos não encontrada. Usando localStorage como fallback.');
+                                usedLocalStorage = true;
+                            } else {
+                                throw new Error(error.message);
+                            }
+                        } else if (data) {
+                            savedId = data.id;
+                        }
+                    } catch (supabaseErr) {
+                        // Se der qualquer exceção na tentativa Supabase, usa localStorage
+                        console.warn('Erro Supabase, usando localStorage:', supabaseErr.message);
+                        usedLocalStorage = true;
+                    }
+                } else {
+                    usedLocalStorage = true;
+                }
+
+                // Fallback: localStorage
+                if (usedLocalStorage) {
+                    const stored = JSON.parse(localStorage.getItem('gallery_photos_local') || '[]');
+                    const localEntry = { ...newPhoto, id: 'local_' + Date.now(), isStatic: false };
+                    stored.unshift(localEntry);
+                    localStorage.setItem('gallery_photos_local', JSON.stringify(stored));
+                    savedId = localEntry.id;
+                }
+
+                setProgress('Concluído!', 100);
+
+                // Adiciona ao array local de imagens
+                const dynamicCount = galleryImages.filter(g => !g.isStatic).length;
+                galleryImages.splice(dynamicCount, 0, {
+                    id: savedId,
+                    src: imageUrl,
+                    caption: caption,
+                    isStatic: false
+                });
+
+                renderGallery();
+
+                setTimeout(() => {
+                    closeUploadPhotoModal();
+                    if (usedLocalStorage) {
+                        // Aviso discreto no console apenas — a foto já está visível na galeria
+                        console.info('Foto salva em localStorage. Para persistência em nuvem, execute o script SQL da tabela gallery_photos no Supabase.');
+                    }
+                }, 500);
+
+            } catch (err) {
+                alert('Erro ao salvar foto: ' + err.message);
+                console.error(err);
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.style.opacity = '';
+                submitBtn.innerHTML = '<span class="material-symbols-outlined text-sm">save</span> Salvar Foto';
+                document.getElementById('uploadProgress').classList.add('hidden');
+            }
+        };
+
+        // ============================
+        // DELETE PHOTO
+        // ============================
+        window.deletePhoto = async function(id, index) {
+            const photo = galleryImages[index];
+            if (!photo || photo.isStatic) return;
+            if (!confirm('Tem certeza que deseja excluir esta foto permanentemente?')) return;
+
+            try {
+                if (id && !id.startsWith('local_') && window.supabaseClient) {
+                    const { error } = await window.supabaseClient
+                        .from('gallery_photos')
+                        .delete()
+                        .eq('id', id);
+                    if (error && error.code !== '42P01') {
+                        throw new Error(error.message);
+                    }
+                } else {
+                    // Remove from localStorage
+                    const stored = JSON.parse(localStorage.getItem('gallery_photos_local') || '[]');
+                    const filtered = stored.filter(p => p.id !== id);
+                    localStorage.setItem('gallery_photos_local', JSON.stringify(filtered));
+                }
+
+                galleryImages.splice(index, 1);
+                renderGallery();
+            } catch (err) {
+                alert('Erro ao excluir foto: ' + err.message);
+            }
+        };
+
+        // ============================
+        // SESSION & AUTH
+        // ============================
         function toggleMobileMenu() {
             const menu = document.getElementById('mobileMenu');
             const isHidden = menu.classList.contains('hidden');
-            
             if (isHidden) {
                 menu.classList.remove('hidden');
                 setTimeout(() => menu.classList.remove('translate-x-full'), 10);
@@ -344,79 +907,107 @@
             }
         }
 
+        window.logout = async function() {
+            if (window.supabaseClient) {
+                await window.supabaseClient.auth.signOut();
+            }
+            window.location.href = 'login.html';
+        };
+
         async function checkSession() {
-            const { data: { session } } = await window.supabaseClient.auth.getSession();
-            if (!session) { window.location.href = 'login.html'; return; }
-
-            const navName = document.getElementById('navName');
-            const navInitial = document.getElementById('navInitial');
-            const navPosition = document.getElementById('navPosition');
-            if (navName) {
-                const firstName = session.user.user_metadata?.full_name?.split(' ')[0] || "Irmão";
-                navName.textContent = "Ir. " + firstName;
-                if (navInitial) navInitial.textContent = firstName.charAt(0);
-                if (navPosition) navPosition.textContent = session.user.user_metadata?.position || "Mestre Maçom";
-            }
-
-            const { data: profile } = await window.supabaseClient.from('profiles').select('role, position').eq('id', session.user.id).single();
-            if (profile && (profile.role === 'admin' || profile.position === 'Secretário' || profile.position === 'Venerável Mestre' || profile.position === 'Mestre de Cerimônias')) {
-                const adminLink = document.getElementById('adminMenuLink');
-                if (adminLink) adminLink.classList.remove('hidden');
-            }
-
-            // Set Current Date
+            // Set date immediately
             const currentDateEl = document.getElementById('currentDate');
             if (currentDateEl) {
                 const options = { day: '2-digit', month: 'long', year: 'numeric' };
                 currentDateEl.textContent = new Date().toLocaleDateString('pt-BR', options);
             }
-        }
 
-        function initGallery() {
-            const images = document.querySelectorAll('.gallery-img');
-            galleryImages = Array.from(images).map(img => img.src);
-        }
+            try {
+                if (!window.supabaseClient) {
+                    console.error('Supabase Client não carregado.');
+                    return;
+                }
 
-        window.openLightbox = function(index) {
-            currentImgIndex = index;
-            const lb = document.getElementById('lightbox');
-            const img = document.getElementById('lightboxImg');
-            img.src = galleryImages[currentImgIndex];
-            lb.style.display = 'flex';
-            document.body.style.overflow = 'hidden';
-        }
+                const { data: { session }, error: sessionError } = await window.supabaseClient.auth.getSession();
+                if (sessionError) {
+                    console.error('Erro de sessão:', sessionError.message);
+                    return;
+                }
 
-        window.closeLightbox = function() {
-            const lb = document.getElementById('lightbox');
-            lb.style.display = 'none';
-            document.body.style.overflow = 'auto';
-        }
+                if (!session) {
+                    window.location.href = 'login.html';
+                    return;
+                }
 
-        window.nextImg = function(e) {
-            if (e) e.stopPropagation();
-            currentImgIndex = (currentImgIndex + 1) % galleryImages.length;
-            document.getElementById('lightboxImg').src = galleryImages[currentImgIndex];
-        }
+                // Update nav user info
+                const navName = document.getElementById('navName');
+                const navInitial = document.getElementById('navInitial');
+                const navPosition = document.getElementById('navPosition');
+                if (navName) {
+                    const firstName = session.user.user_metadata?.full_name?.split(' ')[0] || 'Irmão';
+                    navName.textContent = 'Ir. ' + firstName;
+                    if (navInitial) navInitial.textContent = firstName.charAt(0);
+                    if (navPosition) navPosition.textContent = session.user.user_metadata?.position || 'Mestre Maçom';
+                }
 
-        window.prevImg = function(e) {
-            if (e) e.stopPropagation();
-            currentImgIndex = (currentImgIndex - 1 + galleryImages.length) % galleryImages.length;
-            document.getElementById('lightboxImg').src = galleryImages[currentImgIndex];
-        }
+                // Check admin
+                const { data: profile, error: profileError } = await window.supabaseClient
+                    .from('profiles')
+                    .select('role, position')
+                    .eq('id', session.user.id)
+                    .single();
 
-        // Keyboard Support
-        document.addEventListener('keydown', (e) => {
-            const lb = document.getElementById('lightbox');
-            if (lb && lb.style.display === 'flex') {
-                if (e.key === 'ArrowRight') nextImg();
-                if (e.key === 'ArrowLeft') prevImg();
-                if (e.key === 'Escape') closeLightbox();
+                if (profileError) {
+                    console.error('Erro ao buscar perfil:', profileError.message);
+                }
+
+                const role = (profile?.role || '').toLowerCase().trim();
+                const position = (profile?.position || '')
+                    .toLowerCase()
+                    .trim()
+                    .normalize('NFD')
+                    .replace(/[\u0300-\u036f]/g, '');
+
+                const isPowerUser = profile && (
+                    role === 'admin' ||
+                    ['secretario', 'veneravel mestre', 'mestre de cerimonias', 'orador', 'tesoureiro'].includes(position)
+                );
+
+                if (isPowerUser) {
+                    isAdmin = true;
+
+                    // Show admin UI elements
+                    const btnAddPhoto = document.getElementById('btnAddPhoto');
+                    if (btnAddPhoto) btnAddPhoto.classList.remove('hidden');
+
+                    const adminLink = document.getElementById('adminMenuLinkDesktop');
+                    if (adminLink) {
+                        adminLink.classList.remove('hidden');
+                        adminLink.classList.add('flex');
+                    }
+                    const adminLinkMobile = document.getElementById('adminMenuLinkMobile');
+                    if (adminLinkMobile) {
+                        adminLinkMobile.classList.remove('hidden');
+                        adminLinkMobile.classList.add('flex');
+                    }
+
+                    // Re-render gallery to show delete buttons
+                    renderGallery();
+                }
+
+            } catch (err) {
+                console.error('Erro inesperado em checkSession:', err);
             }
-        });
+        }
 
-        document.addEventListener('DOMContentLoaded', () => {
-            checkSession();
-            initGallery();
+        // ============================
+        // INIT
+        // ============================
+        document.addEventListener('DOMContentLoaded', async () => {
+            // Load gallery first (shows static photos immediately)
+            await loadGallery();
+            // Then check session (may update admin state and re-render)
+            await checkSession();
         });
     </script>
 </body>

@@ -253,8 +253,46 @@
                 padding: 1.5rem !important;
             }
         }
+        /* iOS Safari: -webkit-backdrop-filter */
+        .glass-card, nav { -webkit-backdrop-filter: blur(40px); }
+        
+        /* iOS: Modal heights with dvh */
+        #presenceModal > div, #eventModal > div, #announcementModal > div,
+        #editMemberModal > div, #newMemberModal > div {
+            max-height: 90dvh !important;
+            overflow-y: auto !important;
+            -webkit-overflow-scrolling: touch !important;
+        }
+
+        /* iOS: prevent auto-zoom on inputs */
+        input, select, textarea { font-size: 16px !important; }
+        
+        /* iOS: use dvh */
+        .min-h-screen { min-height: 100dvh; }
+        #mobileMenu { height: 100dvh !important; }
+        
+        /* Mobile: tabelas com scroll horizontal */
+        @media (max-width: 768px) {
+            table { display: block; overflow-x: auto; -webkit-overflow-scrolling: touch; width: 100%; }
+            thead, tbody, tr { display: table; width: 100%; table-layout: fixed; }
+            
+            /* Bento grid: 2 colunas em mobile */
+            .grid.gap-4 { grid-template-columns: repeat(2, 1fr) !important; }
+
+            /* Modais mais completos */
+            #presenceModal > div, #eventModal > div, #announcementModal > div,
+            #editMemberModal > div, #newMemberModal > div {
+                width: 95vw !important;
+                max-width: none !important;
+                max-height: 90dvh !important;
+                overflow-y: auto !important;
+                margin: 5dvh auto !important;
+                padding: 1.25rem !important;
+            }
+        }
     </style>
     <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js'></script>
+<link rel="stylesheet" href="/css/mobile.css">
 </head>
 <body class="bg-background text-on-background min-h-screen">
     <div class="bg-logo-overlay"></div>

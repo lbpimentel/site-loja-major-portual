@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html class="dark" lang="pt-BR">
 <head>
     <meta charset="utf-8"/>
@@ -71,7 +71,17 @@
                 padding: 1.5rem !important;
             }
         }
+        /* iOS Safari */
+        .glass-card { -webkit-backdrop-filter: blur(40px); }
+        .min-h-screen { min-height: 100dvh; }
+        #mobileMenu { height: 100dvh !important; }
+        input, select, textarea { font-size: 16px !important; }
+        @media (max-width: 768px) {
+            table { display: block !important; overflow-x: auto !important; -webkit-overflow-scrolling: touch !important; }
+            #uploadModal > div { width: 95vw !important; max-height: 90dvh !important; overflow-y: auto !important; padding: 1.5rem !important; }
+        }
     </style>
+<link rel="stylesheet" href="/css/mobile.css">
 </head>
 <body class="bg-background text-on-background min-h-screen">
     <!-- MOBILE TOP BAR -->

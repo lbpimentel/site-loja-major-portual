@@ -1,0 +1,315 @@
+/**
+ * mobile.css - Correções de responsividade para Android e iOS
+ * Incluir em todas as páginas: <link rel="stylesheet" href="/css/mobile.css">
+ */
+
+/* =============================================
+   1. RESET GLOBAL iOS/Android
+   ============================================= */
+
+/* Prevent iOS text size adjustment after orientation change */
+html {
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+}
+
+/* Use dynamic viewport height (100dvh) - corrige bug do Safari com barra de endereço */
+body {
+    min-height: 100dvh;
+    /* Safe area para notch do iPhone e barra home */
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+/* iOS Safari: webkit-backdrop-filter em todos os elementos com blur */
+.glass-card,
+nav[class*="backdrop"],
+[class*="backdrop-blur"],
+[class*="backdrop_blur"] {
+    -webkit-backdrop-filter: blur(12px);
+}
+
+/* Prevent iOS auto-zoom in inputs (font-size < 16px causa zoom) */
+input, select, textarea {
+    font-size: 16px !important;
+    -webkit-appearance: none;
+    appearance: none;
+    border-radius: 0;
+}
+
+/* Touch targets mínimos de 44x44px (Apple HIG) */
+button, a, [role="button"] {
+    min-height: 44px;
+    min-width: 44px;
+}
+
+/* Prevent horizontal scroll */
+html, body {
+    overflow-x: hidden;
+    max-width: 100vw;
+}
+
+/* Smooth momentum scrolling no iOS */
+.overflow-y-auto, .overflow-auto, [style*="overflow"] {
+    -webkit-overflow-scrolling: touch;
+}
+
+/* =============================================
+   2. MODAIS - Correções universais mobile
+   ============================================= */
+
+/* Todos os modais: altura máxima com scroll interno */
+[id$="Modal"] > div,
+[id$="modal"] > div,
+.modal-content {
+    max-height: 90dvh;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+/* iOS: fix para position:fixed dentro de transform */
+@supports (-webkit-touch-callout: none) {
+    [id$="Modal"],
+    [id$="modal"] {
+        position: fixed;
+        -webkit-overflow-scrolling: touch;
+    }
+}
+
+/* =============================================
+   3. MEDIA QUERIES - Breakpoints principais
+   ============================================= */
+
+/* --- Pequeno (< 480px | iPhone SE, Galaxy A) --- */
+@media (max-width: 480px) {
+    /* Navegação lateral: ocultar por padrão */
+    nav.lg\:flex { display: none !important; }
+    
+    /* Conteúdo principal: sem margem da sidebar */
+    main.lg\:ml-72 {
+        margin-left: 0 !important;
+        padding: 1rem !important;
+        padding-top: 5.5rem !important;
+    }
+
+    /* Cabeçalhos de página */
+    header.mb-12 {
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        gap: 0.75rem !important;
+        margin-bottom: 1.5rem !important;
+    }
+
+    /* Cards: padding reduzido */
+    .glass-card { padding: 1.25rem !important; }
+
+    /* Botões: largura total em mobile */
+    .flex.flex-wrap.items-center.gap-3 {
+        width: 100%;
+    }
+    .flex.flex-wrap.items-center.gap-3 > button,
+    .flex.flex-wrap.items-center.gap-3 > a {
+        flex: 1;
+        justify-content: center;
+        text-align: center;
+    }
+
+    /* Tabelas: scroll horizontal */
+    table {
+        display: block;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        white-space: nowrap;
+    }
+    
+    /* Grids: forçar coluna única */
+    .grid-cols-2, .grid-cols-3, .md\:grid-cols-2, .md\:grid-cols-3,
+    .lg\:grid-cols-2, .lg\:grid-cols-3, .lg\:grid-cols-4 {
+        grid-template-columns: 1fr !important;
+    }
+
+    /* Textos grandes: escalar para mobile */
+    .text-4xl { font-size: 1.75rem !important; }
+    .text-5xl { font-size: 2rem !important; }
+    .text-3xl { font-size: 1.5rem !important; }
+
+    /* Modais: largura total */
+    [id$="Modal"] > div,
+    [id$="modal"] > div {
+        width: 95vw !important;
+        margin: auto !important;
+        padding: 1.25rem !important;
+    }
+}
+
+/* --- Médio (481px - 768px | Android médio, iPhone Plus) --- */
+@media (min-width: 481px) and (max-width: 768px) {
+    main.lg\:ml-72 {
+        margin-left: 0 !important;
+        padding: 1.5rem !important;
+        padding-top: 5.5rem !important;
+    }
+    
+    .glass-card { padding: 1.5rem !important; }
+
+    table {
+        display: block;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+}
+
+/* =============================================
+   4. CALENDÁRIO (FullCalendar) mobile
+   ============================================= */
+@media (max-width: 768px) {
+    #calendar {
+        min-height: 420px !important;
+        font-size: 0.75rem !important;
+    }
+    .fc .fc-toolbar {
+        flex-direction: column !important;
+        gap: 0.5rem !important;
+        align-items: center !important;
+    }
+    .fc .fc-toolbar-title {
+        font-size: 1rem !important;
+    }
+    .fc .fc-button {
+        padding: 0.35rem 0.6rem !important;
+        font-size: 0.7rem !important;
+    }
+    .fc .fc-daygrid-day-number {
+        font-size: 0.7rem !important;
+        padding: 2px 4px !important;
+    }
+    .fc-event-title {
+        font-size: 0.65rem !important;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+}
+
+/* =============================================
+   5. GALERIA - Grid responsivo
+   ============================================= */
+@media (max-width: 640px) {
+    #galleryGrid {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 0.5rem !important;
+    }
+    #galleryGrid .gallery-item {
+        aspect-ratio: 1 / 1 !important;
+    }
+    /* Lightbox mobile */
+    #lightbox img {
+        max-width: 95vw !important;
+        max-height: 75dvh !important;
+    }
+    .prev-btn { left: 8px !important; padding: 8px !important; }
+    .next-btn { right: 8px !important; padding: 8px !important; }
+}
+
+/* =============================================
+   6. DASHBOARD - Bento Grid mobile
+   ============================================= */
+@media (max-width: 640px) {
+    /* Bento grid: forçar 1 coluna */
+    .grid.grid-cols-2.md\:grid-cols-4,
+    .grid.grid-cols-1.md\:grid-cols-2.lg\:grid-cols-4 {
+        grid-template-columns: 1fr 1fr !important;
+    }
+    
+    /* Cards de métricas menores */
+    .metric-card { padding: 1rem !important; }
+
+    /* Tabela de membros com scroll */
+    #membersTable, #pendingTable {
+        display: block;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+}
+
+/* =============================================
+   7. FORMULÁRIOS mobile (cadastro, login)
+   ============================================= */
+@media (max-width: 768px) {
+    /* Grid de 2 colunas em formulários → 1 coluna */
+    form .grid.grid-cols-2 {
+        grid-template-columns: 1fr !important;
+    }
+    
+    /* Padding do main em páginas de auth */
+    main.min-h-screen.flex.flex-col.items-center {
+        padding: 1rem !important;
+        padding-top: 2rem !important;
+        justify-content: flex-start !important;
+    }
+
+    /* Card de login/cadastro */
+    .glass-card.p-10 {
+        padding: 1.5rem !important;
+    }
+}
+
+/* =============================================
+   8. NAVBAR LATERAL - Safe area e shadow
+   ============================================= */
+@media (max-width: 1023px) {
+    /* Sidebar: oculta em mobile */
+    nav.hidden.lg\:flex {
+        display: none !important;
+    }
+    
+    /* Top bar mobile: safe area para notch */
+    nav.lg\:hidden {
+        padding-top: max(1rem, env(safe-area-inset-top, 1rem)) !important;
+    }
+    
+    /* Menu mobile overlay: usar dvh */
+    #mobileMenu {
+        height: 100dvh !important;
+    }
+}
+
+/* =============================================
+   9. iOS SAFARI - Correções específicas
+   ============================================= */
+
+/* Fix: botões com position:sticky em iOS */
+@supports (-webkit-touch-callout: none) {
+    /* Usar 100dvh em vez de 100vh */
+    .min-h-screen {
+        min-height: 100dvh;
+    }
+    
+    /* Fix: backdrop-filter no Safari */
+    .backdrop-blur-xl { -webkit-backdrop-filter: blur(24px); }
+    .backdrop-blur-2xl { -webkit-backdrop-filter: blur(40px); }
+    .backdrop-blur-3xl { -webkit-backdrop-filter: blur(64px); }
+    .backdrop-blur-sm { -webkit-backdrop-filter: blur(4px); }
+    
+    /* Fix: overflow em modais com teclado virtual */
+    .fixed.inset-0 {
+        position: fixed;
+        inset: 0;
+    }
+}
+
+/* =============================================
+   10. ANDROID - Correções específicas
+   ============================================= */
+
+/* Android: Fix para border-radius em alguns inputs */
+@media screen and (-webkit-min-device-pixel-ratio: 0) and (min-resolution: 0.001dpcm) {
+    input[type="text"],
+    input[type="email"],
+    input[type="password"],
+    input[type="number"],
+    input[type="url"],
+    select,
+    textarea {
+        background-clip: padding-box;
+    }
+}

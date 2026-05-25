@@ -130,7 +130,21 @@
             .space-y-8 > * + * { margin-top: 1.5rem !important; }
             button[type="submit"] { padding: 1rem !important; font-size: 0.8rem !important; }
         }
+        /* iOS: dvh e safe-area para notch */
+        main { min-height: 100dvh; padding-bottom: env(safe-area-inset-bottom, 20px); }
+        /* iOS: modal de recuperação de senha */
+        #resetPasswordModal > div {
+            max-height: 90dvh;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+        @media (max-width: 390px) {
+            .glass-card { padding: 1.25rem !important; }
+            h1.font-h2 { font-size: 1.15rem !important; }
+            .h-28 { height: 4rem !important; }
+        }
     </style>
+<link rel="stylesheet" href="/css/mobile.css">
 </head>
 <body class="bg-background text-on-background font-body-md selection:bg-secondary selection:text-on-secondary">
 <!-- Hero Background Wrapper -->

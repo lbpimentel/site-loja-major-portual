@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html class="dark" lang="pt-BR">
 <head>
     <meta charset="utf-8"/>
@@ -140,7 +140,23 @@
             .space-y-6 > * + * { margin-top: 1.25rem !important; }
             button[type="submit"] { padding: 1.25rem !important; font-size: 0.8rem !important; margin-top: 2rem !important; }
         }
+
+        /* === iOS/Android Mobile Fixes === */
+        html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+        body { padding-bottom: env(safe-area-inset-bottom, 0px); }
+        .glass-card, nav { -webkit-backdrop-filter: blur(12px); }
+        .min-h-screen { min-height: 100dvh; }
+        #mobileMenu { height: 100dvh !important; }
+        input, select, textarea { font-size: 16px !important; -webkit-appearance: none; }
+        @media (max-width: 480px) {
+            .text-4xl { font-size: 1.75rem !important; }
+            .text-5xl { font-size: 2rem !important; }
+            .py-32 { padding-top: 4rem !important; padding-bottom: 4rem !important; }
+            .glass-card { padding: 1.25rem !important; }
+            section { padding-left: 1rem !important; padding-right: 1rem !important; }
+        }
     </style>
+<link rel="stylesheet" href="/css/mobile.css">
 </head>
 <body class="bg-background text-on-background font-body-md selection:bg-secondary selection:text-on-secondary">
     <!-- Background Wrapper -->

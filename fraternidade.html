@@ -160,19 +160,41 @@
             0% { background-position: 200% 0; }
             100% { background-position: -200% 0; }
         }
-
         @media (max-width: 768px) {
             main { margin-left: 0 !important; padding: 1rem !important; padding-top: 5.5rem !important; }
             header { flex-direction: column; align-items: flex-start !important; gap: 1rem; }
             .text-right { text-align: left !important; }
-            #galleryGrid { grid-template-columns: 1fr !important; gap: 1rem !important; }
-            #lightbox img { max-width: 95%; max-height: 70vh; }
+            /* Galeria: 2 colunas em mobile pequeno */
+            #galleryGrid { grid-template-columns: repeat(2, 1fr) !important; gap: 0.5rem !important; }
+            #galleryGrid .gallery-item { aspect-ratio: 1/1 !important; }
+            #lightbox img { max-width: 95%; max-height: 75dvh; }
             .nav-btn { padding: 8px; background: rgba(0,0,0,0.6); border-color: rgba(255,255,255,0.2); }
-            .prev-btn { left: 10px; }
-            .next-btn { right: 10px; }
+            .prev-btn { left: 8px; }
+            .next-btn { right: 8px; }
             .glass-card { padding: 1.25rem !important; }
+            /* Modal de upload: scroll em telas pequenas */
+            #uploadPhotoModal > div {
+                width: 95vw !important;
+                max-height: 92dvh !important;
+                overflow-y: auto !important;
+                -webkit-overflow-scrolling: touch !important;
+                padding: 1.25rem !important;
+                margin: 4dvh auto !important;
+            }
+            /* Touch: botão de excluir sempre visível em mobile */
+            .gallery-item .delete-overlay { opacity: 1 !important; }
+            /* Botões de ação: wrap para mobile */
+            .flex.flex-wrap.items-center.gap-3 { width: 100%; }
+            .flex.flex-wrap.items-center.gap-3 > * { flex: 1; justify-content: center; text-align: center; }
         }
+        /* iOS: backdrop-filter e dvh */
+        .glass-card, nav, #lightbox { -webkit-backdrop-filter: blur(12px); }
+        .min-h-screen { min-height: 100dvh; }
+        #mobileMenu { height: 100dvh !important; }
+        /* iOS: prevent zoom on inputs */
+        input, select, textarea { font-size: 16px !important; }
     </style>
+<link rel="stylesheet" href="/css/mobile.css">
 </head>
 <body class="bg-background text-on-background min-h-screen">
     <div class="bg-logo-overlay"></div>

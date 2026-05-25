@@ -121,8 +121,32 @@
             
             .glass-card { padding: 1.25rem !important; }
         }
+        /* iOS Safari: -webkit-backdrop-filter */
+        .glass-card, nav { -webkit-backdrop-filter: blur(40px); }
+        /* iOS: dvh */
+        .min-h-screen { min-height: 100dvh; }
+        #mobileMenu { height: 100dvh !important; }
+        /* iOS: prevent zoom on inputs */
+        input, select, textarea { font-size: 16px !important; }
+        /* Modal do evento: scroll em mobile */
+        #eventModal > div, #eventDetailModal > div {
+            max-height: 90dvh !important;
+            overflow-y: auto !important;
+            -webkit-overflow-scrolling: touch !important;
+        }
+        @media (max-width: 480px) {
+            #calendar { font-size: 0.65rem !important; min-height: 380px !important; }
+            .fc .fc-button { padding: 0.25rem 0.4rem !important; font-size: 0.65rem !important; }
+            .fc-event { font-size: 0.6rem !important; }
+            #eventModal > div, #eventDetailModal > div {
+                width: 95vw !important;
+                padding: 1rem !important;
+                margin: 5dvh auto !important;
+            }
+        }
     </style>
     <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js'></script>
+<link rel="stylesheet" href="/css/mobile.css">
 </head>
 <body class="bg-background text-on-background min-h-screen">
     <div class="bg-logo-overlay"></div>    <!-- MOBILE TOP BAR -->

@@ -14,9 +14,10 @@ export default defineConfig(({mode}) => {
     // apiDevPlugin serve as funcoes de api/ no `dev`; em producao quem as
     // serve e a propria Vercel.
     plugins: [siteConfigPlugin(), apiDevPlugin(), react(), tailwindcss()],
-    define: {
-      'process.env.GEMINI_API_KEY': JSON.stringify(env.GEMINI_API_KEY),
-    },
+    // Nao existe `define` para a chave da IA de proposito: `define` faz a
+    // substituicao TEXTUAL no bundle do cliente, e a chave iria parar no
+    // JavaScript baixado por qualquer visitante. Quem fala com o provedor e
+    // a funcao serverless em api/, que le process.env no servidor.
     resolve: {
       alias: {
         '@': path.resolve(__dirname, '.'),

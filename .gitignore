@@ -12,3 +12,9 @@ coverage/
 # Artefatos de teste (Playwright) — gerados a cada execucao, nao versionar
 test-results/
 playwright-report/
+
+# PDFs do quadro da Loja: dados pessoais de Irmaos, cunhadas e sobrinhos.
+# Um arquivo commitado fica no historico do git para sempre, e este repositorio
+# e o mesmo template servido a outras Lojas.
+*.pdf
+*.PDF

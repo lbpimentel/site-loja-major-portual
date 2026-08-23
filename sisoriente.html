@@ -155,7 +155,12 @@
         .faq-item.active .faq-icon {
             transform: rotate(180deg);
         }
+        /* Paridade de responsividade com as demais paginas do portal */
+        .min-h-screen { min-height: 100dvh; }
+        /* iOS aplica zoom em campo com fonte menor que 16px ao receber foco */
+        input, select, textarea { font-size: 16px !important; }
     </style>
+<link rel="stylesheet" href="/css/mobile.css">
 </head>
 <body class="selection:bg-amber-500/20 selection:text-white">
 

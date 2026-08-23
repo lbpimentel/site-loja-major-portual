@@ -1323,7 +1323,15 @@
                 .eq('id', session.user.id);
         }
         
-        if (profile && (profile.role === 'admin' || profile.position === 'Secretário' || profile.position === 'Venerável Mestre' || profile.position === 'Orador')) {
+        // Normaliza como cargo_normalizado() faz no banco: a comparacao
+        // exata com acento quebra assim que o cargo for gravado de outra
+        // forma, e a tela passaria a discordar do RLS sem aviso nenhum.
+        const cargoNormalizado = (profile?.position || '')
+            .toLowerCase().trim()
+            .normalize('NFD').replace(/[̀-ͯ]/g, '');
+
+        if (profile && (profile.role === 'admin' ||
+            ['secretario', 'veneravel mestre', 'orador'].includes(cargoNormalizado))) {
             isAdmin = true;
             const btnNewAnnouncement = document.getElementById('btnNewAnnouncement');
             if(btnNewAnnouncement) btnNewAnnouncement.classList.remove('hidden');

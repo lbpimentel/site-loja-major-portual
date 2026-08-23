@@ -120,17 +120,33 @@ faz seu próprio build a partir do mesmo código, com o config da sua Loja.
 
 ---
 
+## O que já está no template
+
+Todas as páginas — o site público (`index`, `historia`, `patrono`) **e** as de
+sistema (`dashboard`, `tesouraria`, `biblioteca`, `calendario`, `login`,
+`cadastro`, `fraternidade`, `timbre`, `sisoriente`) — leem nome, logo, contato
+e listas do arquivo da Loja. Não resta nenhum dado da Major Portugal cravado
+em `.html`.
+
+O **PWA** acompanha a Loja: `manifest.json` e `sw.js` não existem como arquivos
+em `public/` — são gerados no build a partir do config (ver
+`vite-plugin-site-config.js` e `pwa/sw-template.js`). O nome do cache do service
+worker carrega o slug da Loja, para que duas Lojas visitadas no mesmo navegador
+não disputem a mesma chave de cache.
+
+As **chaves do Supabase** ficam em `lojas/<slug>.js` → `integracoes.supabase`.
+Cada Loja aponta para o seu próprio projeto: bancos fisicamente separados, sem
+tabela compartilhada de onde uma Loja pudesse ler a outra. A chave publicável é
+visível no navegador por design — quem protege os dados é o RLS
+(`supabase/01_rls.sql`), e `supabase/replicar/GUIA.md` traz o passo a passo para
+provisionar o banco da Loja seguinte.
+
+---
+
 ## O que ainda NÃO está no template
 
-O escopo desta refatoração foi o **site público** (`index.html`, `historia.html`,
-`patrono.html`). As páginas de sistema continuam com dados fixos no HTML:
-
-- `dashboard.html`, `tesouraria.html`, `biblioteca.html`, `calendario.html`,
-  `login.html`, `cadastro.html`, `fraternidade.html`, `timbre.html`, `sisoriente.html`
-
-Elas carregam o nome e o logo da Loja no cabeçalho. Antes de vender para a Loja B,
-essas páginas precisam receber o mesmo tratamento (é mecânico: trocar os textos
-fixos pelos marcadores e adicioná-las ao mesmo build).
-
-As chaves do Supabase continuam em `public/js/supabase-config.js` — cada Loja
-precisará das suas.
+- **Conteúdo dentro do banco** (membros, atas, eventos, arquivos da biblioteca)
+  não é copiado por este build: nasce vazio em cada projeto Supabase novo.
+- **`css/mobile.css`** carrega a paleta âmbar como cor de destaque em regras
+  fixas. `marca.corPrimaria` cobre a `theme-color` do PWA, mas uma Loja que
+  queira outra cor ainda precisa de um passe no CSS.

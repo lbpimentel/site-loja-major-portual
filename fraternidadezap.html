@@ -1,0 +1,864 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FraternidadeZap - Portal {{loja.nomeCurto}}</title>
+    <meta name="description" content="Lembrador de aniversários da família maçônica da {{loja.nomeCompleto}}.">
+    <script src="/js/theme.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;0,6..72,700;1,6..72,400&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #e9c349;
+            --secondary: #e9c349;
+            --background: #0a0a0a;
+            --surface: #141414;
+            --on-background: #ffffff;
+            --on-surface: #ffffff;
+            --on-surface-variant: #94a3b8;
+        }
+        body { font-family: 'Inter', sans-serif; background-color: var(--background); color: var(--on-background); }
+        .font-newsreader { font-family: 'Newsreader', serif; }
+        .glass-card {
+            background: rgba(20, 20, 20, 0.8);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 1rem;
+        }
+        .bg-logo-overlay {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 70vh;
+            height: 70vh;
+            background-image: url('{{marca.logo}}');
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            opacity: 0.15;
+            z-index: -1;
+            pointer-events: none;
+        }
+        .aba-ativa { border-color: #e9c349; color: #e9c349; }
+        /* iOS: backdrop-filter e dvh */
+        .glass-card, nav { -webkit-backdrop-filter: blur(12px); }
+        .min-h-screen { min-height: 100dvh; }
+        #mobileMenu { height: 100dvh !important; }
+        /* iOS: prevent zoom on inputs */
+        input, select, textarea { font-size: 16px !important; }
+    </style>
+<link rel="stylesheet" href="/css/mobile.css">
+</head>
+<body class="bg-background text-on-background min-h-screen">
+    <div class="bg-logo-overlay"></div>
+
+    <!-- MOBILE TOP BAR -->
+    <nav class="lg:hidden fixed top-0 w-full z-50 flex justify-between items-center px-6 py-4 bg-slate-950/90 backdrop-blur-xl border-b border-white/10">
+        <div class="flex items-center gap-3">
+            <img src="{{marca.logo}}" alt="Logo" class="h-8 w-auto">
+            <span class="font-newsreader text-amber-500 font-bold">{{loja.nomeCurto}}</span>
+        </div>
+        <div class="flex items-center gap-2">
+            <button onclick="toggleTheme()" class="text-amber-500 hover:text-amber-300 transition-colors flex items-center justify-center p-2 focus:outline-none" aria-label="Alternar Tema">
+                <span class="material-symbols-outlined theme-icon text-2xl">light_mode</span>
+            </button>
+            <button onclick="toggleMobileMenu()" class="text-amber-500">
+                <span class="material-symbols-outlined text-3xl">menu</span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- MOBILE MENU OVERLAY -->
+    <div id="mobileMenu" class="fixed inset-0 z-[60] hidden flex flex-col bg-slate-950/98 backdrop-blur-2xl p-8 transform transition-transform duration-500 translate-x-full">
+        <div class="flex justify-between items-center mb-12">
+            <div class="flex items-center gap-3">
+                <img src="{{marca.logo}}" alt="Logo" class="h-8">
+                <span class="font-newsreader text-amber-500 font-bold text-lg">Menu Principal</span>
+            </div>
+            <button onclick="toggleMobileMenu()" class="text-amber-500 w-12 h-12 flex items-center justify-center">
+                <span class="material-symbols-outlined text-4xl">close</span>
+            </button>
+        </div>
+        <div class="flex flex-col gap-4">
+            <a id="dashboardMenuLinkMobile" class="flex items-center gap-6 p-5 bg-white/5 text-slate-200 border-white/5 rounded-2xl active:scale-95 transition-all border" href="dashboard.html">
+                <span class="material-symbols-outlined text-amber-500">dashboard</span>
+                <span class="text-lg font-medium tracking-wide">Painel Principal</span>
+            </a>
+            <a class="flex items-center gap-6 p-5 bg-white/5 text-slate-200 border-white/5 rounded-2xl active:scale-95 transition-all border" href="biblioteca.html">
+                <span class="material-symbols-outlined text-amber-500">auto_stories</span>
+                <span class="text-lg font-medium tracking-wide">Biblioteca Digital</span>
+            </a>
+            <a class="flex items-center gap-6 p-5 bg-white/5 text-slate-200 border-white/5 rounded-2xl active:scale-95 transition-all border" href="fraternidade.html">
+                <span class="material-symbols-outlined text-amber-500">local_library</span>
+                <span class="text-lg font-medium tracking-wide">Galeria de Fotos</span>
+            </a>
+            <a class="flex items-center gap-6 p-5 bg-amber-500/10 text-amber-500 border-amber-500/10 rounded-2xl active:scale-95 transition-all border" href="fraternidadezap.html">
+                <span class="material-symbols-outlined text-amber-500">cake</span>
+                <span class="text-lg font-medium tracking-wide">FraternidadeZap</span>
+            </a>
+            <a class="flex items-center gap-6 p-5 bg-white/5 text-slate-200 border-white/5 rounded-2xl active:scale-95 transition-all border" href="calendario.html">
+                <span class="material-symbols-outlined text-amber-500">calendar_month</span>
+                <span class="text-lg font-medium tracking-wide">Calendário de Sessões</span>
+            </a>
+            <a class="flex items-center gap-6 p-5 bg-white/5 text-slate-200 border-white/5 rounded-2xl active:scale-95 transition-all border" href="tesouraria.html">
+                <span class="material-symbols-outlined text-amber-500">account_balance_wallet</span>
+                <span class="text-lg font-medium tracking-wide">Tesouraria</span>
+            </a>
+            <a id="adminMenuLinkMobile" href="dashboard.html?section=admin" class="hidden items-center gap-6 p-5 bg-white/5 rounded-2xl text-slate-200 border border-white/5 active:scale-95 transition-all">
+                <span class="material-symbols-outlined text-amber-500">admin_panel_settings</span>
+                <span class="text-lg font-medium tracking-wide">Administração</span>
+            </a>
+            <button onclick="logout()" class="flex items-center gap-6 p-5 bg-red-500/10 rounded-2xl text-red-400 border border-red-500/10 active:scale-95 transition-all mt-8">
+                <span class="material-symbols-outlined">logout</span>
+                <span class="text-lg font-medium tracking-wide uppercase">Sair do Portal</span>
+            </button>
+        </div>
+        <div class="mt-auto text-center pb-8 px-6">
+            <p class="text-slate-600 text-[10px] uppercase tracking-widest mb-4">{{loja.nomeCompleto}}</p>
+        </div>
+    </div>
+
+    <!-- SIDE NAVBAR (Desktop) -->
+    <nav class="hidden lg:flex fixed left-0 top-0 h-screen flex-col bg-slate-950/95 backdrop-blur-xl w-72 border-r border-white/10 shadow-2xl z-50">
+        <div class="p-8 flex flex-col items-center text-center">
+            <h1 class="text-amber-500 font-bold font-newsreader text-lg leading-tight tracking-tight">{{loja.nomeCompleto}}</h1>
+            <p class="text-slate-500 text-[10px] uppercase tracking-[0.2em] mt-2">{{loja.obediencia}}</p>
+        </div>
+
+        <div class="flex-1 px-4 py-6 space-y-2 overflow-y-auto">
+            <a id="dashboardMenuLink" href="dashboard.html" class="flex items-center gap-4 px-6 py-4 text-slate-400 hover:text-amber-500 hover:bg-white/5 rounded-xl transition-all group">
+                <span class="material-symbols-outlined">dashboard</span>
+                <span class="font-medium">Painel Principal</span>
+            </a>
+            <a href="biblioteca.html" class="flex items-center gap-4 px-6 py-4 text-slate-400 hover:text-amber-500 hover:bg-white/5 rounded-xl transition-all group">
+                <span class="material-symbols-outlined">auto_stories</span>
+                <span class="font-medium">Biblioteca Digital</span>
+            </a>
+            <a href="fraternidade.html" class="flex items-center gap-4 px-6 py-4 text-slate-400 hover:text-amber-500 hover:bg-white/5 rounded-xl transition-all group">
+                <span class="material-symbols-outlined">local_library</span>
+                <span class="font-medium">Galeria de Fotos</span>
+            </a>
+            <a href="fraternidadezap.html" class="flex items-center gap-4 px-6 py-4 bg-amber-500/10 text-amber-500 rounded-xl transition-all group">
+                <span class="material-symbols-outlined">cake</span>
+                <span class="font-medium">FraternidadeZap</span>
+            </a>
+            <a href="calendario.html" class="flex items-center gap-4 px-6 py-4 text-slate-400 hover:text-amber-500 hover:bg-white/5 rounded-xl transition-all group">
+                <span class="material-symbols-outlined">calendar_month</span>
+                <span class="font-medium">Calendário de Sessões</span>
+            </a>
+            <a href="tesouraria.html" class="flex items-center gap-4 px-6 py-4 text-slate-400 hover:text-amber-500 hover:bg-white/5 rounded-xl transition-all group">
+                <span class="material-symbols-outlined">account_balance_wallet</span>
+                <span class="font-medium">Tesouraria</span>
+            </a>
+            <a id="adminMenuLink" href="dashboard.html?section=admin" class="hidden items-center gap-4 px-6 py-4 text-slate-400 hover:text-amber-500 hover:bg-white/5 rounded-xl transition-all group">
+                <span class="material-symbols-outlined">admin_panel_settings</span>
+                <span class="font-medium">Administração</span>
+            </a>
+        </div>
+
+        <div class="p-6 border-t border-white/5">
+            <div class="flex items-center gap-4 p-4 bg-white/5 rounded-2xl mb-4">
+                <div class="w-10 h-10 rounded-full bg-amber-500 flex items-center justify-center text-black font-bold" id="navInitial">M</div>
+                <div class="flex-1">
+                    <p class="text-sm font-bold text-slate-200" id="navName">Membro</p>
+                    <p class="text-[10px] text-slate-500 uppercase tracking-widest" id="navPosition">Portal Ativo</p>
+                </div>
+            </div>
+            <button onclick="toggleTheme()" class="w-full flex items-center justify-center gap-2 py-2 text-slate-500 hover:text-amber-500 transition-colors text-xs font-bold uppercase tracking-widest group mb-2">
+                <span class="material-symbols-outlined theme-icon text-lg">light_mode</span>
+                <span>Alternar Tema</span>
+            </button>
+            <button onclick="logout()" class="w-full flex items-center justify-center gap-2 py-3 text-slate-500 hover:text-red-400 transition-colors text-sm font-bold uppercase tracking-widest group">
+                <span class="material-symbols-outlined text-xl group-hover:rotate-12 transition-transform">logout</span>
+                Sair do Portal
+            </button>
+        </div>
+    </nav>
+
+    <main class="lg:ml-72 min-h-screen p-6 lg:p-12 pt-24 lg:pt-12">
+        <header class="mb-10">
+            <p class="text-amber-500/70 text-[10px] uppercase tracking-[0.3em] font-bold mb-2">Chancelaria &middot; Hospitalaria</p>
+            <h2 class="font-newsreader text-4xl lg:text-5xl font-bold">FraternidadeZap</h2>
+            <p class="text-slate-400 mt-3 max-w-2xl">
+                Nenhum aniversário da família maçônica passa em branco. Cada Irmão cadastra a
+                própria família; a Chancelaria enxerga o quadro do mês e dispara os parabéns.
+            </p>
+        </header>
+
+        <!-- ================= ABAS ================= -->
+        <div class="border-b border-white/10 mb-8 flex gap-2 overflow-x-auto">
+            <button id="abaBotaoFamilia" onclick="trocarAba('familia')"
+                    class="aba-ativa px-5 py-3 border-b-2 font-medium whitespace-nowrap transition-all">
+                <span class="material-symbols-outlined align-middle text-lg mr-1">family_restroom</span>
+                Minha Família
+            </button>
+            <button id="abaBotaoQuadro" onclick="trocarAba('quadro')"
+                    class="hidden px-5 py-3 border-b-2 border-transparent text-slate-400 hover:text-amber-500 font-medium whitespace-nowrap transition-all">
+                <span class="material-symbols-outlined align-middle text-lg mr-1">cake</span>
+                Quadro do Mês
+            </button>
+            <button id="abaBotaoTemplates" onclick="trocarAba('templates')"
+                    class="hidden px-5 py-3 border-b-2 border-transparent text-slate-400 hover:text-amber-500 font-medium whitespace-nowrap transition-all">
+                <span class="material-symbols-outlined align-middle text-lg mr-1">edit_note</span>
+                Mensagens Padrão
+            </button>
+        </div>
+
+        <!-- ================= ABA: MINHA FAMÍLIA ================= -->
+        <section id="abaFamilia" class="space-y-6">
+            <div class="flex flex-wrap justify-between items-center gap-4">
+                <div>
+                    <h3 class="font-newsreader text-2xl font-bold">Cunhadas e Sobrinhos</h3>
+                    <p class="text-slate-500 text-sm mt-1">Só você e a Chancelaria enxergam esta lista.</p>
+                </div>
+                <button onclick="abrirModalDependente()"
+                        class="flex items-center gap-2 bg-amber-500 hover:bg-amber-400 text-black font-bold px-5 py-3 rounded-xl transition-all active:scale-95">
+                    <span class="material-symbols-outlined">person_add</span>
+                    Cadastrar
+                </button>
+            </div>
+
+            <div class="glass-card p-6">
+                <h4 class="text-xs uppercase tracking-widest text-slate-500 font-bold mb-4">Meu aniversário</h4>
+                <form id="formMeuAniversario" class="grid gap-4 sm:grid-cols-3 items-end">
+                    <div>
+                        <label class="block text-xs text-slate-400 mb-2" for="meuNascimento">Data de nascimento</label>
+                        <input type="date" id="meuNascimento"
+                               class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-on-background focus:border-amber-500 focus:outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-xs text-slate-400 mb-2" for="meuTelefone">Meu WhatsApp</label>
+                        <input type="tel" id="meuTelefone" inputmode="tel" placeholder="(21) 99888-7777"
+                               class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-on-background focus:border-amber-500 focus:outline-none">
+                    </div>
+                    <button type="submit"
+                            class="bg-white/5 hover:bg-white/10 border border-white/10 font-bold px-5 py-3 rounded-xl transition-all">
+                        Salvar
+                    </button>
+                </form>
+            </div>
+
+            <div id="listaDependentes" class="grid gap-4 md:grid-cols-2 xl:grid-cols-3"></div>
+            <div id="familiaVazia" class="hidden glass-card p-12 text-center">
+                <span class="material-symbols-outlined text-5xl text-slate-700">family_restroom</span>
+                <p class="text-slate-400 mt-4">Nenhum familiar cadastrado ainda.</p>
+                <p class="text-slate-600 text-sm mt-1">Cadastre sua esposa e seus filhos para que a Loja não perca a data.</p>
+            </div>
+        </section>
+
+        <!-- ================= ABA: QUADRO DO MÊS ================= -->
+        <section id="abaQuadro" class="hidden space-y-8">
+            <div class="grid gap-4 sm:grid-cols-3">
+                <div class="glass-card p-6 border-l-4 border-l-amber-500">
+                    <p class="text-[10px] uppercase tracking-widest text-slate-500 font-bold">Hoje</p>
+                    <p id="metricaHoje" class="font-newsreader text-4xl font-bold text-amber-500 mt-2">0</p>
+                    <p class="text-slate-500 text-xs mt-1">aniversariantes</p>
+                </div>
+                <div class="glass-card p-6 border-l-4 border-l-sky-500">
+                    <p class="text-[10px] uppercase tracking-widest text-slate-500 font-bold">Próximos 7 dias</p>
+                    <p id="metricaSemana" class="font-newsreader text-4xl font-bold text-sky-400 mt-2">0</p>
+                    <p class="text-slate-500 text-xs mt-1">aniversariantes</p>
+                </div>
+                <div class="glass-card p-6 border-l-4 border-l-fuchsia-500">
+                    <p class="text-[10px] uppercase tracking-widest text-slate-500 font-bold">No mês de <span id="rotuloMes">—</span></p>
+                    <p id="metricaMes" class="font-newsreader text-4xl font-bold text-fuchsia-400 mt-2">0</p>
+                    <p class="text-slate-500 text-xs mt-1">aniversariantes</p>
+                </div>
+            </div>
+
+            <div class="glass-card overflow-hidden">
+                <div class="p-6 border-b border-white/5 flex flex-wrap justify-between items-center gap-3">
+                    <h3 class="font-newsreader text-2xl font-bold">Aniversariantes de <span id="rotuloMesTabela">—</span></h3>
+                    <button onclick="copiarQuadroDoMes()"
+                            class="flex items-center gap-2 bg-white/5 hover:bg-white/10 border border-white/10 text-sm font-bold px-4 py-2 rounded-xl transition-all">
+                        <span class="material-symbols-outlined text-lg">content_copy</span>
+                        Copiar o mês inteiro
+                    </button>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-sm">
+                        <thead class="bg-white/5 text-slate-400 text-[10px] uppercase tracking-widest">
+                            <tr>
+                                <th class="text-left font-bold px-6 py-4">Dia</th>
+                                <th class="text-left font-bold px-6 py-4">Nome</th>
+                                <th class="text-left font-bold px-6 py-4">Vínculo</th>
+                                <th class="text-left font-bold px-6 py-4 hidden md:table-cell">Família de</th>
+                                <th class="text-right font-bold px-6 py-4">Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody id="corpoQuadro" class="divide-y divide-white/5"></tbody>
+                    </table>
+                </div>
+                <div id="quadroVazio" class="hidden p-12 text-center">
+                    <span class="material-symbols-outlined text-5xl text-slate-700">event_busy</span>
+                    <p class="text-slate-400 mt-4">Nenhum aniversário neste mês.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= ABA: TEMPLATES ================= -->
+        <section id="abaTemplates" class="hidden space-y-6">
+            <div class="glass-card p-6">
+                <h3 class="font-newsreader text-2xl font-bold mb-2">Mensagens padrão</h3>
+                <p class="text-slate-400 text-sm">
+                    O texto sai em nome da Loja. As variáveis disponíveis aparecem sob cada campo
+                    e são trocadas na hora do envio.
+                </p>
+            </div>
+            <div id="listaTemplates" class="space-y-6"></div>
+        </section>
+    </main>
+
+    <!-- ================= MODAL: DEPENDENTE ================= -->
+    <div id="modalDependente" class="hidden fixed inset-0 bg-black/85 backdrop-blur-sm z-[150] flex items-center justify-center p-4">
+        <div class="glass-card w-full max-w-lg max-h-[90dvh] overflow-y-auto">
+            <div class="flex justify-between items-center p-6 border-b border-white/5">
+                <h3 id="tituloModalDependente" class="font-newsreader text-2xl font-bold">Cadastrar familiar</h3>
+                <button onclick="fecharModalDependente()" class="text-slate-500 hover:text-amber-500 w-10 h-10 flex items-center justify-center">
+                    <span class="material-symbols-outlined text-3xl">close</span>
+                </button>
+            </div>
+            <form id="formDependente" class="p-6 space-y-5">
+                <input type="hidden" id="dependenteId">
+
+                <div>
+                    <label class="block text-xs text-slate-400 mb-2" for="dependenteNome">Nome completo *</label>
+                    <input type="text" id="dependenteNome" required maxlength="120"
+                           class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-on-background focus:border-amber-500 focus:outline-none">
+                </div>
+
+                <div class="grid gap-4 sm:grid-cols-2">
+                    <div>
+                        <label class="block text-xs text-slate-400 mb-2" for="dependenteParentesco">Vínculo *</label>
+                        <select id="dependenteParentesco" required
+                                class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-on-background focus:border-amber-500 focus:outline-none">
+                            <option class="bg-background" value="cunhada">Cunhada (esposa)</option>
+                            <option class="bg-background" value="filho">Filho</option>
+                            <option class="bg-background" value="filha">Filha</option>
+                            <option class="bg-background" value="outro">Outro familiar</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs text-slate-400 mb-2" for="dependenteNascimento">Nascimento *</label>
+                        <input type="date" id="dependenteNascimento" required
+                               class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-on-background focus:border-amber-500 focus:outline-none">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs text-slate-400 mb-2" for="dependenteTelefone">WhatsApp</label>
+                    <input type="tel" id="dependenteTelefone" inputmode="tel" placeholder="(21) 99888-7777"
+                           class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-on-background focus:border-amber-500 focus:outline-none">
+                    <p class="text-slate-600 text-xs mt-2">Opcional. Sem número, a mensagem ainda pode ser copiada.</p>
+                </div>
+
+                <div>
+                    <label class="block text-xs text-slate-400 mb-2" for="dependenteObservacoes">Observações</label>
+                    <textarea id="dependenteObservacoes" rows="2" maxlength="280"
+                              class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-on-background focus:border-amber-500 focus:outline-none"></textarea>
+                </div>
+
+                <div id="erroDependente" class="hidden bg-red-500/10 border border-red-500/20 text-red-300 text-sm rounded-xl px-4 py-3"></div>
+
+                <div class="flex gap-3 pt-2">
+                    <button type="button" onclick="fecharModalDependente()"
+                            class="flex-1 bg-white/5 hover:bg-white/10 border border-white/10 font-bold py-3 rounded-xl transition-all">
+                        Cancelar
+                    </button>
+                    <button type="submit" id="botaoSalvarDependente"
+                            class="flex-1 bg-amber-500 hover:bg-amber-400 text-black font-bold py-3 rounded-xl transition-all active:scale-95">
+                        Salvar
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- ================= AVISO ================= -->
+    <div id="aviso" class="hidden fixed bottom-6 left-1/2 -translate-x-1/2 z-[200] px-6 py-4 rounded-2xl font-medium shadow-2xl"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <!-- Config da Loja: injetada em build-time a partir de lojas/<slug>.js -->
+<script>
+  window.__SITE_CONFIG__ = {
+    supabase: {
+      url: "{{integracoes.supabase.url}}",
+      anonKey: "{{integracoes.supabase.anonKey}}"
+    },
+    loja: {
+      nomeCompleto: "{{loja.nomeCompleto}}",
+      nomeCurto: "{{loja.nomeCurto}}"
+    }
+  };
+</script>
+<script src="/js/supabase-config.js"></script>
+<script src="/js/fraternidade.js"></script>
+    <script>
+        // ====================================================================
+        // FRATERNIDADEZAP — camada de tela
+        //
+        // O cálculo e o acesso ao banco vivem em /js/fraternidade.js. Aqui só
+        // existe DOM. A separação não é estética: os textos das mensagens usam
+        // chaves como variável, e a mesma sintaxe de chaves duplas é a do
+        // vite-plugin-site-config — um exemplo de template escrito neste
+        // <script> derrubaria o build. Por isso todo texto de template mora
+        // no .js, que o Vite copia cru.
+        // ====================================================================
+
+        const FZ = window.FraternidadeZap;
+        const calc = FZ.calculo;
+
+        let ehDiretoria = false;
+        let abaAtual = 'familia';
+
+        // ---------------------------------------------------------------
+        // UTILIDADES DE TELA
+        // ---------------------------------------------------------------
+
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobileMenu');
+            menu.classList.toggle('hidden');
+            menu.classList.toggle('translate-x-full');
+        }
+
+        async function logout() {
+            await window.supabaseClient.auth.signOut();
+            window.location.href = 'login.html';
+        }
+
+        /** Escapa antes de injetar em innerHTML: os nomes vêm do banco. */
+        function esc(valor) {
+            return String(valor === null || valor === undefined ? '' : valor)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#39;');
+        }
+
+        let timerAviso = null;
+        function avisar(texto, tipo) {
+            const el = document.getElementById('aviso');
+            const cores = {
+                ok: 'bg-emerald-500 text-black',
+                erro: 'bg-red-500 text-white',
+                info: 'bg-amber-500 text-black'
+            };
+            el.className = 'fixed bottom-6 left-1/2 -translate-x-1/2 z-[200] px-6 py-4 rounded-2xl font-medium shadow-2xl ' + (cores[tipo] || cores.info);
+            el.textContent = texto;
+            el.classList.remove('hidden');
+
+            clearTimeout(timerAviso);
+            timerAviso = setTimeout(function () { el.classList.add('hidden'); }, 3200);
+        }
+
+        function trocarAba(nome) {
+            abaAtual = nome;
+            ['familia', 'quadro', 'templates'].forEach(function (a) {
+                const secao = document.getElementById('aba' + a.charAt(0).toUpperCase() + a.slice(1));
+                const botao = document.getElementById('abaBotao' + a.charAt(0).toUpperCase() + a.slice(1));
+                const ativa = a === nome;
+
+                if (secao) secao.classList.toggle('hidden', !ativa);
+                if (botao) {
+                    botao.classList.toggle('aba-ativa', ativa);
+                    botao.classList.toggle('border-transparent', !ativa);
+                    botao.classList.toggle('text-slate-400', !ativa);
+                }
+            });
+        }
+
+        // ---------------------------------------------------------------
+        // ABA: MINHA FAMÍLIA
+        // ---------------------------------------------------------------
+
+        function renderMinhaFamilia() {
+            const lista = document.getElementById('listaDependentes');
+            const vazio = document.getElementById('familiaVazia');
+            const itens = FZ.estado.meusDependentes;
+
+            vazio.classList.toggle('hidden', itens.length > 0);
+            lista.innerHTML = itens.map(function (d) {
+                const estilo = FZ.estiloParentesco(d.parentesco);
+                const dias = calc.diasAteAniversario(d.data_nascimento);
+                const faixa = calc.faixaDeAlerta(dias);
+
+                const destaque = faixa === 'hoje'
+                    ? '<span class="text-amber-500 font-bold text-xs">é hoje!</span>'
+                    : '<span class="text-slate-500 text-xs">faltam ' + dias + ' dias</span>';
+
+                return '' +
+                    '<div class="glass-card p-5">' +
+                        '<div class="flex justify-between items-start gap-3 mb-3">' +
+                            '<div class="min-w-0">' +
+                                '<p class="font-bold truncate">' + esc(d.nome_completo) + '</p>' +
+                                '<p class="text-slate-500 text-xs mt-1">' + esc(calc.porExtenso(d.data_nascimento)) + ' &middot; ' + destaque + '</p>' +
+                            '</div>' +
+                            '<span class="shrink-0 text-[10px] uppercase tracking-wider font-bold px-2.5 py-1 rounded-full border ' + estilo.classe + '">' + esc(estilo.rotulo) + '</span>' +
+                        '</div>' +
+                        (d.telefone ? '<p class="text-slate-400 text-xs mb-3">' + esc(calc.mascararTelefone(d.telefone)) + '</p>' : '') +
+                        '<div class="flex gap-2">' +
+                            '<button onclick="abrirModalDependente(\'' + d.id + '\')" class="flex-1 bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-bold py-2 rounded-lg transition-all">Editar</button>' +
+                            '<button onclick="excluirDependente(\'' + d.id + '\')" class="px-3 bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/20 text-xs font-bold py-2 rounded-lg transition-all">Excluir</button>' +
+                        '</div>' +
+                    '</div>';
+            }).join('');
+        }
+
+        function abrirModalDependente(id) {
+            const form = document.getElementById('formDependente');
+            form.reset();
+            document.getElementById('erroDependente').classList.add('hidden');
+            document.getElementById('dependenteId').value = id || '';
+            document.getElementById('tituloModalDependente').textContent = id ? 'Editar familiar' : 'Cadastrar familiar';
+
+            if (id) {
+                const d = FZ.estado.meusDependentes.find(function (x) { return x.id === id; });
+                if (d) {
+                    document.getElementById('dependenteNome').value = d.nome_completo || '';
+                    document.getElementById('dependenteParentesco').value = d.parentesco || 'cunhada';
+                    document.getElementById('dependenteNascimento').value = (d.data_nascimento || '').slice(0, 10);
+                    document.getElementById('dependenteTelefone').value = d.telefone ? calc.mascararTelefone(d.telefone) : '';
+                    document.getElementById('dependenteObservacoes').value = d.observacoes || '';
+                }
+            }
+            document.getElementById('modalDependente').classList.remove('hidden');
+        }
+
+        function fecharModalDependente() {
+            document.getElementById('modalDependente').classList.add('hidden');
+        }
+
+        async function excluirDependente(id) {
+            const d = FZ.estado.meusDependentes.find(function (x) { return x.id === id; });
+            if (!confirm('Excluir ' + (d ? d.nome_completo : 'este familiar') + ' da lista?')) return;
+
+            try {
+                await FZ.removerDependente(id);
+                await FZ.carregarMeusDependentes();
+                renderMinhaFamilia();
+                avisar('Familiar removido.', 'ok');
+            } catch (erro) {
+                avisar('Não consegui remover: ' + erro.message, 'erro');
+            }
+        }
+
+        // ---------------------------------------------------------------
+        // ABA: QUADRO DO MÊS
+        // ---------------------------------------------------------------
+
+        function renderQuadro() {
+            const hoje = calc.hojeLocal();
+            const doMes = calc.doMesCorrente(FZ.estado.quadroCompleto, hoje);
+
+            const nomeMes = calc.porExtenso(
+                hoje.getFullYear() + '-' + String(hoje.getMonth() + 1).padStart(2, '0') + '-01'
+            ).split(' de ')[1];
+            document.getElementById('rotuloMes').textContent = nomeMes;
+            document.getElementById('rotuloMesTabela').textContent = nomeMes;
+
+            const comDias = FZ.estado.quadroCompleto.map(function (p) {
+                return { pessoa: p, dias: calc.diasAteAniversario(p.data_nascimento, hoje) };
+            });
+
+            document.getElementById('metricaHoje').textContent =
+                comDias.filter(function (x) { return x.dias === 0; }).length;
+            document.getElementById('metricaSemana').textContent =
+                comDias.filter(function (x) { return x.dias !== null && x.dias <= 7; }).length;
+            document.getElementById('metricaMes').textContent = doMes.length;
+
+            const corpo = document.getElementById('corpoQuadro');
+            document.getElementById('quadroVazio').classList.toggle('hidden', doMes.length > 0);
+
+            corpo.innerHTML = doMes.map(function (p, i) {
+                const estilo = FZ.estiloParentesco(p.parentesco);
+                const dias = calc.diasAteAniversario(p.data_nascimento, hoje);
+                const faixa = calc.faixaDeAlerta(dias);
+
+                const marcaDia = faixa === 'hoje'
+                    ? '<span class="ml-2 text-[9px] uppercase tracking-wider font-bold bg-amber-500 text-black px-2 py-0.5 rounded-full">hoje</span>'
+                    : faixa === 'amanha'
+                        ? '<span class="ml-2 text-[9px] uppercase tracking-wider font-bold bg-sky-500 text-black px-2 py-0.5 rounded-full">amanhã</span>'
+                        : faixa === 'proximo'
+                            ? '<span class="ml-2 text-[9px] uppercase tracking-wider font-bold bg-sky-500/20 text-sky-300 px-2 py-0.5 rounded-full">D-' + dias + '</span>'
+                            : '';
+
+                const idade = calc.idadeQueCompleta(p.data_nascimento, hoje);
+
+                return '' +
+                    '<tr class="hover:bg-white/[0.02] transition-colors">' +
+                        '<td class="px-6 py-4 whitespace-nowrap"><span class="font-newsreader text-lg font-bold">' + esc(calc.diaMes(p.data_nascimento)) + '</span>' + marcaDia + '</td>' +
+                        '<td class="px-6 py-4"><p class="font-medium">' + esc(p.nome) + '</p><p class="text-slate-600 text-xs">' + idade + ' anos</p></td>' +
+                        '<td class="px-6 py-4"><span class="text-[10px] uppercase tracking-wider font-bold px-2.5 py-1 rounded-full border ' + estilo.classe + '">' + esc(estilo.rotulo) + '</span></td>' +
+                        '<td class="px-6 py-4 hidden md:table-cell text-slate-500 text-xs">' + esc(p.responsavel || '—') + '</td>' +
+                        '<td class="px-6 py-4">' +
+                            '<div class="flex justify-end gap-2">' +
+                                '<button onclick="abrirWhatsApp(' + i + ')" title="Abrir WhatsApp" class="flex items-center gap-1.5 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 border border-emerald-500/20 text-xs font-bold px-3 py-2 rounded-lg transition-all whitespace-nowrap">' +
+                                    '<span class="material-symbols-outlined text-base">chat</span>WhatsApp</button>' +
+                                '<button onclick="copiarMensagemGrupo(' + i + ')" title="Copiar mensagem do grupo" class="flex items-center gap-1.5 bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-bold px-3 py-2 rounded-lg transition-all whitespace-nowrap">' +
+                                    '<span class="material-symbols-outlined text-base">content_copy</span>Grupo</button>' +
+                            '</div>' +
+                        '</td>' +
+                    '</tr>';
+            }).join('');
+
+            // As ações são por índice desta lista, então ela precisa ficar
+            // acessível aos handlers — que rodam depois da renderização.
+            window.__quadroDoMes = doMes;
+        }
+
+        function pessoaDoQuadro(indice) {
+            return (window.__quadroDoMes || [])[indice];
+        }
+
+        function abrirWhatsApp(indice) {
+            const p = pessoaDoQuadro(indice);
+            if (!p) return;
+
+            const mensagem = FZ.mensagemPara('privado_aniversariante', p);
+            if (!p.telefone) {
+                avisar('Sem WhatsApp cadastrado — abrindo para escolher o contato.', 'info');
+            }
+            window.open(calc.linkWhatsApp(p.telefone, mensagem), '_blank', 'noopener');
+        }
+
+        async function copiarMensagemGrupo(indice) {
+            const p = pessoaDoQuadro(indice);
+            if (!p) return;
+
+            const deu = await FZ.copiar(FZ.mensagemPara('grupo_loja', p));
+            avisar(deu ? 'Mensagem copiada. Cole no grupo da Loja.' : 'Não consegui copiar.', deu ? 'ok' : 'erro');
+        }
+
+        async function copiarQuadroDoMes() {
+            const lista = window.__quadroDoMes || [];
+            if (!lista.length) {
+                avisar('Nenhum aniversário neste mês.', 'info');
+                return;
+            }
+
+            const linhas = lista.map(function (p) {
+                return calc.diaMes(p.data_nascimento) + ' - ' + p.nome +
+                       ' (' + FZ.estiloParentesco(p.parentesco).rotulo + ')';
+            });
+
+            const deu = await FZ.copiar('Aniversariantes do mês:\n' + linhas.join('\n'));
+            avisar(deu ? 'Quadro do mês copiado.' : 'Não consegui copiar.', deu ? 'ok' : 'erro');
+        }
+
+        // ---------------------------------------------------------------
+        // ABA: TEMPLATES
+        // ---------------------------------------------------------------
+
+        const ROTULOS_TEMPLATE = {
+            alerta_diretoria: {
+                titulo: 'Alerta interno da diretoria',
+                ajuda: 'Enviado entre Chanceler, Hospitaleiro e Venerável para lembrar da data.'
+            },
+            grupo_loja: {
+                titulo: 'Mensagem do grupo da Loja',
+                ajuda: 'Texto copiado para colar no grupo oficial no dia do aniversário.'
+            },
+            privado_aniversariante: {
+                titulo: 'Mensagem privada ao aniversariante',
+                ajuda: 'Abre direto no WhatsApp da pessoa, já preenchida.'
+            }
+        };
+
+        function renderTemplates() {
+            const alvo = document.getElementById('listaTemplates');
+            // As variáveis são montadas em tempo de execução justamente para
+            // não escrever chaves na fonte do HTML.
+            const variaveis = ['nome', 'parentesco', 'loja', 'data', 'idade']
+                .map(function (v) { return '{' + v + '}'; })
+                .join('  ');
+
+            alvo.innerHTML = Object.keys(ROTULOS_TEMPLATE).map(function (tipo) {
+                const t = FZ.estado.templates[tipo];
+                const meta = ROTULOS_TEMPLATE[tipo];
+
+                return '' +
+                    '<div class="glass-card p-6">' +
+                        '<h4 class="font-bold text-lg">' + esc(meta.titulo) + '</h4>' +
+                        '<p class="text-slate-500 text-xs mt-1 mb-4">' + esc(meta.ajuda) + '</p>' +
+                        '<textarea id="template_' + tipo + '" rows="4" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-on-background focus:border-amber-500 focus:outline-none">' + esc(t ? t.template_texto : '') + '</textarea>' +
+                        '<div class="flex flex-wrap justify-between items-center gap-3 mt-3">' +
+                            '<p class="text-slate-600 text-xs font-mono">' + esc(variaveis) + '</p>' +
+                            '<button onclick="salvarTemplate(\'' + tipo + '\')" class="bg-amber-500 hover:bg-amber-400 text-black text-sm font-bold px-5 py-2 rounded-xl transition-all active:scale-95">Salvar</button>' +
+                        '</div>' +
+                    '</div>';
+            }).join('');
+        }
+
+        async function salvarTemplate(tipo) {
+            const texto = document.getElementById('template_' + tipo).value.trim();
+            if (!texto) {
+                avisar('O texto não pode ficar vazio.', 'erro');
+                return;
+            }
+
+            try {
+                await FZ.salvarTemplate(tipo, texto);
+                avisar('Mensagem padrão atualizada.', 'ok');
+            } catch (erro) {
+                avisar('Não consegui salvar: ' + erro.message, 'erro');
+            }
+        }
+
+        // ---------------------------------------------------------------
+        // FORMULÁRIOS
+        // ---------------------------------------------------------------
+
+        document.getElementById('formDependente').addEventListener('submit', async function (evento) {
+            evento.preventDefault();
+
+            const erroEl = document.getElementById('erroDependente');
+            const botao = document.getElementById('botaoSalvarDependente');
+            erroEl.classList.add('hidden');
+            botao.disabled = true;
+            botao.textContent = 'Salvando...';
+
+            try {
+                await FZ.salvarDependente({
+                    id: document.getElementById('dependenteId').value || null,
+                    nome_completo: document.getElementById('dependenteNome').value,
+                    parentesco: document.getElementById('dependenteParentesco').value,
+                    data_nascimento: document.getElementById('dependenteNascimento').value,
+                    telefone: document.getElementById('dependenteTelefone').value,
+                    observacoes: document.getElementById('dependenteObservacoes').value
+                });
+
+                await FZ.carregarMeusDependentes();
+                renderMinhaFamilia();
+                fecharModalDependente();
+                avisar('Familiar salvo.', 'ok');
+            } catch (erro) {
+                erroEl.textContent = erro.message;
+                erroEl.classList.remove('hidden');
+            } finally {
+                botao.disabled = false;
+                botao.textContent = 'Salvar';
+            }
+        });
+
+        document.getElementById('formMeuAniversario').addEventListener('submit', async function (evento) {
+            evento.preventDefault();
+
+            const data = document.getElementById('meuNascimento').value;
+            const telefoneBruto = document.getElementById('meuTelefone').value;
+
+            let telefone = null;
+            if (telefoneBruto.trim()) {
+                const normalizado = calc.normalizarTelefoneBR(telefoneBruto);
+                if (!normalizado.ok) {
+                    avisar(normalizado.erro, 'erro');
+                    return;
+                }
+                telefone = normalizado.e164;
+            }
+
+            try {
+                const { error } = await window.supabaseClient
+                    .from('profiles')
+                    .update({ data_nascimento: data || null, telefone: telefone })
+                    .eq('id', FZ.estado.usuario.id);
+
+                if (error) throw error;
+                avisar('Seus dados foram salvos.', 'ok');
+            } catch (erro) {
+                avisar('Não consegui salvar: ' + erro.message, 'erro');
+            }
+        });
+
+        // Máscara enquanto digita, nos dois campos de telefone.
+        ['dependenteTelefone', 'meuTelefone'].forEach(function (id) {
+            const campo = document.getElementById(id);
+            campo.addEventListener('input', function () {
+                campo.value = calc.mascararTelefone(campo.value);
+            });
+        });
+
+        // ---------------------------------------------------------------
+        // INICIALIZAÇÃO
+        // ---------------------------------------------------------------
+
+        async function iniciar() {
+            const { data: { session } } = await window.supabaseClient.auth.getSession();
+            if (!session) {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            FZ.estado.usuario = session.user;
+            FZ.estado.nomeDaLoja = window.__SITE_CONFIG__.loja.nomeCompleto;
+
+            const { data: perfil } = await window.supabaseClient
+                .from('profiles')
+                .select('full_name, role, position, data_nascimento, telefone')
+                .eq('id', session.user.id)
+                .single();
+
+            // Cabeçalho da barra lateral
+            const primeiroNome = (perfil && perfil.full_name ? perfil.full_name : 'Irmão').split(' ')[0];
+            document.getElementById('navName').textContent = 'Ir. ' + primeiroNome;
+            document.getElementById('navInitial').textContent = primeiroNome.charAt(0);
+            document.getElementById('navPosition').textContent = (perfil && perfil.position) || 'Mestre Maçom';
+
+            if (perfil) {
+                document.getElementById('meuNascimento').value = (perfil.data_nascimento || '').slice(0, 10);
+                document.getElementById('meuTelefone').value = perfil.telefone ? calc.mascararTelefone(perfil.telefone) : '';
+            }
+
+            // Mesma regra do RLS is_diretoria_fraternidade(), normalizando o
+            // acento para casar com "Venerável Mestre" como está gravado.
+            const papel = ((perfil && perfil.role) || '').toLowerCase().trim();
+            const cargo = ((perfil && perfil.position) || '')
+                .toLowerCase().trim().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+
+            ehDiretoria = papel === 'admin' || [
+                'veneravel mestre', 'chanceler', 'hospitaleiro',
+                'hopitaleiro', 'hospitalario', 'hospitalar'
+            ].indexOf(cargo) !== -1;
+            FZ.estado.ehDiretoria = ehDiretoria;
+
+            if (papel === 'admin') {
+                ['adminMenuLink', 'adminMenuLinkMobile'].forEach(function (id) {
+                    const el = document.getElementById(id);
+                    if (el) { el.classList.remove('hidden'); el.classList.add('flex'); }
+                });
+            }
+
+            try {
+                await FZ.carregarMeusDependentes();
+                renderMinhaFamilia();
+            } catch (erro) {
+                avisar('Não consegui carregar sua família: ' + erro.message, 'erro');
+            }
+
+            if (ehDiretoria) {
+                document.getElementById('abaBotaoQuadro').classList.remove('hidden');
+                document.getElementById('abaBotaoTemplates').classList.remove('hidden');
+
+                try {
+                    await Promise.all([FZ.carregarQuadroCompleto(), FZ.carregarTemplates()]);
+                    renderQuadro();
+                    renderTemplates();
+                    trocarAba('quadro');
+                } catch (erro) {
+                    avisar('Não consegui carregar o quadro: ' + erro.message, 'erro');
+                }
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            iniciar().catch(function (erro) {
+                console.error('[fraternidadezap] falha na inicializacao:', erro);
+                avisar('Erro ao abrir a página. Veja o console.', 'erro');
+            });
+        });
+    </script>
+</body>
+</html>

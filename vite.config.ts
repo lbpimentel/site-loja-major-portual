@@ -34,6 +34,7 @@ export default defineConfig(({mode}) => {
           historia: path.resolve(__dirname, 'historia.html'),
           patrono: path.resolve(__dirname, 'patrono.html'),
           sisoriente: path.resolve(__dirname, 'sisoriente.html'),
+          fraternidadezap: path.resolve(__dirname, 'fraternidadezap.html'),
         },
       },
     },

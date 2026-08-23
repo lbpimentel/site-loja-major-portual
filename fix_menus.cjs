@@ -1,6 +1,6 @@
 const fs = require('fs');
 
-const filesToFix = ['biblioteca.html', 'fraternidade.html', 'calendario.html', 'tesouraria.html', 'dashboard.html'];
+const filesToFix = ['biblioteca.html', 'fraternidade.html', 'fraternidadezap.html', 'calendario.html', 'tesouraria.html', 'dashboard.html'];
 
 const buildMobileMenu = (activePage) => {
     return `<!-- MOBILE TOP BAR -->
@@ -43,6 +43,10 @@ const buildMobileMenu = (activePage) => {
             <a class="flex items-center gap-6 p-5 ${activePage === 'fraternidade' ? 'bg-amber-500/10 text-amber-500 border-amber-500/10' : 'bg-white/5 text-slate-200 border-white/5'} rounded-2xl active:scale-95 transition-all border" href="fraternidade.html">
                 <span class="material-symbols-outlined text-amber-500">local_library</span>
                 <span class="text-lg font-medium tracking-wide">Galeria de Fotos</span>
+            </a>
+            <a class="flex items-center gap-6 p-5 ${activePage === 'fraternidadezap' ? 'bg-amber-500/10 text-amber-500 border-amber-500/10' : 'bg-white/5 text-slate-200 border-white/5'} rounded-2xl active:scale-95 transition-all border" href="fraternidadezap.html">
+                <span class="material-symbols-outlined text-amber-500">cake</span>
+                <span class="text-lg font-medium tracking-wide">FraternidadeZap</span>
             </a>
             <a class="flex items-center gap-6 p-5 ${activePage === 'calendario' ? 'bg-amber-500/10 text-amber-500 border-amber-500/10' : 'bg-white/5 text-slate-200 border-white/5'} rounded-2xl active:scale-95 transition-all border" href="calendario.html">
                 <span class="material-symbols-outlined text-amber-500">calendar_month</span>
@@ -104,6 +108,10 @@ const buildDesktopMenu = (activePage) => {
             <a href="fraternidade.html" class="flex items-center gap-4 px-6 py-4 ${activePage === 'fraternidade' ? 'bg-amber-500/10 text-amber-500 rounded-xl' : 'text-slate-400 hover:text-amber-500 hover:bg-white/5 rounded-xl'} transition-all group">
                 <span class="material-symbols-outlined">local_library</span>
                 <span class="font-medium">Galeria de Fotos</span>
+            </a>
+            <a href="fraternidadezap.html" class="flex items-center gap-4 px-6 py-4 ${activePage === 'fraternidadezap' ? 'bg-amber-500/10 text-amber-500 rounded-xl' : 'text-slate-400 hover:text-amber-500 hover:bg-white/5 rounded-xl'} transition-all group">
+                <span class="material-symbols-outlined">cake</span>
+                <span class="font-medium">FraternidadeZap</span>
             </a>
             <a href="calendario.html" class="flex items-center gap-4 px-6 py-4 ${activePage === 'calendario' ? 'bg-amber-500/10 text-amber-500 rounded-xl' : 'text-slate-400 hover:text-amber-500 hover:bg-white/5 rounded-xl'} transition-all group">
                 <span class="material-symbols-outlined">calendar_month</span>

@@ -42,6 +42,16 @@ comment on column public.profiles.ano_conhecido is
   'false quando só o dia e o mês são conhecidos. A tela não exibe idade nessas linhas.';
 
 
+-- `profiles` não tinha onde guardar uma nota livre sobre o Irmão. A carga
+-- precisa disso para o telefone secundário: o quadro traz Irmãos com celular
+-- E fixo, e `telefone` guarda um só — o do WhatsApp, que é o que o módulo usa.
+-- Sem esta coluna o segundo número seria simplesmente descartado na importação.
+alter table public.profiles add column if not exists observacoes text;
+
+comment on column public.profiles.observacoes is
+  'Nota livre sobre o Irmão. A carga usa para o telefone secundário do quadro.';
+
+
 -- -----------------------------------------------------------------------------
 -- TELEFONE EM E.164 — a mesma regra que o navegador aplica
 --

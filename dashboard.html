@@ -1,8 +1,10 @@
 <!DOCTYPE html>
 
-<html class="dark" lang="pt-BR"><head>
+<html lang="pt-BR"><head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Painel do Membro - {{loja.nomeCompleto}}</title>
+<script src="/js/theme.js"></script>
 <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
 <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,200..800;1,6..72,200..800&amp;family=Inter:wght@100..900&amp;display=swap" rel="stylesheet"/>
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
@@ -13,53 +15,53 @@
             theme: {
                 extend: {
                     "colors": {
-                        "surface-container-high": "#2a2a2a",
-                        "on-background": "#e4e2e1",
-                        "on-surface": "#e4e2e1",
-                        "on-tertiary-container": "#878585",
-                        "primary-fixed-dim": "#b6c7ec",
-                        "on-tertiary-fixed": "#1c1b1b",
-                        "background": "#131313",
-                        "outline": "#8f9098",
-                        "on-tertiary": "#313030",
-                        "on-secondary-container": "#342800",
-                        "surface-container-low": "#1b1c1c",
-                        "secondary-fixed-dim": "#e9c349",
-                        "surface-container": "#1f2020",
-                        "tertiary": "#c8c6c5",
-                        "primary-container": "#0b1e3b",
-                        "error": "#ffb4ab",
-                        "inverse-primary": "#4e5f7f",
-                        "secondary": "#e9c349",
-                        "surface-dim": "#131313",
-                        "surface-container-lowest": "#0e0e0e",
-                        "outline-variant": "#44474d",
-                        "on-secondary": "#3c2f00",
-                        "secondary-container": "#af8d11",
-                        "primary-fixed": "#d7e2ff",
-                        "surface": "#131313",
-                        "tertiary-fixed-dim": "#c8c6c5",
-                        "on-primary": "#1f304e",
-                        "tertiary-fixed": "#e5e2e1",
-                        "primary": "#b6c7ec",
-                        "on-primary-fixed-variant": "#364766",
-                        "on-secondary-fixed": "#241a00",
-                        "tertiary-container": "#1e1e1e",
-                        "on-error": "#690005",
-                        "surface-tint": "#b6c7ec",
-                        "on-secondary-fixed-variant": "#574500",
-                        "secondary-fixed": "#ffe088",
-                        "on-primary-container": "#7686a9",
-                        "surface-container-highest": "#353535",
-                        "surface-bright": "#393939",
-                        "on-error-container": "#ffdad6",
-                        "on-tertiary-fixed-variant": "#474646",
-                        "surface-variant": "#353535",
-                        "on-surface-variant": "#c5c6ce",
-                        "inverse-surface": "#e4e2e1",
-                        "inverse-on-surface": "#303030",
-                        "error-container": "#93000a",
-                        "on-primary-fixed": "#081b38"
+                        "surface-container-high": "var(--surface-container-high, #2a2a2a)",
+                        "on-background": "var(--on-background, #e4e2e1)",
+                        "on-surface": "var(--on-surface, #e4e2e1)",
+                        "on-tertiary-container": "var(--on-tertiary-container, #878585)",
+                        "primary-fixed-dim": "var(--primary-fixed-dim, #b6c7ec)",
+                        "on-tertiary-fixed": "var(--on-tertiary-fixed, #1c1b1b)",
+                        "background": "var(--background, #131313)",
+                        "outline": "var(--outline, #8f9098)",
+                        "on-tertiary": "var(--on-tertiary, #313030)",
+                        "on-secondary-container": "var(--on-secondary-container, #342800)",
+                        "surface-container-low": "var(--surface-container-low, #1b1c1c)",
+                        "secondary-fixed-dim": "var(--secondary-fixed-dim, #e9c349)",
+                        "surface-container": "var(--surface-container, #1f2020)",
+                        "tertiary": "var(--tertiary, #c8c6c5)",
+                        "primary-container": "var(--primary-container, #0b1e3b)",
+                        "error": "var(--error, #ffb4ab)",
+                        "inverse-primary": "var(--inverse-primary, #4e5f7f)",
+                        "secondary": "var(--secondary, #e9c349)",
+                        "surface-dim": "var(--surface-dim, #131313)",
+                        "surface-container-lowest": "var(--surface-container-lowest, #0e0e0e)",
+                        "outline-variant": "var(--outline-variant, #44474d)",
+                        "on-secondary": "var(--on-secondary, #3c2f00)",
+                        "secondary-container": "var(--secondary-container, #af8d11)",
+                        "primary-fixed": "var(--primary-fixed, #d7e2ff)",
+                        "surface": "var(--surface, #131313)",
+                        "tertiary-fixed-dim": "var(--tertiary-fixed-dim, #c8c6c5)",
+                        "on-primary": "var(--on-primary, #1f304e)",
+                        "tertiary-fixed": "var(--tertiary-fixed, #e5e2e1)",
+                        "primary": "var(--primary, #b6c7ec)",
+                        "on-primary-fixed-variant": "var(--on-primary-fixed-variant, #364766)",
+                        "on-secondary-fixed": "var(--on-secondary-fixed, #241a00)",
+                        "tertiary-container": "var(--tertiary-container, #1e1e1e)",
+                        "on-error": "var(--on-error, #690005)",
+                        "surface-tint": "var(--surface-tint, #b6c7ec)",
+                        "on-secondary-fixed-variant": "var(--on-secondary-fixed-variant, #574500)",
+                        "secondary-fixed": "var(--secondary-fixed, #ffe088)",
+                        "on-primary-container": "var(--on-primary-container, #7686a9)",
+                        "surface-container-highest": "var(--surface-container-highest, #353535)",
+                        "surface-bright": "var(--surface-bright, #393939)",
+                        "on-error-container": "var(--on-error-container, #ffdad6)",
+                        "on-tertiary-fixed-variant": "var(--on-tertiary-fixed-variant, #474646)",
+                        "surface-variant": "var(--surface-variant, #353535)",
+                        "on-surface-variant": "var(--on-surface-variant, #c5c6ce)",
+                        "inverse-surface": "var(--inverse-surface, #e4e2e1)",
+                        "inverse-on-surface": "var(--inverse-on-surface, #303030)",
+                        "error-container": "var(--error-container, #93000a)",
+                        "on-primary-fixed": "var(--on-primary-fixed, #081b38)"
                     },
                     "borderRadius": {
                         "DEFAULT": "0.125rem",
@@ -297,22 +299,27 @@
 <body class="bg-background text-on-background min-h-screen">
     <div class="bg-logo-overlay"></div>
 
-    <!-- MOBILE TOP BAR -->
     <nav class="lg:hidden fixed top-0 w-full z-50 flex justify-between items-center px-6 py-4 bg-slate-950/90 backdrop-blur-xl border-b border-white/10">
         <div class="flex items-center gap-3">
-            <img src="logo.png" alt="Logo" class="h-8 w-auto">
-            <span class="font-newsreader text-amber-500 font-bold">Major Manoel</span>
+            <img src="{{marca.logo}}" alt="Logo" class="h-8 w-auto">
+            <span class="font-newsreader text-amber-500 font-bold">{{loja.nomeCurto}}</span>
         </div>
-        <button onclick="toggleMobileMenu()" class="text-amber-500">
-            <span class="material-symbols-outlined text-3xl">menu</span>
-        </button>
+        <div class="flex items-center gap-2">
+            <!-- Botão de Alternância de Tema -->
+            <button onclick="toggleTheme()" class="text-amber-500 hover:text-amber-300 transition-colors flex items-center justify-center p-2 focus:outline-none" aria-label="Alternar Tema">
+                <span class="material-symbols-outlined theme-icon text-2xl">light_mode</span>
+            </button>
+            <button onclick="toggleMobileMenu()" class="text-amber-500">
+                <span class="material-symbols-outlined text-3xl">menu</span>
+            </button>
+        </div>
     </nav>
 
     <!-- MOBILE MENU OVERLAY -->
     <div id="mobileMenu" class="fixed inset-0 z-[60] hidden flex flex-col bg-slate-950/98 backdrop-blur-2xl p-8 transform transition-transform duration-500 translate-x-full">
         <div class="flex justify-between items-center mb-12">
             <div class="flex items-center gap-3">
-                <img src="logo.png" alt="Logo" class="h-8">
+                <img src="{{marca.logo}}" alt="Logo" class="h-8">
                 <span class="font-newsreader text-amber-500 font-bold text-lg">Menu Principal</span>
             </div>
             <button onclick="toggleMobileMenu()" class="text-amber-500 w-12 h-12 flex items-center justify-center">
@@ -351,19 +358,19 @@
             </button>
         </div>
 <div class="mt-auto text-center pb-8">
-            <p class="text-slate-600 text-[10px] uppercase tracking-widest">A∴R∴L∴S∴ Major Manoel dos Santos Portugal Nº 4424</p>
+            <p class="text-slate-600 text-[10px] uppercase tracking-widest">{{loja.nomeCompleto}}</p>
         </div>
     </div>
 
     <!-- SIDE NAVBAR (Desktop) -->
-    <nav class="hidden lg:flex fixed left-0 top-0 h-screen flex-col bg-slate-950/95 backdrop-blur-lg w-72 border-r border-white/10 shadow-2xl z-50">
+    <nav class="hidden lg:flex fixed left-0 top-0 h-screen flex-col bg-slate-950/95 backdrop-blur-xl w-72 border-r border-white/10 shadow-2xl z-50">
         <div class="p-8 flex flex-col items-center text-center">
-            <h1 class="text-amber-500 font-bold font-newsreader text-lg leading-tight tracking-tight">A∴R∴L∴S∴ Major Manoel dos Santos Portugal Nº 4424</h1>
-            <p class="text-slate-500 text-[10px] uppercase tracking-[0.2em] mt-2">Nº 4424 - GOB - Rito Moderno</p>
+            <h1 class="text-amber-500 font-bold font-newsreader text-lg leading-tight tracking-tight">{{loja.nomeCompleto}}</h1>
+            <p class="text-slate-500 text-[10px] uppercase tracking-[0.2em] mt-2">{{loja.obediencia}}</p>
         </div>
 
-                <div class="flex-1 px-4 py-6 space-y-2">
-            <a href="dashboard.html" class="flex items-center gap-4 px-6 py-4 bg-amber-500/10 text-amber-500 rounded-xl transition-all group">
+        <div class="flex-1 px-4 py-6 space-y-2">
+            <a id="dashboardMenuLink" href="dashboard.html" class="flex items-center gap-4 px-6 py-4 bg-amber-500/10 text-amber-500 rounded-xl transition-all group">
                 <span class="material-symbols-outlined">dashboard</span>
                 <span class="font-medium">Painel Principal</span>
             </a>
@@ -390,20 +397,39 @@
             </a>
         </div>
 
-        <div class="p-6 border-t border-white/10 flex items-center gap-4">
-            <div class="w-10 h-10 rounded-full overflow-hidden border border-amber-500/30">
-                <div class="w-full h-full bg-amber-500 flex items-center justify-center text-black font-bold" id="navInitial">P</div>
+        <div class="p-6 border-t border-white/5">
+            <div class="flex items-center gap-4 p-4 bg-white/5 rounded-2xl mb-4">
+                <div class="w-10 h-10 rounded-full bg-amber-500 flex items-center justify-center text-black font-bold" id="navInitial">M</div>
+                <div class="flex-1">
+                    <p class="text-sm font-bold text-slate-200" id="navName">Membro</p>
+                    <p class="text-[10px] text-slate-500 uppercase tracking-widest" id="navPosition">Portal Ativo</p>
+                </div>
             </div>
-            <div>
-                <p class="text-on-background font-medium text-sm" id="navName">Ir. Portugal</p>
-                <p class="text-slate-500 text-[10px] uppercase tracking-widest" id="navPosition">Mestre Maçom</p>
-            </div>
-        </div>
-        <div class="px-6 pb-6">
+            <!-- Botão de Alternância de Tema -->
+            <button onclick="toggleTheme()" class="w-full flex items-center justify-center gap-2 py-2 text-slate-500 hover:text-amber-500 transition-colors text-xs font-bold uppercase tracking-widest group mb-2">
+                <span class="material-symbols-outlined theme-icon text-lg">light_mode</span>
+                <span>Alternar Tema</span>
+            </button>
             <button onclick="logout()" class="w-full flex items-center justify-center gap-2 py-3 text-slate-500 hover:text-red-400 transition-colors text-sm font-bold uppercase tracking-widest group">
                 <span class="material-symbols-outlined text-xl group-hover:rotate-12 transition-transform">logout</span>
-                <span>Sair</span>
+                Sair do Portal
             </button>
+            
+            <!-- Institutional Affiliation (Desktop) -->
+            <div class="mt-6 pt-6 border-t border-white/5 flex flex-col items-center">
+                <div class="flex items-center gap-6 mb-3">
+                    <a href="{{rodape.orientes.0.url}}" target="_blank" rel="noopener noreferrer" class="transition-transform hover:scale-105">
+                        <img src="{{rodape.orientes.0.logo}}" alt="GOB-RJ" class="h-10 w-auto opacity-20 hover:opacity-100 grayscale hover:grayscale-0 transition-all duration-500">
+                    </a>
+                    <a href="{{rodape.orientes.1.url}}" target="_blank" rel="noopener noreferrer" class="transition-transform hover:scale-105">
+                        <img src="{{rodape.orientes.1.logo}}" alt="GOB" class="h-10 w-auto opacity-20 hover:opacity-100 grayscale hover:grayscale-0 transition-all duration-500">
+                    </a>
+                </div>
+                <div class="space-y-0.5">
+                    <p class="font-newsreader text-[10px] text-slate-400">Grande Oriente do Brasil no Rio de Janeiro</p>
+                    <p class="text-[7px] text-amber-500/30 uppercase tracking-widest font-bold">Federado ao Grande Oriente do Brasil</p>
+                </div>
+            </div>
         </div>
     </nav>
 
@@ -817,6 +843,18 @@
                 <span class="material-symbols-outlined text-sm">mail</span> E-mail
             </a>
         </div>
+
+        <!-- Exclusão definitiva: separada das ações principais, para não ser clicada sem querer. -->
+        <div class="mt-6 pt-5 border-t border-white/10">
+            <button onclick="deleteInterest()" id="interestDeleteBtn"
+                class="w-full flex items-center justify-center gap-2 py-3 text-xs font-bold uppercase tracking-widest rounded-lg border border-red-500/30 text-red-400 hover:bg-red-500/10 hover:border-red-500/60 transition-all disabled:opacity-50 disabled:cursor-not-allowed">
+                <span class="material-symbols-outlined text-sm">delete</span>
+                <span id="interestDeleteLabel">Excluir Registro</span>
+            </button>
+            <p class="text-[10px] text-on-tertiary-container text-center mt-2">
+                A exclusão é definitiva e não pode ser desfeita.
+            </p>
+        </div>
     </div>
 </div>
 
@@ -952,16 +990,16 @@
 <!-- FOOTER -->
 <footer class="mt-section-gap w-full py-12 border-t border-white/5">
 <div class="flex flex-col md:flex-row justify-between items-center gap-8 text-on-tertiary-container">
-<p class="font-newsreader text-xs tracking-widest uppercase">© 2024 A∴R∴L∴S∴ Major Manoel dos Santos Portugal Nº 4424. Todos os direitos reservados.</p>
+<p class="font-newsreader text-xs tracking-widest uppercase">© {{loja.anoCopyright}} {{loja.nomeCompleto}}. Todos os direitos reservados.</p>
 
 <!-- Institutional Affiliation -->
 <div class="mt-12 pt-8 border-t border-white/5 flex flex-col items-center text-center">
     <div class="flex items-center gap-8 mb-4">
-        <a href="https://gob-rj.org.br/home" target="_blank" rel="noopener noreferrer" class="transition-transform hover:scale-105">
-            <img src="logo_gob_rj-2.png" alt="Grande Oriente do Brasil no Rio de Janeiro" class="h-10 w-auto opacity-30 hover:opacity-100 grayscale hover:grayscale-0 transition-all duration-500">
+        <a href="{{rodape.orientes.0.url}}" target="_blank" rel="noopener noreferrer" class="transition-transform hover:scale-105">
+            <img src="{{rodape.orientes.0.logo}}" alt="Grande Oriente do Brasil no Rio de Janeiro" class="h-10 w-auto opacity-30 hover:opacity-100 grayscale hover:grayscale-0 transition-all duration-500">
         </a>
-        <a href="https://www.gob.org.br/" target="_blank" rel="noopener noreferrer" class="transition-transform hover:scale-105">
-            <img src="logo-gob-brasilia-df-selo.png" alt="Grande Oriente do Brasil" class="h-10 w-auto opacity-30 hover:opacity-100 grayscale hover:grayscale-0 transition-all duration-500">
+        <a href="{{rodape.orientes.1.url}}" target="_blank" rel="noopener noreferrer" class="transition-transform hover:scale-105">
+            <img src="{{rodape.orientes.1.logo}}" alt="Grande Oriente do Brasil" class="h-10 w-auto opacity-30 hover:opacity-100 grayscale hover:grayscale-0 transition-all duration-500">
         </a>
     </div>
     <div class="space-y-1">
@@ -978,6 +1016,15 @@
 </footer>
 </main>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<!-- Config da Loja: injetada em build-time a partir de lojas/<slug>.js -->
+<script>
+  window.__SITE_CONFIG__ = {
+    supabase: {
+      url: "{{integracoes.supabase.url}}",
+      anonKey: "{{integracoes.supabase.anonKey}}"
+    }
+  };
+</script>
 <script src="/js/supabase-config.js"></script>
 <script>
     // Gerenciador de Seções (Navegação)
@@ -1600,11 +1647,14 @@
         document.getElementById('statContacted').textContent = contatados;
         document.getElementById('statPending').textContent = aguardando;
 
-        // Badge na aba
+        // Badge na aba. O `else` importa: sem ele, o badge some da lógica mas fica
+        // na tela quando o último pendente é atendido ou excluído.
+        const badge = document.getElementById('interestBadge');
         if (aguardando > 0) {
-            const badge = document.getElementById('interestBadge');
             badge.textContent = aguardando;
             badge.classList.remove('hidden');
+        } else {
+            badge.classList.add('hidden');
         }
     };
 
@@ -1693,6 +1743,48 @@
     window.closeInterestModal = function() {
         document.getElementById('interestDetailModal').classList.add('hidden');
         currentInterestId = null;
+    };
+
+    window.deleteInterest = async function() {
+        if (!currentInterestId) return;
+
+        const candidato = allInterests.find(x => x.id === currentInterestId);
+        const nome = candidato?.nome || 'este registro';
+
+        // Ação destrutiva e irreversível: nomeia o candidato para o admin não
+        // apagar o errado por engano.
+        if (!confirm(`Excluir definitivamente o registro de "${nome}"?\n\nEsta ação não pode ser desfeita.`)) {
+            return;
+        }
+
+        const btn = document.getElementById('interestDeleteBtn');
+        const label = document.getElementById('interestDeleteLabel');
+        btn.disabled = true;
+        label.textContent = 'Excluindo...';
+
+        const { error } = await window.supabaseClient
+            .from('candidatos_interesse')
+            .delete()
+            .eq('id', currentInterestId);
+
+        btn.disabled = false;
+        label.textContent = 'Excluir Registro';
+
+        if (error) {
+            // 42501 = RLS negou. Só admin pode excluir (ver supabase/01_rls.sql).
+            if (error.code === '42501') {
+                alert('Você não tem permissão para excluir registros. Apenas administradores podem fazer isso.');
+            } else {
+                alert('Erro ao excluir o registro: ' + (error.message || 'erro desconhecido'));
+            }
+            console.error('Erro ao excluir candidato:', error);
+            return;
+        }
+
+        closeInterestModal();
+        // Recarrega do banco em vez de remendar o estado local: assim os cards
+        // (total, novos, contatados, aguardando) e o badge da aba ficam certos.
+        await loadInterests();
     };
 
     window.setInterestStatus = async function(status) {

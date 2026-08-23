@@ -1,9 +1,10 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html class="dark" lang="pt-BR">
 <head>
     <meta charset="utf-8"/>
     <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-    <title>Tesouraria - A∴R∴L∴S∴ Major Manoel dos Santos Portugal Nº 4424</title>
+    <title>Tesouraria - {{loja.nomeCompleto}}</title>
+    <script src="/js/theme.js"></script>
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
     <link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400;500;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
@@ -13,14 +14,14 @@
             theme: {
                 extend: {
                     "colors": {
-                        "background": "#131313",
-                        "secondary": "#e9c349",
-                        "on-background": "#e4e2e1",
-                        "on-tertiary-container": "#878585",
-                        "outline-variant": "#44474d",
-                        "surface": "#131313",
-                        "surface-container-low": "#1b1c1c",
-                        "error": "#ffb4ab"
+                        "background": "var(--background, #131313)",
+                        "secondary": "var(--secondary, #e9c349)",
+                        "on-background": "var(--on-background, #e4e2e1)",
+                        "on-tertiary-container": "var(--on-tertiary-container, #878585)",
+                        "outline-variant": "var(--outline-variant, #44474d)",
+                        "surface": "var(--surface, #131313)",
+                        "surface-container-low": "var(--surface-container-low, #1b1c1c)",
+                        "error": "var(--error, #ffb4ab)"
                     },
                     "fontFamily": {
                         "h1": ["Newsreader"],
@@ -87,19 +88,25 @@
     <!-- MOBILE TOP BAR -->
     <nav class="lg:hidden fixed top-0 w-full z-50 flex justify-between items-center px-6 py-4 bg-slate-950/90 backdrop-blur-xl border-b border-white/10">
         <div class="flex items-center gap-3">
-            <img src="logo.png" alt="Logo" class="h-8 w-auto">
-            <span class="font-newsreader text-amber-500 font-bold">Major Manoel</span>
+            <img src="{{marca.logo}}" alt="Logo" class="h-8 w-auto">
+            <span class="font-newsreader text-amber-500 font-bold">{{loja.nomeCurto}}</span>
         </div>
-        <button onclick="toggleMobileMenu()" class="text-amber-500">
-            <span class="material-symbols-outlined text-3xl">menu</span>
-        </button>
+        <div class="flex items-center gap-2">
+            <!-- Botão de Alternância de Tema -->
+            <button onclick="toggleTheme()" class="text-amber-500 hover:text-amber-300 transition-colors flex items-center justify-center p-2 focus:outline-none" aria-label="Alternar Tema">
+                <span class="material-symbols-outlined theme-icon text-2xl">light_mode</span>
+            </button>
+            <button onclick="toggleMobileMenu()" class="text-amber-500">
+                <span class="material-symbols-outlined text-3xl">menu</span>
+            </button>
+        </div>
     </nav>
 
     <!-- MOBILE MENU OVERLAY -->
     <div id="mobileMenu" class="fixed inset-0 z-[60] hidden flex flex-col bg-slate-950/98 backdrop-blur-2xl p-8 transform transition-transform duration-500 translate-x-full">
         <div class="flex justify-between items-center mb-12">
             <div class="flex items-center gap-3">
-                <img src="logo.png" alt="Logo" class="h-8">
+                <img src="{{marca.logo}}" alt="Logo" class="h-8">
                 <span class="font-newsreader text-amber-500 font-bold text-lg">Menu Principal</span>
             </div>
             <button onclick="toggleMobileMenu()" class="text-amber-500 w-12 h-12 flex items-center justify-center">
@@ -138,16 +145,16 @@
             </button>
         </div>
         <div class="mt-auto text-center pb-8 px-6">
-            <p class="text-slate-600 text-[10px] uppercase tracking-widest mb-4">A∴R∴L∴S∴ Major Manoel dos Santos Portugal Nº 4424</p>
+            <p class="text-slate-600 text-[10px] uppercase tracking-widest mb-4">{{loja.nomeCompleto}}</p>
             
             <!-- Institutional Affiliation (Mobile) -->
             <div class="pt-6 border-t border-white/5 flex flex-col items-center">
                 <div class="flex items-center gap-6 mb-3">
-                    <a href="https://gob-rj.org.br/home" target="_blank" rel="noopener noreferrer" class="transition-transform hover:scale-105">
-                        <img src="logo_gob_rj-2.png" alt="GOB-RJ" class="h-10 w-auto opacity-30">
+                    <a href="{{rodape.orientes.0.url}}" target="_blank" rel="noopener noreferrer" class="transition-transform hover:scale-105">
+                        <img src="{{rodape.orientes.0.logo}}" alt="GOB-RJ" class="h-10 w-auto opacity-30">
                     </a>
-                    <a href="https://www.gob.org.br/" target="_blank" rel="noopener noreferrer" class="transition-transform hover:scale-105">
-                        <img src="logo-gob-brasilia-df-selo.png" alt="GOB" class="h-10 w-auto opacity-30">
+                    <a href="{{rodape.orientes.1.url}}" target="_blank" rel="noopener noreferrer" class="transition-transform hover:scale-105">
+                        <img src="{{rodape.orientes.1.logo}}" alt="GOB" class="h-10 w-auto opacity-30">
                     </a>
                 </div>
                 <div class="space-y-0.5">
@@ -160,8 +167,8 @@
 <!-- SIDE NAVBAR (Desktop) -->
     <nav class="hidden lg:flex fixed left-0 top-0 h-screen flex-col bg-slate-950/95 backdrop-blur-xl w-72 border-r border-white/10 shadow-2xl z-50">
         <div class="p-8 flex flex-col items-center text-center">
-            <h1 class="text-amber-500 font-bold font-newsreader text-lg leading-tight tracking-tight">A∴R∴L∴S∴ Major Manoel dos Santos Portugal Nº 4424</h1>
-            <p class="text-slate-500 text-[10px] uppercase tracking-[0.2em] mt-2">GOB - Rito Moderno</p>
+            <h1 class="text-amber-500 font-bold font-newsreader text-lg leading-tight tracking-tight">{{loja.nomeCompleto}}</h1>
+            <p class="text-slate-500 text-[10px] uppercase tracking-[0.2em] mt-2">{{loja.obediencia}}</p>
         </div>
 
         <div class="flex-1 px-4 py-6 space-y-2">
@@ -200,6 +207,11 @@
                     <p class="text-[10px] text-slate-500 uppercase tracking-widest" id="navPosition">Portal Ativo</p>
                 </div>
             </div>
+            <!-- Botão de Alternância de Tema -->
+            <button onclick="toggleTheme()" class="w-full flex items-center justify-center gap-2 py-2 text-slate-500 hover:text-amber-500 transition-colors text-xs font-bold uppercase tracking-widest group mb-2">
+                <span class="material-symbols-outlined theme-icon text-lg">light_mode</span>
+                <span>Alternar Tema</span>
+            </button>
             <button onclick="logout()" class="w-full flex items-center justify-center gap-2 py-3 text-slate-500 hover:text-red-400 transition-colors text-sm font-bold uppercase tracking-widest group">
                 <span class="material-symbols-outlined text-xl group-hover:rotate-12 transition-transform">logout</span>
                 Sair do Portal
@@ -208,11 +220,11 @@
             <!-- Institutional Affiliation (Desktop) -->
             <div class="mt-6 pt-6 border-t border-white/5 flex flex-col items-center">
                 <div class="flex items-center gap-6 mb-3">
-                    <a href="https://gob-rj.org.br/home" target="_blank" rel="noopener noreferrer" class="transition-transform hover:scale-105">
-                        <img src="logo_gob_rj-2.png" alt="GOB-RJ" class="h-10 w-auto opacity-20 hover:opacity-100 grayscale hover:grayscale-0 transition-all duration-500">
+                    <a href="{{rodape.orientes.0.url}}" target="_blank" rel="noopener noreferrer" class="transition-transform hover:scale-105">
+                        <img src="{{rodape.orientes.0.logo}}" alt="GOB-RJ" class="h-10 w-auto opacity-20 hover:opacity-100 grayscale hover:grayscale-0 transition-all duration-500">
                     </a>
-                    <a href="https://www.gob.org.br/" target="_blank" rel="noopener noreferrer" class="transition-transform hover:scale-105">
-                        <img src="logo-gob-brasilia-df-selo.png" alt="GOB" class="h-10 w-auto opacity-20 hover:opacity-100 grayscale hover:grayscale-0 transition-all duration-500">
+                    <a href="{{rodape.orientes.1.url}}" target="_blank" rel="noopener noreferrer" class="transition-transform hover:scale-105">
+                        <img src="{{rodape.orientes.1.logo}}" alt="GOB" class="h-10 w-auto opacity-20 hover:opacity-100 grayscale hover:grayscale-0 transition-all duration-500">
                     </a>
                 </div>
                 <div class="space-y-0.5">
@@ -310,7 +322,16 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="/js/supabase-config.js"></script>
+    <!-- Config da Loja: injetada em build-time a partir de lojas/<slug>.js -->
+<script>
+  window.__SITE_CONFIG__ = {
+    supabase: {
+      url: "{{integracoes.supabase.url}}",
+      anonKey: "{{integracoes.supabase.anonKey}}"
+    }
+  };
+</script>
+<script src="/js/supabase-config.js"></script>
     <script>
         async function checkSession() {
             // 1. Set Current Date instantaneamente (independente de chamadas assíncronas de banco)
@@ -382,7 +403,13 @@
                     }
                 }
                 
-                if (profile && (position === 'tesoureiro' || position === 'veneravel mestre' || role === 'admin')) {
+                // Cargos com acesso financeiro (enviar/ver documentos). DEVE espelhar
+                // is_oficial() no banco (supabase/03_ajuste_oficial.sql): admin,
+                // tesoureiro, orador, venerável. Este gate é só visual — quem protege
+                // de verdade é o RLS; mas manter os dois iguais evita mostrar um botão
+                // que o banco depois recusaria.
+                const cargosFinanceiros = ['tesoureiro', 'orador', 'veneravel mestre'];
+                if (profile && (role === 'admin' || cargosFinanceiros.includes(position))) {
                     document.getElementById('treasurerActions').classList.remove('hidden');
                 }
             } catch (err) {
@@ -392,17 +419,44 @@
             loadDocuments();
         }
 
+        // Converte o que está gravado em file_url num caminho dentro do bucket.
+        // Aceita o formato novo (só o caminho, "financial/arquivo.pdf") e também
+        // uma eventual URL pública antiga, extraindo o trecho após o nome do bucket.
+        function caminhoNoBucket(fileUrl) {
+            if (!fileUrl) return null;
+            const marcador = '/documents/';
+            const i = fileUrl.indexOf(marcador);
+            if (i !== -1) return fileUrl.slice(i + marcador.length);
+            return fileUrl; // já é um caminho relativo
+        }
+
+        // Gera uma URL assinada temporária para o arquivo (válida por 1h). Bucket
+        // privado: sem isto o arquivo não abre nem para o oficial.
+        async function urlAssinada(fileUrl) {
+            const path = caminhoNoBucket(fileUrl);
+            if (!path) return null;
+            const { data, error } = await window.supabaseClient.storage
+                .from('documents')
+                .createSignedUrl(path, 3600);
+            if (error) { console.error('Erro ao assinar URL:', error); return null; }
+            return data.signedUrl;
+        }
+
         async function loadDocuments() {
             const { data, error } = await window.supabaseClient
                 .from('financial_documents')
                 .select('*')
                 .order('created_at', { ascending: false });
-            
+
             const listEl = document.getElementById('documentList');
             if (error || !data || data.length === 0) {
                 listEl.innerHTML = '<tr><td colspan="3" class="px-8 py-12 text-center text-slate-500 italic text-sm">Nenhum documento encontrado.</td></tr>';
                 return;
             }
+
+            // Assina todas as URLs em paralelo antes de renderizar.
+            const urls = await Promise.all(data.map(doc => urlAssinada(doc.file_url)));
+            data.forEach((doc, i) => { doc._signedUrl = urls[i]; });
 
             listEl.innerHTML = data.map(doc => `
                 <tr class="hover:bg-white/5 transition-colors group">
@@ -420,8 +474,8 @@
                     </td>
                     <td class="px-8 py-5 text-right">
                         <div class="flex items-center justify-end gap-4">
-                            <button onclick="previewDocument('${doc.file_url}', '${doc.title.replace(/'/g, "\\'")}')" class="material-symbols-outlined text-slate-500 hover:text-secondary transition-colors">visibility</button>
-                            <a href="${doc.file_url}" target="_blank" class="material-symbols-outlined text-slate-500 hover:text-secondary transition-colors">download</a>
+                            <button onclick="previewDocument('${doc._signedUrl || ''}', '${doc.title.replace(/'/g, "\\'")}')" class="material-symbols-outlined text-slate-500 hover:text-secondary transition-colors">visibility</button>
+                            <a href="${doc._signedUrl || '#'}" target="_blank" class="material-symbols-outlined text-slate-500 hover:text-secondary transition-colors">download</a>
                         </div>
                     </td>
                 </tr>
@@ -457,9 +511,10 @@
                 return;
             }
 
-            const { data: { publicUrl } } = window.supabaseClient.storage
-                .from('documents')
-                .getPublicUrl(`financial/${fileName}`);
+            // Bucket é PRIVADO: guardamos o CAMINHO do arquivo, não uma URL pública.
+            // A URL de acesso é assinada sob demanda em loadDocuments (expira em 1h),
+            // então um link vazado não dá acesso permanente ao documento financeiro.
+            const filePath = `financial/${fileName}`;
 
             // Save to DB
             const { error: dbError } = await window.supabaseClient
@@ -467,7 +522,7 @@
                 .insert({
                     title,
                     description: desc,
-                    file_url: publicUrl,
+                    file_url: filePath,
                     uploaded_by: session.user.id
                 });
 

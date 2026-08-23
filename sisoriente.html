@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SisOriente - Sistema para Gestão de Loja Maçônica</title>
+    <script src="/js/theme.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    
+    <style>
+        :root {
+            --bg-primary: #090d16; /* Deep Masonic Navy Slate */
+            --bg-secondary: #0f1524;
+            --accent-gold: #D4AF37;
+            --accent-gold-glow: rgba(212, 175, 55, 0.25);
+            --text-primary: #f8fafc;
+            --text-secondary: #cbd5e1;
+            --glass-bg: rgba(15, 21, 36, 0.75);
+            --glass-border: rgba(255, 255, 255, 0.06);
+            --backdrop-color: rgba(4, 6, 12, 0.85);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            overflow-x: hidden;
+        }
+
+        .font-display {
+            font-family: 'Playfair Display', serif;
+        }
+
+        /* Glassmorphic elements */
+        .glass-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--glass-border);
+            border-radius: 1.25rem;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .glass-card:hover {
+            border-color: rgba(212, 175, 55, 0.25);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5), 0 0 24px var(--accent-gold-glow);
+            transform: translateY(-3px);
+        }
+
+        /* Elegant gold gradient text */
+        .masonic-gradient-text {
+            background: linear-gradient(135deg, #D4AF37 0%, #F5DE93 50%, #D4AF37 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* Premium Buttons */
+        .btn-gold {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            background-color: var(--accent-gold);
+            color: #090d16;
+            font-weight: 700;
+            font-size: 0.875rem;
+            border-radius: 0.75rem;
+            padding: 0.75rem 1.75rem;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid var(--accent-gold);
+            box-shadow: 0 4px 14px rgba(212, 175, 55, 0.2);
+            cursor: pointer;
+        }
+
+        .btn-gold:hover {
+            background-color: #f1d27a;
+            border-color: #f1d27a;
+            box-shadow: 0 6px 22px rgba(212, 175, 55, 0.35);
+            transform: scale(1.03) translateY(-1px);
+        }
+
+        .btn-gold:active {
+            transform: scale(0.97) translateY(0);
+        }
+
+        .btn-glass {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            background-color: rgba(255, 255, 255, 0.04);
+            color: var(--text-primary);
+            font-weight: 600;
+            font-size: 0.875rem;
+            border-radius: 0.75rem;
+            padding: 0.75rem 1.75rem;
+            transition: all 0.2s;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            cursor: pointer;
+        }
+
+        .btn-glass:hover {
+            background-color: rgba(255, 255, 255, 0.08);
+            border-color: rgba(212, 175, 55, 0.3);
+            color: #ffffff;
+            transform: translateY(-1px);
+        }
+
+        /* Ambient Watermark Background Logo */
+        .watermark-bg {
+            position: absolute;
+            top: 5%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80vw;
+            height: 80vw;
+            max-width: 600px;
+            max-height: 600px;
+            background-image: url('logo.png');
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            opacity: 0.04;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--bg-primary);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--accent-gold);
+        }
+
+        /* FAQ Accordion Toggle */
+        .faq-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+        }
+        .faq-item.active .faq-content {
+            max-height: 300px;
+        }
+        .faq-item.active .faq-icon {
+            transform: rotate(180deg);
+        }
+    </style>
+</head>
+<body class="selection:bg-amber-500/20 selection:text-white">
+
+<!-- Ambient Background Light Effects -->
+<div class="absolute top-[-20%] left-[-10%] w-[500px] h-[500px] bg-amber-500/5 rounded-full filter blur-[120px] pointer-events-none z-0"></div>
+<div class="absolute top-[30%] right-[-10%] w-[600px] h-[600px] bg-blue-500/5 rounded-full filter blur-[150px] pointer-events-none z-0"></div>
+
+<!-- Top Sticky Navigation Header -->
+<nav class="fixed top-0 w-full z-50 bg-slate-950/70 backdrop-blur-xl border-b border-white/5 flex justify-between items-center px-6 md:px-12 py-4">
+    <a href="#inicio" class="flex items-center gap-3 transition-transform hover:scale-[1.02] active:scale-98">
+        <img src="{{marca.logo}}" alt="Logo SisOriente" class="h-9 w-auto">
+        <div class="font-display font-bold text-xl tracking-tight text-white flex items-center gap-1.5">
+            Sis<span class="masonic-gradient-text">Oriente</span>
+            <span class="text-[9px] uppercase tracking-wider bg-amber-500/10 text-amber-400 px-1.5 py-0.5 rounded border border-amber-500/20">SaaS v2.0</span>
+        </div>
+    </a>
+
+    <!-- Desktop Navigation Links -->
+    <div class="hidden lg:flex items-center gap-8 text-sm">
+        <a href="#inicio" class="text-slate-300 hover:text-white font-medium transition-colors">Início</a>
+        <a href="#recursos" class="text-slate-300 hover:text-white font-medium transition-colors">Recursos</a>
+        <a href="#design" class="text-slate-300 hover:text-white font-medium transition-colors">Diferenciais</a>
+        <a href="#precos" class="text-slate-300 hover:text-white font-medium transition-colors">Planos & Preço</a>
+        <a href="#faq" class="text-slate-300 hover:text-white font-medium transition-colors">Dúvidas</a>
+    </div>
+
+    <div class="flex items-center gap-3">
+        <!-- Botão de Alternância de Tema -->
+        <button onclick="toggleTheme()" class="text-amber-500 hover:text-amber-300 transition-colors flex items-center justify-center p-2 focus:outline-none" aria-label="Alternar Tema">
+            <span class="material-symbols-outlined theme-icon text-2xl">light_mode</span>
+        </button>
+        <a href="login.html" class="btn-glass px-4 py-2 text-xs">
+            Acessar Sistema
+        </a>
+        <a href="#precos" class="btn-gold px-4 py-2 text-xs hidden sm:inline-flex">
+            Testar Grátis
+        </a>
+        <button class="lg:hidden text-amber-500 flex items-center" onclick="toggleMobileMenu()">
+            <span class="material-symbols-outlined text-3xl">menu</span>
+        </button>
+    </div>
+</nav>
+
+<!-- Mobile Navigation Menu -->
+<div id="mobileMenu" class="fixed inset-0 z-50 hidden flex flex-col bg-slate-950/98 backdrop-blur-3xl transform transition-transform duration-500 translate-x-full">
+    <div class="flex justify-between items-center px-6 py-5 border-b border-white/5 bg-[#090d16]">
+        <span class="font-display text-amber-500 font-bold text-xl">Menu Principal</span>
+        <button onclick="toggleMobileMenu()" class="text-amber-500 flex items-center">
+            <span class="material-symbols-outlined text-3xl">close</span>
+        </button>
+    </div>
+    <div class="flex flex-col gap-4 p-6 overflow-y-auto text-sm">
+        <a class="flex items-center gap-6 p-4 bg-white/5 rounded-2xl text-slate-200 border border-white/5 active:scale-95 transition-all" href="#inicio" onclick="toggleMobileMenu()">
+            <span class="material-symbols-outlined text-amber-500">home</span>
+            <span class="text-base font-semibold">Início</span>
+        </a>
+        <a class="flex items-center gap-6 p-4 bg-white/5 rounded-2xl text-slate-200 border border-white/5 active:scale-95 transition-all" href="#recursos" onclick="toggleMobileMenu()">
+            <span class="material-symbols-outlined text-amber-500">verified</span>
+            <span class="text-base font-semibold">Recursos</span>
+        </a>
+        <a class="flex items-center gap-6 p-4 bg-white/5 rounded-2xl text-slate-200 border border-white/5 active:scale-95 transition-all" href="#design" onclick="toggleMobileMenu()">
+            <span class="material-symbols-outlined text-amber-500">devices</span>
+            <span class="text-base font-semibold">Diferenciais</span>
+        </a>
+        <a class="flex items-center gap-6 p-4 bg-white/5 rounded-2xl text-slate-200 border border-white/5 active:scale-95 transition-all" href="#precos" onclick="toggleMobileMenu()">
+            <span class="material-symbols-outlined text-amber-500">payments</span>
+            <span class="text-base font-semibold">Plano & Preços</span>
+        </a>
+        <a class="flex items-center gap-6 p-4 bg-white/5 rounded-2xl text-slate-200 border border-white/5 active:scale-95 transition-all" href="#faq" onclick="toggleMobileMenu()">
+            <span class="material-symbols-outlined text-amber-500">help</span>
+            <span class="text-base font-semibold">Tire suas dúvidas</span>
+        </a>
+        <a class="flex items-center gap-6 p-4 bg-amber-500/10 rounded-2xl text-amber-500 border border-amber-500/20 active:scale-95 transition-all mt-4" href="login.html" onclick="toggleMobileMenu()">
+            <span class="material-symbols-outlined">account_circle</span>
+            <span class="text-base font-bold">Acessar Área Restrita</span>
+        </a>
+    </div>
+</div>
+
+<main class="relative z-10 pt-20">
+    <!-- Hero Section -->
+    <section id="inicio" class="relative py-24 md:py-32 px-6 overflow-hidden flex flex-col items-center">
+        <div class="watermark-bg"></div>
+
+        <div class="max-w-4xl mx-auto text-center relative z-10">
+            <span class="font-bold uppercase tracking-[0.35em] text-amber-500 text-xs md:text-sm mb-6 block drop-shadow-md">PLATAFORMA INTEGRADA SAAS</span>
+            <h1 class="font-display text-5xl md:text-7xl mb-8 leading-tight text-white drop-shadow-2xl">
+                O Sistema mais completo para <br/><span class="masonic-gradient-text italic font-semibold">Gestão de Loja Maçônica</span>
+            </h1>
+            <p class="text-base md:text-lg text-slate-300 font-light mb-10 max-w-2xl mx-auto leading-relaxed drop-shadow-md">
+                Controle secretaria, chancelaria, tesouraria e presidência de forma segura, sigilosa e totalmente intuitiva. Uma plataforma moderna e integrada desenvolvida especialmente para oficinas.
+            </p>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
+                <a href="#precos" class="btn-gold px-8 py-3.5 w-full sm:w-auto">
+                    Experimente Grátis por 30 Dias
+                </a>
+                <a href="#recursos" class="btn-glass px-8 py-3.5 w-full sm:w-auto">
+                    Conhecer Módulos
+                </a>
+            </div>
+        </div>
+
+        <!-- System Mockup Device Showcase -->
+        <div class="max-w-5xl mx-auto mt-20 px-4 relative z-10 animate-fade-in">
+            <div class="glass-card p-2 bg-white/5 border border-glass-border/30 rounded-[2rem] shadow-2xl relative">
+                <div class="absolute inset-0 bg-gradient-to-t from-slate-950/70 via-transparent to-transparent z-10 rounded-[2rem] pointer-events-none"></div>
+                <img src="img/modelo1_sismacom.png" alt="SisOriente Dashboard Preview" class="w-full h-auto rounded-[1.75rem] shadow-lg border border-glass-border/10">
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section ("Tudo no mesmo pacote") -->
+    <section id="recursos" class="py-24 max-w-7xl mx-auto px-6 relative z-10">
+        <div class="text-center mb-20">
+            <span class="font-bold uppercase tracking-[0.3em] text-[#99907C] text-xs mb-3 block">FERRAMENTAS INCRÍVEIS</span>
+            <h2 class="font-display text-4xl md:text-5xl text-white mb-4">Tudo no mesmo pacote</h2>
+            <p class="text-slate-400 text-sm max-w-md mx-auto leading-relaxed">Diga adeus às planilhas complexas. O SisOriente une os principais setores administrativos da sua oficina em uma única conta corporativa.</p>
+            <div class="h-0.5 w-16 bg-amber-500 mx-auto mt-6"></div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <!-- Módulo: Secretaria -->
+            <div class="glass-card p-8 flex flex-col items-start group">
+                <div class="mb-6 w-14 h-14 border border-amber-500/30 rounded-2xl flex items-center justify-center text-amber-500 bg-amber-500/5 group-hover:bg-amber-500/10 transition-colors">
+                    <span class="material-symbols-outlined text-3xl">menu_book</span>
+                </div>
+                <h3 class="font-display text-xl text-white mb-4 font-semibold">Secretaria Eficiente</h3>
+                <p class="text-slate-400 text-sm leading-relaxed mb-4">
+                    Cadastro completo de Irmãos e familiares, controle rigoroso de graus, cargos da administração, balaústres de sessões, decretos, expedientes oficiais e GED (gerenciador de arquivos na nuvem).
+                </p>
+            </div>
+
+            <!-- Módulo: Chancelaria -->
+            <div class="glass-card p-8 flex flex-col items-start group">
+                <div class="mb-6 w-14 h-14 border border-amber-500/30 rounded-2xl flex items-center justify-center text-amber-500 bg-amber-500/5 group-hover:bg-amber-500/10 transition-colors">
+                    <span class="material-symbols-outlined text-3xl">draw</span>
+                </div>
+                <h3 class="font-display text-xl text-white mb-4 font-semibold">Chancelaria Digital</h3>
+                <p class="text-slate-400 text-sm leading-relaxed mb-4">
+                    Gerenciamento diário de presenças, controle especial de visitantes de outras oficinas, livro de presenças virtual, agenda oficial de aniversariantes e relatórios de frequência em PDF ou Excel.
+                </p>
+            </div>
+
+            <!-- Módulo: Tesouraria -->
+            <div class="glass-card p-8 flex flex-col items-start group">
+                <div class="mb-6 w-14 h-14 border border-amber-500/30 rounded-2xl flex items-center justify-center text-amber-500 bg-amber-500/5 group-hover:bg-amber-500/10 transition-colors">
+                    <span class="material-symbols-outlined text-3xl">payments</span>
+                </div>
+                <h3 class="font-display text-xl text-white mb-4 font-semibold">Tesouraria Integrada</h3>
+                <p class="text-slate-400 text-sm leading-relaxed mb-4">
+                    Controle de contas a pagar e receber, geração de recibos eletrônicos, centro de custo detalhado, fluxo de caixa unificado, contas bancárias/caixa e emissão inteligente de metais/mensalidades por Irmão.
+                </p>
+            </div>
+
+            <!-- Módulo: Presidência -->
+            <div class="glass-card p-8 flex flex-col items-start group">
+                <div class="mb-6 w-14 h-14 border border-amber-500/30 rounded-2xl flex items-center justify-center text-amber-500 bg-amber-500/5 group-hover:bg-amber-500/10 transition-colors">
+                    <span class="material-symbols-outlined text-3xl">gavel</span>
+                </div>
+                <h3 class="font-display text-xl text-white mb-4 font-semibold">Mesa da Presidência</h3>
+                <p class="text-slate-400 text-sm leading-relaxed mb-4">
+                    Cadastro histórico de administrações passadas, galeria virtual de ex-Veneráveis, comissões especiais, avisos rápidos por e-mail/WhatsApp, agenda de eventos oficiais e fórum de comunicações sigilosas.
+                </p>
+            </div>
+
+            <!-- Módulo: Suporte Técnico -->
+            <div class="glass-card p-8 flex flex-col items-start group">
+                <div class="mb-6 w-14 h-14 border border-amber-500/30 rounded-2xl flex items-center justify-center text-amber-500 bg-amber-500/5 group-hover:bg-amber-500/10 transition-colors">
+                    <span class="material-symbols-outlined text-3xl">support_agent</span>
+                </div>
+                <h3 class="font-display text-xl text-white mb-4 font-semibold">Suporte Dedicado</h3>
+                <p class="text-slate-400 text-sm leading-relaxed mb-4">
+                    Uma equipe de obreiros pronta para sanar quaisquer dúvidas através de canais dedicados via chat online, WhatsApp e e-mail. Atendimento pleno e ilimitado mesmo durante o período de testes grátis.
+                </p>
+            </div>
+
+            <!-- Módulo: Segurança e Sigilo -->
+            <div class="glass-card p-8 flex flex-col items-start group">
+                <div class="mb-6 w-14 h-14 border border-amber-500/30 rounded-2xl flex items-center justify-center text-amber-500 bg-amber-500/5 group-hover:bg-amber-500/10 transition-colors">
+                    <span class="material-symbols-outlined text-3xl">lock</span>
+                </div>
+                <h3 class="font-display text-xl text-white mb-4 font-semibold">Segurança & Sigilo</h3>
+                <p class="text-slate-400 text-sm leading-relaxed mb-4">
+                    Hospedagem segura sob encriptação de ponta a ponta. Os dados e acessos às telas são rigidamente classificados por grau e controlados por perfis específicos de cargos, impossibilitando qualquer vazamento.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Product Showcase / Bullet Points ("Design moderno e flexível") -->
+    <section id="design" class="py-24 px-6 bg-slate-900/10 relative z-10">
+        <div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+            <div>
+                <span class="font-bold uppercase tracking-[0.25em] text-[#99907C] text-xs block mb-3">CARACTERÍSTICAS TÉCNICAS</span>
+                <h2 class="font-display text-4xl md:text-5xl text-white mb-8">Design moderno e flexível</h2>
+                
+                <div class="space-y-6">
+                    <div class="flex items-start gap-4">
+                        <span class="material-symbols-outlined text-amber-500 mt-1">check_circle</span>
+                        <div>
+                            <h4 class="font-bold text-white text-base">Design Totalmente Responsivo</h4>
+                            <p class="text-slate-400 text-sm mt-1">Acesse e trabalhe de onde estiver. A interface adapta-se perfeitamente em celulares, tablets e computadores desktop.</p>
+                        </div>
+                    </div>
+
+                    <div class="flex items-start gap-4">
+                        <span class="material-symbols-outlined text-amber-500 mt-1">check_circle</span>
+                        <div>
+                            <h4 class="font-bold text-white text-base">Recursos Organizados por Cargo</h4>
+                            <p class="text-slate-400 text-sm mt-1">Cada oficial de mesa (Tesoureiro, Secretário, Chanceler) tem seu painel exclusivo focado apenas nas suas atribuições administrativas.</p>
+                        </div>
+                    </div>
+
+                    <div class="flex items-start gap-4">
+                        <span class="material-symbols-outlined text-amber-500 mt-1">check_circle</span>
+                        <div>
+                            <h4 class="font-bold text-white text-base">Relatórios Intuitivos com Gráficos</h4>
+                            <p class="text-slate-400 text-sm mt-1">Gere análises de frequência geral e fluxo de caixa mensal através de gráficos estatísticos animados e fáceis de ler.</p>
+                        </div>
+                    </div>
+
+                    <div class="flex items-start gap-4">
+                        <span class="material-symbols-outlined text-amber-500 mt-1">check_circle</span>
+                        <div>
+                            <h4 class="font-bold text-white text-base">Disponibilidade Imediata (Ativação Instântanea)</h4>
+                            <p class="text-slate-400 text-sm mt-1">Ao cadastrar sua oficina, o seu painel de gestão é inicializado e configurado na nuvem na mesma hora de forma totalmente automatizada.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Laptop Showcase Preview Mockup image -->
+            <div class="flex justify-center">
+                <div class="glass-card p-3 bg-white/5 border border-glass-border/30 rounded-2xl shadow-xl relative w-full max-w-lg">
+                    <img src="img/modelo1_sismacom.png" alt="Plataforma de Gestão Maçônica" class="w-full h-auto rounded-xl">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing Section ("PLANO ÚNICO - Contratação simplificada") -->
+    <section id="precos" class="py-24 px-6 relative z-10">
+        <div class="text-center mb-16">
+            <span class="font-bold uppercase tracking-[0.3em] text-[#99907C] text-xs block mb-3">PLANO ÚNICO</span>
+            <h2 class="font-display text-4xl md:text-5xl text-white mb-4">Contratação simplificada</h2>
+            <p class="text-slate-400 text-sm max-w-md mx-auto leading-relaxed">Sem letras miúdas ou planos restritivos. Uma única assinatura integral contendo todas as ferramentas do sistema.</p>
+            <div class="h-0.5 w-16 bg-accent-gold mx-auto mt-6"></div>
+        </div>
+
+        <div class="max-w-md mx-auto relative">
+            <!-- Glow background highlight behind card -->
+            <div class="absolute inset-0 bg-amber-500/10 rounded-[2rem] filter blur-[32px] pointer-events-none z-0"></div>
+
+            <div class="glass-card p-8 md:p-12 text-center border border-amber-500/30 relative z-10 shadow-2xl flex flex-col items-center">
+                <span class="px-4 py-1.5 bg-amber-500/10 text-amber-400 border border-amber-500/20 text-xs font-bold uppercase tracking-wider rounded-full mb-6">
+                    30 dias grátis para testar
+                </span>
+                
+                <div class="font-display text-slate-400 text-sm uppercase tracking-wider mb-2 font-semibold">Assinatura Mensal</div>
+                <div class="flex items-baseline gap-2 mb-2">
+                    <span class="text-2xl font-bold text-slate-400">R$</span>
+                    <span class="text-6xl font-black text-white masonic-gradient-text tracking-tighter">90,00</span>
+                    <span class="text-sm font-semibold text-slate-400">/ mês</span>
+                </div>
+                <div class="text-xs text-text-secondary/70 mb-8 font-medium">Sem taxas de adesão ou custos adicionais ocultos.</div>
+
+                <div class="w-full border-t border-glass-border/30 pt-6 mb-8 text-left text-sm space-y-4">
+                    <div class="flex items-center gap-3">
+                        <span class="material-symbols-outlined text-amber-500 text-base">check</span>
+                        <span class="text-slate-300 font-medium">Todos os módulos inclusos sem limite</span>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <span class="material-symbols-outlined text-amber-500 text-base">check</span>
+                        <span class="text-slate-300 font-medium">10 GB de armazenamento em nuvem</span>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <span class="material-symbols-outlined text-amber-500 text-base">check</span>
+                        <span class="text-slate-300 font-medium">Irmãos e usuários ilimitados</span>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <span class="material-symbols-outlined text-amber-500 text-base">check</span>
+                        <span class="text-slate-300 font-medium">Suporte técnico especializado online</span>
+                    </div>
+                </div>
+
+                <a href="cadastro.html" class="btn-gold w-full py-4 text-base shadow-xl">
+                    Faça o teste, cadastre sua Loja
+                </a>
+                
+                <p class="text-[10px] text-text-secondary/50 uppercase tracking-wider mt-4 font-semibold">Nenhum cartão é exigido para o teste grátis</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Accordion Section ("Tire suas dúvidas") -->
+    <section id="faq" class="py-24 px-6 bg-slate-900/10 relative z-10">
+        <div class="max-w-4xl mx-auto">
+            <div class="text-center mb-16">
+                <span class="font-bold uppercase tracking-[0.3em] text-[#99907C] text-xs block mb-3">COMO FUNCIONA?</span>
+                <h2 class="font-display text-4xl md:text-5xl text-white mb-4">Tire suas dúvidas</h2>
+                <div class="h-0.5 w-16 bg-amber-500 mx-auto mt-6"></div>
+            </div>
+
+            <div class="space-y-4">
+                <!-- FAQ Item 1 -->
+                <div class="faq-item glass-card p-6 cursor-pointer border border-glass-border/30 hover:border-amber-500/20 active:scale-[0.99] transition-all" onclick="toggleFaq(this)">
+                    <div class="flex justify-between items-center select-none">
+                        <h4 class="font-bold text-white text-base">1. O que é o SisOriente?</h4>
+                        <span class="faq-icon material-symbols-outlined text-amber-500 transition-transform duration-300">expand_more</span>
+                    </div>
+                    <div class="faq-content">
+                        <p class="text-slate-400 text-sm mt-4 leading-relaxed">
+                            O SisOriente é uma plataforma completa no modelo SaaS (Software as a Service) desenvolvida especificamente para a administração digital de Lojas Maçônicas. Hospedada totalmente em nuvem, ela permite o controle das atividades de Secretaria, Chancelaria, Tesouraria e Presidência em um único local seguro.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- FAQ Item 2 -->
+                <div class="faq-item glass-card p-6 cursor-pointer border border-glass-border/30 hover:border-amber-500/20 active:scale-[0.99] transition-all" onclick="toggleFaq(this)">
+                    <div class="flex justify-between items-center select-none">
+                        <h4 class="font-bold text-white text-base">2. A quem se destina o sistema?</h4>
+                        <span class="faq-icon material-symbols-outlined text-amber-500 transition-transform duration-300">expand_more</span>
+                    </div>
+                    <div class="faq-content">
+                        <p class="text-slate-400 text-sm mt-4 leading-relaxed">
+                            O sistema destina-se a Oficinas e Lojas Maçônicas regulares de qualquer rito ou potência que buscam modernizar seus processos, reduzir burocracia, aumentar o controle financeiro, organizar o histórico de obreiros e garantir total sigilo dos dados.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- FAQ Item 3 -->
+                <div class="faq-item glass-card p-6 cursor-pointer border border-glass-border/30 hover:border-amber-500/20 active:scale-[0.99] transition-all" onclick="toggleFaq(this)">
+                    <div class="flex justify-between items-center select-none">
+                        <h4 class="font-bold text-white text-base">3. Como funciona o período de testes grátis?</h4>
+                        <span class="faq-icon material-symbols-outlined text-amber-500 transition-transform duration-300">expand_more</span>
+                    </div>
+                    <div class="faq-content">
+                        <p class="text-slate-400 text-sm mt-4 leading-relaxed">
+                            Disponibilizamos 30 dias de acesso gratuito completo sem qualquer limitação de ferramentas. Durante esse período, você pode testar todos os recursos com os Irmãos da Loja. Nenhum cartão de crédito é solicitado para ativar o período de testes.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- FAQ Item 4 -->
+                <div class="faq-item glass-card p-6 cursor-pointer border border-glass-border/30 hover:border-amber-500/20 active:scale-[0.99] transition-all" onclick="toggleFaq(this)">
+                    <div class="flex justify-between items-center select-none">
+                        <h4 class="font-bold text-white text-base">4. Quais são as formas de pagamento disponíveis?</h4>
+                        <span class="faq-icon material-symbols-outlined text-amber-500 transition-transform duration-300">expand_more</span>
+                    </div>
+                    <div class="faq-content">
+                        <p class="text-slate-400 text-sm mt-4 leading-relaxed">
+                            Ao fim dos 30 dias de teste, se decidir contratar o plano único de R$ 90,00 mensais, os pagamentos podem ser efetuados via Pix, Boleto Bancário ou Cartão de Crédito com recorrência automática diretamente pelo painel administrativo da oficina.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- FAQ Item 5 -->
+                <div class="faq-item glass-card p-6 cursor-pointer border border-glass-border/30 hover:border-amber-500/20 active:scale-[0.99] transition-all" onclick="toggleFaq(this)">
+                    <div class="flex justify-between items-center select-none">
+                        <h4 class="font-bold text-white text-base">5. Os dados da minha oficina estão realmente seguros?</h4>
+                        <span class="faq-icon material-symbols-outlined text-amber-500 transition-transform duration-300">expand_more</span>
+                    </div>
+                    <div class="faq-content">
+                        <p class="text-slate-400 text-sm mt-4 leading-relaxed">
+                            Sim, com absoluto rigor. Toda a comunicação do SisOriente é realizada sob o protocolo criptografado HTTPS (certificado digital SSL). O acesso às telas e dados (como informações de presenças e balanços de tesouraria) é individualizado e limitado de forma estrita pelo grau maçônico e pelo cargo oficial de cada usuário.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- FAQ Item 6 -->
+                <div class="faq-item glass-card p-6 cursor-pointer border border-glass-border/30 hover:border-amber-500/20 active:scale-[0.99] transition-all" onclick="toggleFaq(this)">
+                    <div class="flex justify-between items-center select-none">
+                        <h4 class="font-bold text-white text-base">6. Quem mantém o SisOriente no ar?</h4>
+                        <span class="faq-icon material-symbols-outlined text-amber-500 transition-transform duration-300">expand_more</span>
+                    </div>
+                    <div class="faq-content">
+                        <p class="text-slate-400 text-sm mt-4 leading-relaxed">
+                            O sistema é desenvolvido, mantido e mantido no ar de forma independente por uma equipe altamente qualificada de mestres maçons e profissionais seniores em engenharia de software na nuvem, garantindo a solidez técnica e o sigilo indispensável à nossa ordem.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+
+<!-- Footer -->
+<footer class="py-16 border-t border-white/5 bg-slate-950/70 relative z-30">
+    <div class="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-8">
+        <div class="flex items-center gap-4">
+            <img src="{{marca.logo}}" alt="Logo SisOriente" class="h-10 w-auto opacity-50 grayscale hover:grayscale-0 hover:opacity-100 transition-all duration-500">
+            <div class="text-left">
+                <p class="text-slate-200 font-display text-lg font-bold">Plataforma SisOriente</p>
+                <p class="text-[#99907C] text-[10px] uppercase tracking-widest font-bold">Gestão Inteligente para Lojas Maçônicas</p>
+            </div>
+        </div>
+        
+        <div class="text-center md:text-right">
+            <p class="text-slate-400 text-sm mb-2">&copy; 2026 SisOriente. Todos os direitos reservados.</p>
+            <p class="text-[10px] text-amber-500/80 uppercase tracking-widest font-bold">
+                Desenvolvido por: <a href="mailto:leandrobessa@hotmail.com" class="text-amber-500 hover:underline transition-colors decoration-none" title="Enviar e-mail">LEANDRO BESSA PIMENTEL</a>
+            </p>
+        </div>
+    </div>
+</footer>
+
+<script>
+    function toggleMobileMenu() {
+        const menu = document.getElementById('mobileMenu');
+        const isHidden = menu.classList.contains('hidden');
+        
+        if (isHidden) {
+            menu.classList.remove('hidden');
+            setTimeout(() => menu.classList.remove('translate-x-full'), 10);
+            document.body.style.overflow = 'hidden';
+        } else {
+            menu.classList.add('translate-x-full');
+            setTimeout(() => menu.classList.add('hidden'), 300);
+            document.body.style.overflow = 'auto';
+        }
+    }
+
+    function toggleFaq(element) {
+        const isActive = element.classList.contains('active');
+        
+        // Close all other items
+        document.querySelectorAll('.faq-item').forEach(item => {
+            item.classList.remove('active');
+        });
+
+        // Toggle current item
+        if (!isActive) {
+            element.classList.add('active');
+        }
+    }
+</script>
+
+</body>
+</html>

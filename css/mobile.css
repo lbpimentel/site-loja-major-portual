@@ -213,3 +213,258 @@ body {
         background-clip: padding-box;
     }
 }
+
+/* =============================================
+   11. SYSTEM THEME OVERRIDES (LIGHT MODE & CUSTOM VARIABLES)
+   ============================================= */
+:root {
+    /* Define variables for pages that do not have custom style blocks but use tailwind */
+    --background: #131313;
+    --surface: #131313;
+    --on-background: #e4e2e1;
+    --on-surface: #e4e2e1;
+    --on-surface-variant: #c5c6ce;
+    --surface-container-low: #1b1c1c;
+    --surface-container: #1f2020;
+    --surface-container-high: #2a2a2a;
+    --surface-container-highest: #353535;
+    --secondary: #e9c349;
+    --primary: #b6c7ec;
+    --outline: #8f9098;
+    --outline-variant: #44474d;
+}
+
+html.light, html.light :root {
+    --background: #fdfcf7 !important; /* Soft warm cream */
+    --surface: #fdfcf7 !important;    /* Lighter warm cream */
+    --on-background: #1c1a16 !important; /* Rich charcoal */
+    --on-surface: #1c1a16 !important;
+    --on-surface-variant: #5c5549 !important; /* Medium warm charcoal */
+    --surface-container-low: #f8f3e5 !important;
+    --surface-container: #f4eedf !important;  /* Cream mais escuro */
+    --surface-container-high: #eae2cc !important;
+    --surface-container-highest: #dfd5ba !important;
+    --secondary: #b3861b !important;          /* Dourado escuro contrastante */
+    --primary: #4e5f7f !important;            /* Azul escuro contrastante */
+    --outline: #9f9a8f !important;
+    --outline-variant: #bfbba0 !important;
+}
+
+/* Light mode specific element adjustments */
+html.light body {
+    background-color: var(--background) !important;
+    color: var(--on-background) !important;
+}
+
+/* Navbar light mode */
+html.light nav {
+    background-color: rgba(253, 252, 247, 0.85) !important;
+    border-color: rgba(28, 26, 22, 0.1) !important;
+}
+
+html.light nav a:not(.text-amber-500):not(.bg-amber-500\/10), 
+html.light nav button:not(.text-amber-500) {
+    color: #4a4538 !important;
+}
+
+html.light nav a:hover, 
+html.light nav button:hover {
+    color: var(--secondary) !important;
+}
+
+/* Dropdown Sobre Nós on Light Mode */
+html.light nav .relative .absolute {
+    background-color: #f4eedf !important;
+    border-color: rgba(28, 26, 22, 0.15) !important;
+}
+
+html.light nav .relative .absolute a:not(.text-amber-500) {
+    color: #4a4538 !important;
+    background-color: transparent !important;
+}
+
+html.light nav .relative .absolute a.text-amber-500 {
+    color: var(--secondary) !important;
+    background-color: rgba(179, 134, 27, 0.08) !important;
+}
+
+html.light nav .relative .absolute a:hover {
+    background-color: rgba(28, 26, 22, 0.05) !important;
+    color: var(--secondary) !important;
+}
+
+/* Mobile Menu light mode */
+html.light #mobileMenu {
+    background-color: rgba(253, 252, 247, 0.98) !important;
+    border-color: rgba(28, 26, 22, 0.1) !important;
+}
+
+html.light #mobileMenu a:not(.text-amber-500):not(.bg-amber-500\/10),
+html.light #mobileMenu button {
+    background-color: rgba(28, 26, 22, 0.05) !important;
+    color: #1c1a16 !important;
+    border-color: rgba(28, 26, 22, 0.08) !important;
+}
+
+/* Glass card overrides */
+html.light .glass-card {
+    background: rgba(244, 238, 223, 0.75) !important;
+    border: 1px solid rgba(28, 26, 22, 0.1) !important;
+    color: #1c1a16 !important;
+}
+
+html.light .glass-card h3,
+html.light .glass-card h2,
+html.light .glass-card h1,
+html.light .glass-card label,
+html.light .glass-card input,
+html.light .glass-card textarea {
+    color: #1c1a16 !important;
+}
+
+html.light .glass-card p,
+html.light .glass-card span:not(.material-symbols-outlined) {
+    color: #5c5549 !important;
+}
+
+/* Inputs on Light Mode */
+html.light input,
+html.light select,
+html.light textarea {
+    background-color: rgba(28, 26, 22, 0.05) !important;
+    border-color: rgba(28, 26, 22, 0.15) !important;
+    color: #1c1a16 !important;
+}
+
+html.light input::placeholder,
+html.light textarea::placeholder {
+    color: rgba(28, 26, 22, 0.4) !important;
+}
+
+html.light input:focus,
+html.light select:focus,
+html.light textarea:focus {
+    border-color: var(--secondary) !important;
+}
+
+/* Hero background overlay adjustments for blending */
+html.light #inicio .absolute.inset-0.z-0 > div {
+    background: linear-gradient(to bottom, rgba(253, 252, 247, 0.75), rgba(253, 252, 247, 0.85), var(--background)) !important;
+}
+
+html.light #inicio img {
+    opacity: 0.15 !important;
+}
+
+html.light #inicio h1 {
+    color: #1c1a16 !important;
+}
+
+html.light #inicio p {
+    color: #4a4538 !important;
+}
+
+/* Section specific styling */
+html.light #valores h2,
+html.light #veneraveis h2,
+html.light #galeria h2,
+html.light #contact h2 {
+    color: #1c1a16 !important;
+}
+
+html.light #valores .material-symbols-outlined {
+    color: var(--secondary) !important;
+}
+
+html.light #veneraveis {
+    background-color: rgba(28, 26, 22, 0.02) !important;
+}
+
+html.light #veneraveis h3 {
+    color: #1c1a16 !important;
+}
+
+html.light #veneraveis p {
+    color: #5c5549 !important;
+}
+
+html.light #veneraveis .border-background {
+    border-color: var(--background) !important;
+}
+
+html.light section.bg-slate-900\/40,
+html.light section.bg-slate-900\/50,
+html.light section.bg-slate-900\/20,
+html.light section.bg-slate-900\/30 {
+    background-color: rgba(28, 26, 22, 0.03) !important;
+    border-color: rgba(28, 26, 22, 0.1) !important;
+}
+
+html.light .text-slate-300,
+html.light .text-slate-400 {
+    color: #4a4538 !important;
+}
+
+html.light .border-white\/5,
+html.light .border-white\/10 {
+    border-color: rgba(28, 26, 22, 0.1) !important;
+}
+
+html.light blockquote, 
+html.light blockquote p {
+    color: #1c1a16 !important;
+}
+
+/* Footer light mode */
+html.light footer {
+    background-color: rgba(28, 26, 22, 0.05) !important;
+    border-color: rgba(28, 26, 22, 0.1) !important;
+}
+
+html.light footer p,
+html.light footer a {
+    color: #4a4538 !important;
+}
+
+html.light footer a:hover {
+    color: var(--secondary) !important;
+}
+
+/* Logo overlay on light mode */
+html.light .bg-logo-overlay {
+    opacity: 0.04 !important;
+}
+
+/* Newsreader font override globally */
+.font-newsreader {
+    font-family: 'Newsreader', Georgia, Cambria, "Times New Roman", Times, serif !important;
+}
+
+/* Sidebar Layout Optimization (Desktop) */
+nav.hidden.lg\:flex {
+    padding-top: 0.5rem !important;
+    padding-bottom: 0.5rem !important;
+}
+
+nav.hidden.lg\:flex > div:first-child {
+    padding: 1.25rem 1rem !important;
+}
+
+nav.hidden.lg\:flex .flex-1 {
+    padding-top: 0.25rem !important;
+    padding-bottom: 0.25rem !important;
+}
+
+nav.hidden.lg\:flex .flex-1 a {
+    padding: 0.65rem 1.25rem !important;
+}
+
+nav.hidden.lg\:flex > div:last-child {
+    padding: 0.75rem 1.5rem !important;
+}
+
+nav.hidden.lg\:flex > div:last-child .mt-6 {
+    margin-top: 0.5rem !important;
+    padding-top: 0.5rem !important;
+}
+

@@ -343,7 +343,16 @@
         ano_conhecido: d.ano_conhecido !== false,
         telefone: d.telefone,
         observacoes: d.observacoes,
-        responsavel: d.profiles ? d.profiles.full_name : null
+        // O quadro da Loja existe antes das contas: um familiar pode estar
+        // cadastrado enquanto o Irmao dele ainda nao criou login. Nesse caso
+        // `profiles` vem nulo e quem responde de quem e aquela pessoa e o
+        // nome gravado na propria linha.
+        //
+        // Nas linhas do proprio Irmao (parentesco 'irmao'), o responsavel e
+        // ele mesmo — exibir "Familia de: <o proprio nome>" nao diria nada.
+        responsavel: d.parentesco === 'irmao'
+          ? null
+          : (d.profiles ? d.profiles.full_name : d.responsavel_nome)
       };
     });
 

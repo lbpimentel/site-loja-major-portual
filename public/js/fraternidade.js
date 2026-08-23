@@ -323,7 +323,7 @@
     const [dependentes, irmaos] = await Promise.all([
       sb.from('dependentes').select('*, profiles(full_name, telefone)'),
       sb.from('profiles')
-        .select('id, full_name, telefone, data_nascimento, position')
+        .select('id, full_name, telefone, data_nascimento, position, ano_conhecido')
         .eq('is_approved', true)
         .not('data_nascimento', 'is', null)
     ]);
@@ -338,6 +338,9 @@
         nome: d.nome_completo,
         parentesco: d.parentesco,
         data_nascimento: d.data_nascimento,
+        // `!== false` e nao `=== true`: uma linha antiga, gravada antes de a
+        // coluna existir, volta como undefined e deve contar como conhecida.
+        ano_conhecido: d.ano_conhecido !== false,
         telefone: d.telefone,
         observacoes: d.observacoes,
         responsavel: d.profiles ? d.profiles.full_name : null
@@ -351,6 +354,7 @@
         nome: p.full_name,
         parentesco: 'irmao',
         data_nascimento: p.data_nascimento,
+        ano_conhecido: p.ano_conhecido !== false,
         telefone: p.telefone,
         observacoes: p.position || null,
         responsavel: null
@@ -429,7 +433,10 @@
       parentesco: estiloParentesco(pessoa.parentesco).rotulo.toLowerCase(),
       loja: estado.nomeDaLoja,
       data: porExtenso(pessoa.data_nascimento),
-      idade: idadeQueCompleta(pessoa.data_nascimento)
+      // Sem o ano, {idade} fica sem valor e o interpolador devolve o marcador
+      // cru — melhor o Chanceler ver "{idade}" e apagar do que a Loja mandar
+      // "parabens pelos 122 anos" para uma crianca.
+      idade: pessoa.ano_conhecido === false ? null : idadeQueCompleta(pessoa.data_nascimento)
     });
   }
 

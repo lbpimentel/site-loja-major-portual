@@ -594,12 +594,17 @@
                             ? '<span class="ml-2 text-[9px] uppercase tracking-wider font-bold bg-sky-500/20 text-sky-300 px-2 py-0.5 rounded-full">D-' + dias + '</span>'
                             : '';
 
-                const idade = calc.idadeQueCompleta(p.data_nascimento, hoje);
+                // O quadro da Loja so registra dia e mes. Onde o ano nao e
+                // conhecido, a linha nao exibe idade nenhuma — um numero
+                // calculado sobre o ano-sentinela seria simplesmente falso.
+                const idade = p.ano_conhecido === false
+                    ? '&mdash;'
+                    : calc.idadeQueCompleta(p.data_nascimento, hoje) + ' anos';
 
                 return '' +
                     '<tr class="hover:bg-white/[0.02] transition-colors">' +
                         '<td class="px-6 py-4 whitespace-nowrap"><span class="font-newsreader text-lg font-bold">' + esc(calc.diaMes(p.data_nascimento)) + '</span>' + marcaDia + '</td>' +
-                        '<td class="px-6 py-4"><p class="font-medium">' + esc(p.nome) + '</p><p class="text-slate-600 text-xs">' + idade + ' anos</p></td>' +
+                        '<td class="px-6 py-4"><p class="font-medium">' + esc(p.nome) + '</p><p class="text-slate-600 text-xs">' + idade + '</p></td>' +
                         '<td class="px-6 py-4"><span class="text-[10px] uppercase tracking-wider font-bold px-2.5 py-1 rounded-full border ' + estilo.classe + '">' + esc(estilo.rotulo) + '</span></td>' +
                         '<td class="px-6 py-4 hidden md:table-cell text-slate-500 text-xs">' + esc(p.responsavel || '—') + '</td>' +
                         '<td class="px-6 py-4">' +

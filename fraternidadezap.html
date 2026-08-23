@@ -213,6 +213,11 @@
                 <span class="material-symbols-outlined align-middle text-lg mr-1">edit_note</span>
                 Mensagens Padrão
             </button>
+            <button id="abaBotaoZap" onclick="trocarAba('zap')"
+                    class="hidden px-5 py-3 border-b-2 border-transparent text-slate-400 hover:text-amber-500 font-medium whitespace-nowrap transition-all">
+                <span class="material-symbols-outlined align-middle text-lg mr-1">settings</span>
+                Configurações do Zap
+            </button>
         </div>
 
         <!-- ================= ABA: MINHA FAMÍLIA ================= -->
@@ -318,6 +323,95 @@
             </div>
             <div id="listaTemplates" class="space-y-6"></div>
         </section>
+
+        <!-- ================= ABA: CONFIGURAÇÕES DO ZAP ================= -->
+        <section id="abaZap" class="hidden space-y-6">
+            <div class="glass-card p-6">
+                <h3 class="font-newsreader text-2xl font-bold mb-2">Disparo automático</h3>
+                <p class="text-slate-400 text-sm">
+                    Todo dia às 07h, havendo aniversariante, a mensagem sai sozinha no grupo
+                    da Loja. Em dia sem aniversariante nada é enviado — um grupo que recebe
+                    aviso todo dia vira um grupo silenciado.
+                </p>
+            </div>
+
+            <form id="formZap" class="glass-card p-6 space-y-6">
+                <div class="grid gap-5 lg:grid-cols-2">
+                    <div>
+                        <label class="block text-xs text-slate-400 mb-2" for="zapGrupoUrl">Link de convite do grupo</label>
+                        <input type="url" id="zapGrupoUrl" placeholder="https://chat.whatsapp.com/..."
+                               class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:border-amber-500 focus:outline-none">
+                        <p class="text-slate-600 text-xs mt-2">Só para referência da diretoria; não é usado no disparo.</p>
+                    </div>
+                    <div>
+                        <label class="block text-xs text-slate-400 mb-2" for="zapGrupoJid">ID do grupo (JID)</label>
+                        <input type="text" id="zapGrupoJid" placeholder="120363028394829384@g.us"
+                               class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 font-mono text-sm focus:border-amber-500 focus:outline-none">
+                        <p class="text-slate-600 text-xs mt-2">É para cá que a mensagem vai. Termina em <span class="font-mono">@g.us</span>.</p>
+                    </div>
+                </div>
+
+                <div class="grid gap-5 lg:grid-cols-2">
+                    <div>
+                        <label class="block text-xs text-slate-400 mb-2" for="zapApiUrl">URL da API de WhatsApp</label>
+                        <input type="url" id="zapApiUrl" placeholder="https://api.exemplo.com/message/sendText/instancia"
+                               class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 font-mono text-sm focus:border-amber-500 focus:outline-none">
+                        <p class="text-slate-600 text-xs mt-2">URL completa do envio de texto, não a raiz da API. Precisa ser HTTPS.</p>
+                    </div>
+                    <div>
+                        <label class="block text-xs text-slate-400 mb-2" for="zapApiToken">API Key / Token</label>
+                        <div class="relative">
+                            <input type="password" id="zapApiToken" autocomplete="off"
+                                   class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 pr-12 font-mono text-sm focus:border-amber-500 focus:outline-none">
+                            <button type="button" onclick="alternarToken()" aria-label="Mostrar ou ocultar o token"
+                                    class="absolute right-2 top-1/2 -translate-y-1/2 text-slate-500 hover:text-amber-500 p-2">
+                                <span class="material-symbols-outlined text-xl" id="iconeToken">visibility</span>
+                            </button>
+                        </div>
+                        <p class="text-slate-600 text-xs mt-2">Manda mensagem em nome da Loja. Trate como a chave do grupo.</p>
+                    </div>
+                </div>
+
+                <div class="grid gap-4 sm:grid-cols-2">
+                    <label class="flex items-start gap-3 bg-white/5 border border-white/10 rounded-xl p-4 cursor-pointer">
+                        <input type="checkbox" id="zapDiario" class="mt-1 w-5 h-5 accent-amber-500">
+                        <span>
+                            <span class="font-medium block">Disparo diário automático</span>
+                            <span class="text-slate-500 text-xs">Às 07h, só nos dias com aniversariante.</span>
+                        </span>
+                    </label>
+                    <label class="flex items-start gap-3 bg-white/5 border border-white/10 rounded-xl p-4 cursor-pointer">
+                        <input type="checkbox" id="zapSemanal" class="mt-1 w-5 h-5 accent-amber-500">
+                        <span>
+                            <span class="font-medium block">Resumo semanal</span>
+                            <span class="text-slate-500 text-xs">Segundas às 07h, com a lista dos 7 dias.</span>
+                        </span>
+                    </label>
+                </div>
+
+                <div class="flex flex-wrap gap-3 pt-2">
+                    <button type="submit" id="botaoSalvarZap"
+                            class="flex items-center gap-2 bg-amber-500 hover:bg-amber-400 text-black font-bold px-6 py-3 rounded-xl transition-all active:scale-95">
+                        <span class="material-symbols-outlined">save</span>
+                        Salvar
+                    </button>
+                    <button type="button" onclick="testarZap()" id="botaoTestarZap"
+                            class="flex items-center gap-2 bg-white/5 hover:bg-white/10 border border-white/10 font-bold px-6 py-3 rounded-xl transition-all">
+                        <span class="material-symbols-outlined">send</span>
+                        Testar disparo
+                    </button>
+                </div>
+                <p class="text-slate-600 text-xs">O teste envia de verdade no grupo. Salve antes: ele usa o que está gravado.</p>
+            </form>
+
+            <div class="glass-card overflow-hidden">
+                <div class="p-6 border-b border-white/5 flex justify-between items-center gap-3">
+                    <h3 class="font-newsreader text-xl font-bold">Últimos disparos</h3>
+                    <button onclick="recarregarLogsZap()" class="text-slate-500 hover:text-amber-500 text-sm font-bold">Atualizar</button>
+                </div>
+                <div id="logsZap" class="divide-y divide-white/5"></div>
+            </div>
+        </section>
     </main>
 
     <!-- ================= MODAL: DEPENDENTE ================= -->
@@ -420,6 +514,7 @@
         const calc = FZ.calculo;
 
         let ehDiretoria = false;
+        let ehDiretoriaZap = false;
         let abaAtual = 'familia';
 
         // ---------------------------------------------------------------
@@ -465,7 +560,7 @@
 
         function trocarAba(nome) {
             abaAtual = nome;
-            ['familia', 'quadro', 'templates'].forEach(function (a) {
+            ['familia', 'quadro', 'templates', 'zap'].forEach(function (a) {
                 const secao = document.getElementById('aba' + a.charAt(0).toUpperCase() + a.slice(1));
                 const botao = document.getElementById('abaBotao' + a.charAt(0).toUpperCase() + a.slice(1));
                 const ativa = a === nome;
@@ -730,6 +825,100 @@
         }
 
         // ---------------------------------------------------------------
+        // ABA: CONFIGURAÇÕES DO ZAP
+        // ---------------------------------------------------------------
+
+        function preencherFormZap() {
+            const c = FZ.estado.configZap || {};
+            document.getElementById('zapGrupoUrl').value = c.whatsapp_grupo_url || '';
+            document.getElementById('zapGrupoJid').value = c.whatsapp_grupo_jid || '';
+            document.getElementById('zapApiUrl').value   = c.whatsapp_api_url || '';
+            document.getElementById('zapApiToken').value = c.whatsapp_api_token || '';
+            document.getElementById('zapDiario').checked  = c.disparo_diario_ativo !== false;
+            document.getElementById('zapSemanal').checked = c.resumo_semanal_ativo !== false;
+        }
+
+        function alternarToken() {
+            const campo = document.getElementById('zapApiToken');
+            const icone = document.getElementById('iconeToken');
+            const oculto = campo.type === 'password';
+
+            campo.type = oculto ? 'text' : 'password';
+            icone.textContent = oculto ? 'visibility_off' : 'visibility';
+        }
+
+        const ROTULO_LOG = {
+            diario: 'Disparo diario',
+            semanal: 'Resumo semanal',
+            alerta_diretoria: 'Alerta da diretoria',
+            teste: 'Teste'
+        };
+
+        function renderLogsZap(linhas) {
+            const alvo = document.getElementById('logsZap');
+
+            if (!linhas.length) {
+                alvo.innerHTML = '<p class="p-6 text-slate-500 text-sm">Nenhum disparo registrado ainda.</p>';
+                return;
+            }
+
+            alvo.innerHTML = linhas.map(function (l) {
+                // Um disparo pulado e gravado como sucesso com `acao: silenciado`
+                // no payload. Mostrar "sucesso" ali confundiria: para a diretoria
+                // o que importa e se a mensagem saiu ou nao.
+                const silenciado = l.payload && l.payload.acao === 'silenciado';
+                const cor = l.status === 'erro'
+                    ? 'text-red-400'
+                    : silenciado ? 'text-slate-500' : 'text-emerald-400';
+                const rotuloStatus = l.status === 'erro'
+                    ? 'falhou'
+                    : silenciado ? 'sem aniversariante' : 'enviado';
+
+                const quando = new Date(l.enviado_em).toLocaleString('pt-BR', {
+                    day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit'
+                });
+                const detalhe = l.status === 'erro' && l.payload && l.payload.erro
+                    ? '<p class="text-red-400/70 text-xs mt-1">' + esc(l.payload.erro) + '</p>'
+                    : '';
+
+                return '<div class="p-4 flex justify-between items-start gap-4">' +
+                       '<div class="min-w-0">' +
+                           '<p class="font-medium text-sm">' + esc(ROTULO_LOG[l.tipo] || l.tipo) + '</p>' +
+                           detalhe +
+                       '</div>' +
+                       '<div class="text-right shrink-0">' +
+                           '<p class="' + cor + ' text-xs font-bold uppercase tracking-wider">' + esc(rotuloStatus) + '</p>' +
+                           '<p class="text-slate-600 text-xs mt-0.5">' + esc(quando) + '</p>' +
+                       '</div></div>';
+            }).join('');
+        }
+
+        async function recarregarLogsZap() {
+            try {
+                renderLogsZap(await FZ.carregarLogsZap(10));
+            } catch (erro) {
+                avisar('Nao consegui carregar os disparos: ' + erro.message, 'erro');
+            }
+        }
+
+        async function testarZap() {
+            const botao = document.getElementById('botaoTestarZap');
+            botao.disabled = true;
+            botao.textContent = 'Enviando...';
+
+            try {
+                const r = await FZ.testarDisparoZap();
+                avisar('Mensagem de teste enviada para ' + r.destino, 'ok');
+            } catch (erro) {
+                avisar(erro.message, 'erro');
+            } finally {
+                botao.disabled = false;
+                botao.innerHTML = '<span class="material-symbols-outlined">send</span> Testar disparo';
+                recarregarLogsZap();
+            }
+        }
+
+        // ---------------------------------------------------------------
         // FORMULÁRIOS
         // ---------------------------------------------------------------
 
@@ -764,6 +953,39 @@
                 botao.textContent = 'Salvar';
             }
         });
+
+        const formZap = document.getElementById('formZap');
+        if (formZap) {
+            formZap.addEventListener('submit', async function (evento) {
+                evento.preventDefault();
+
+                const botao = document.getElementById('botaoSalvarZap');
+                botao.disabled = true;
+                botao.textContent = 'Salvando...';
+
+                try {
+                    await FZ.salvarConfigZap({
+                        whatsapp_grupo_url: document.getElementById('zapGrupoUrl').value.trim(),
+                        whatsapp_grupo_jid: document.getElementById('zapGrupoJid').value.trim(),
+                        whatsapp_api_url:   document.getElementById('zapApiUrl').value.trim(),
+                        whatsapp_api_token: document.getElementById('zapApiToken').value.trim(),
+                        disparo_diario_ativo: document.getElementById('zapDiario').checked,
+                        resumo_semanal_ativo: document.getElementById('zapSemanal').checked
+                    });
+                    avisar('Configuracao salva.', 'ok');
+                } catch (erro) {
+                    // O banco recusa JID fora do padrao e URL sem HTTPS. A mensagem
+                    // crua do Postgres nao diz nada a quem preencheu o campo.
+                    const msg = /lojas_config_url_https/.test(erro.message)
+                        ? 'A URL da API precisa comecar com https://'
+                        : erro.message;
+                    avisar('Nao consegui salvar: ' + msg, 'erro');
+                } finally {
+                    botao.disabled = false;
+                    botao.innerHTML = '<span class="material-symbols-outlined">save</span> Salvar';
+                }
+            });
+        }
 
         document.getElementById('formMeuAniversario').addEventListener('submit', async function (evento) {
             evento.preventDefault();
@@ -814,6 +1036,7 @@
             }
 
             FZ.estado.usuario = session.user;
+            FZ.estado.token = session.access_token;
             FZ.estado.nomeDaLoja = window.__SITE_CONFIG__.loja.nomeCompleto;
 
             const { data: perfil } = await window.supabaseClient
@@ -845,6 +1068,16 @@
             ].indexOf(cargo) !== -1;
             FZ.estado.ehDiretoria = ehDiretoria;
 
+            // Espelha is_diretoria_zap() do banco: a mesma lista, mais o
+            // Secretario, que na pratica opera as comunicacoes da Loja.
+            // Quem de fato barra e o RLS — isto aqui so decide o que a tela
+            // mostra, para nao oferecer um botao que vai dar erro.
+            ehDiretoriaZap = papel === 'admin' || [
+                'veneravel mestre', 'chanceler', 'secretario',
+                'hospitaleiro', 'hopitaleiro', 'hospitalario', 'hospitalar'
+            ].indexOf(cargo) !== -1;
+            FZ.estado.ehDiretoriaZap = ehDiretoriaZap;
+
             if (papel === 'admin') {
                 ['adminMenuLink', 'adminMenuLinkMobile'].forEach(function (id) {
                     const el = document.getElementById(id);
@@ -857,6 +1090,22 @@
                 renderMinhaFamilia();
             } catch (erro) {
                 avisar('Não consegui carregar sua família: ' + erro.message, 'erro');
+            }
+
+            if (ehDiretoriaZap) {
+                document.getElementById('abaBotaoZap').classList.remove('hidden');
+
+                // A falha aqui nao pode derrubar o resto da pagina: o quadro do
+                // mes continua util mesmo com a integracao do WhatsApp ainda
+                // sem configurar (ou com a migracao 05 nao aplicada).
+                try {
+                    await FZ.carregarConfigZap();
+                    preencherFormZap();
+                    renderLogsZap(await FZ.carregarLogsZap(10));
+                } catch (erro) {
+                    console.warn('[fraternidadezap] configuracao do Zap indisponivel:', erro.message);
+                    renderLogsZap([]);
+                }
             }
 
             if (ehDiretoria) {

@@ -273,7 +273,10 @@
     nomeDaLoja: '',
     meusDependentes: [],
     quadroCompleto: [],
-    templates: {}
+    templates: {},
+    configZap: null,
+    ehDiretoriaZap: false,
+    token: null
   };
 
   function cliente() {
@@ -419,6 +422,88 @@
     if (error) throw error;
   }
 
+  // ==========================================================================
+  // CONFIGURAÇÃO DO WHATSAPP
+  //
+  // A tabela é lida e escrita direto pelo cliente, com o RLS de
+  // `is_diretoria_zap()` decidindo quem passa. O disparo em si NUNCA acontece
+  // daqui: quem fala com o gateway é a função serverless, porque o gateway
+  // costuma recusar chamada de outra origem e porque o teste precisa exercitar
+  // exatamente o mesmo caminho do cron das 07h.
+  // ==========================================================================
+
+  async function carregarConfigZap() {
+    const { data, error } = await cliente()
+      .from('lojas_config')
+      .select('*')
+      .limit(1)
+      .maybeSingle();
+
+    if (error) throw error;
+    estado.configZap = data || null;
+    return estado.configZap;
+  }
+
+  async function salvarConfigZap(dados) {
+    if (!estado.configZap || !estado.configZap.id) {
+      throw new Error('Configuração não encontrada. Rode a migração 05 no Supabase.');
+    }
+
+    const { data, error } = await cliente()
+      .from('lojas_config')
+      .update({
+        whatsapp_api_url: dados.whatsapp_api_url || null,
+        whatsapp_api_token: dados.whatsapp_api_token || null,
+        whatsapp_grupo_jid: dados.whatsapp_grupo_jid || null,
+        whatsapp_grupo_url: dados.whatsapp_grupo_url || null,
+        disparo_diario_ativo: !!dados.disparo_diario_ativo,
+        resumo_semanal_ativo: !!dados.resumo_semanal_ativo,
+        updated_at: new Date().toISOString()
+      })
+      .eq('id', estado.configZap.id)
+      .select()
+      .single();
+
+    if (error) throw error;
+    estado.configZap = data;
+    return data;
+  }
+
+  /**
+   * Dispara a mensagem de teste pela funcao serverless.
+   *
+   * O token nao e enviado na requisicao: o servidor o le do banco com a
+   * service_role. Mandar o token do navegador para o nosso proprio servidor
+   * so o faria trafegar uma vez a mais sem necessidade nenhuma.
+   */
+  async function testarDisparoZap() {
+    const resposta = await fetch('/api/whatsapp/test', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + estado.token
+      }
+    });
+
+    const dados = await resposta.json().catch(function () { return {}; });
+    if (!resposta.ok) {
+      throw new Error(dados.erro || ('O servidor respondeu ' + resposta.status + '.'));
+    }
+    return dados;
+  }
+
+  /** Ultimos disparos, para a diretoria saber que o cron esta vivo. */
+  async function carregarLogsZap(limite) {
+    const { data, error } = await cliente()
+      .from('whatsapp_dispatch_logs')
+      .select('tipo, status, destinatario, payload, enviado_em')
+      .order('enviado_em', { ascending: false })
+      .limit(limite || 10);
+
+    if (error) throw error;
+    return data || [];
+  }
+
   async function salvarTemplate(tipo, texto) {
     const { data, error } = await cliente()
       .from('fraternidade_templates')
@@ -498,6 +583,10 @@
     removerDependente: removerDependente,
     salvarTemplate: salvarTemplate,
     mensagemPara: mensagemPara,
-    copiar: copiar
+    copiar: copiar,
+    carregarConfigZap: carregarConfigZap,
+    salvarConfigZap: salvarConfigZap,
+    testarDisparoZap: testarDisparoZap,
+    carregarLogsZap: carregarLogsZap
   };
 })(window);

@@ -34,6 +34,7 @@
 
 import { GoogleGenAI } from '@google/genai';
 
+import { sessaoValida } from '../_lib/auth.js';
 import { contemResiduoRitual, MARCA_SUPRESSAO } from '../../public/js/balaustre-sanitizer.js';
 
 /** Teto de entrada. Uma ata longa cabe folgada; um despejo de arquivo, não. */
@@ -93,43 +94,6 @@ async function lerCorpo(req) {
     return cru ? JSON.parse(cru) : {};
   } catch (erro) {
     throw new Error('Corpo da requisição não é JSON válido.');
-  }
-}
-
-/**
- * Confirma que quem chamou tem sessão ativa no Supabase desta Loja.
- *
- * Sem isto o endpoint ficaria aberto na internet: qualquer pessoa poderia
- * disparar chamadas à IA na conta da Loja, e a fatura apareceria sem que
- * ninguém soubesse de onde veio.
- *
- * A checagem é feita por fetch contra o próprio Supabase em vez do SDK, para
- * não carregar uma dependência inteira numa função que só precisa saber se um
- * token é válido.
- */
-async function sessaoValida(req) {
-  const cabecalho = req.headers.authorization || req.headers.Authorization || '';
-  const token = cabecalho.startsWith('Bearer ') ? cabecalho.slice(7).trim() : '';
-
-  if (!token) return { ok: false, motivo: 'Requisição sem token de sessão.' };
-
-  const url = process.env.SUPABASE_URL;
-  const anon = process.env.SUPABASE_ANON_KEY;
-  if (!url || !anon) {
-    return { ok: false, motivo: 'SUPABASE_URL/SUPABASE_ANON_KEY não configuradas nesta implantação.' };
-  }
-
-  try {
-    const resposta = await fetch(url.replace(/\/+$/, '') + '/auth/v1/user', {
-      headers: { Authorization: 'Bearer ' + token, apikey: anon }
-    });
-
-    if (!resposta.ok) return { ok: false, motivo: 'Sessão inválida ou expirada.' };
-
-    const usuario = await resposta.json();
-    return { ok: true, usuario: usuario };
-  } catch (erro) {
-    return { ok: false, motivo: 'Não consegui validar a sessão: ' + erro.message };
   }
 }
 

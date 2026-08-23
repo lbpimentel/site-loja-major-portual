@@ -20,9 +20,10 @@ Todos são idempotentes: rodar de novo não quebra nada e não duplica dados.
 | 5 | `migrations/20260823_02_cargos_sem_acento.sql` | Corrige `is_oficial()` e padroniza o cargo de Hospitaleiro |
 | 6 | `migrations/20260823_03_ano_nascimento_desconhecido.sql` | `ano_conhecido`, `telefone_e164_br()`, `nome_normalizado()` |
 | 7 | `migrations/20260823_04_quadro_sem_conta.sql` | Desacopla o quadro das contas de acesso |
-| 8 | `seed_aniversariantes_major_portugal.sql` | Carga do quadro de aniversariantes |
+| 8 | `migrations/20260823_05_whatsapp_config_and_cron.sql` | `lojas_config`, logs de disparo, `aniversariantes()` |
+| 9 | `seed_aniversariantes_major_portugal.sql` | Carga do quadro de aniversariantes |
 
-> **O passo 8 não está no git.** `supabase/seed_*.sql` está no `.gitignore`:
+> **O passo 9 não está no git.** `supabase/seed_*.sql` está no `.gitignore`:
 > o arquivo traz nome, telefone e data de nascimento de Irmãos, esposas e
 > crianças, e este repositório é o mesmo template servido a todas as Lojas —
 > o histórico do git não esquece. O arquivo existe no disco de quem o gerou.
@@ -40,10 +41,10 @@ propósito, para não deixar um `is_oficial()` quebrado no lugar do bom.
 
 ## Ao provisionar uma Loja NOVA
 
-Cada Loja tem seu próprio projeto Supabase. Rode os passos **1 a 7** no
+Cada Loja tem seu próprio projeto Supabase. Rode os passos **1 a 8** no
 projeto novo — eles não contêm dado nenhum de Loja alguma.
 
-O passo **8 é exclusivo da Major Portugal**: contém o quadro de
+O passo **9 é exclusivo da Major Portugal**: contém o quadro de
 aniversariantes dela. Nunca rode esse arquivo no banco de outra Loja.
 
 Declare o slug da Loja uma vez, no projeto novo:
@@ -150,3 +151,69 @@ update public.profiles
 set data_nascimento = null, ano_conhecido = true
 where ano_conhecido = false;
 ```
+
+---
+
+## Automação do WhatsApp (migração 08)
+
+O disparo roda na Vercel, não no Supabase. Além dos scripts SQL, o projeto da
+Loja precisa destas variáveis em **Settings → Environment Variables**:
+
+| Variável | Para quê |
+|---|---|
+| `SUPABASE_URL` | Já usada pelo Balaústre |
+| `SUPABASE_ANON_KEY` | Valida a sessão de quem clica em "Testar disparo" |
+| `SUPABASE_SERVICE_ROLE_KEY` | O cron lê a config e grava os logs sem usuário logado |
+| `CRON_SECRET` | Sem ela o cron **recusa tudo** — ver abaixo |
+
+> `SUPABASE_SERVICE_ROLE_KEY` ignora o RLS e dá acesso total ao banco. Ela só
+> pode existir nas variáveis de ambiente da Vercel; nunca no código do site.
+
+### Por que `CRON_SECRET` é obrigatória
+
+`/api/cron/birthdays` é uma URL pública. Sem verificação, qualquer pessoa que
+descobrisse o endereço poderia disparar mensagens no grupo quantas vezes
+quisesse, e os logs mostrariam envios que ninguém pediu.
+
+A Vercel envia `Authorization: Bearer $CRON_SECRET` nas chamadas do cron quando
+essa variável existe. Se ela **não** estiver configurada, a função recusa tudo
+com 401 em vez de rodar aberta.
+
+### Horário
+
+`vercel.json` agenda `0 10 * * *` — 10:00 UTC = **07:00 de Brasília**. O
+cálculo dos aniversariantes fixa o fuso em `America/Sao_Paulo` dentro do SQL,
+então a virada de dia acontece no horário certo mesmo com o servidor em UTC.
+
+### O que sai, e o que não sai
+
+| Situação | Resultado |
+|---|---|
+| Há aniversariante hoje e o disparo diário está ligado | Mensagem no grupo |
+| Nenhum aniversariante hoje | **Nada é enviado** — só um log `silenciado` |
+| Segunda-feira com o resumo ligado e alguém na semana | Consolidado no grupo |
+| Segunda-feira sem ninguém na semana | **Nada é enviado** |
+
+Dia vazio não vira mensagem de propósito: um grupo que recebe "hoje não temos
+aniversariantes" todo dia vira um grupo silenciado, e aí a mensagem que importa
+também deixa de ser lida. Mas o log é gravado — sem ele, ninguém distingue
+"não havia aniversariante" de "o cron não rodou".
+
+### Formato esperado do gateway
+
+`whatsapp_api_url` deve ser a URL **completa** do endpoint de envio de texto,
+não a raiz da API. A requisição é:
+
+```
+POST <whatsapp_api_url>
+apikey: <token>
+Authorization: Bearer <token>
+Content-Type: application/json
+
+{ "number": "<jid do grupo>", "text": "..." }
+```
+
+O token vai nos dois cabeçalhos porque as duas convenções convivem no meio
+(Evolution API usa `apikey`, outros usam `Authorization`); o gateway lê a que
+entende e ignora a outra. Se o seu usar outro formato de corpo, o ponto de
+ajuste é `enviarMensagem()` em `api/_lib/whatsapp.js`.

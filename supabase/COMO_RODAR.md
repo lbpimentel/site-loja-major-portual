@@ -21,6 +21,14 @@ Todos são idempotentes: rodar de novo não quebra nada e não duplica dados.
 | 6 | `migrations/20260823_03_ano_nascimento_desconhecido.sql` | `ano_conhecido`, `telefone_e164_br()`, `nome_normalizado()` |
 | 7 | `seed_aniversariantes_major_portugal.sql` | Carga do quadro de aniversariantes |
 
+> **O passo 7 não está no git.** `supabase/seed_*.sql` está no `.gitignore`:
+> o arquivo traz nome, telefone e data de nascimento de Irmãos, esposas e
+> crianças, e este repositório é o mesmo template servido a todas as Lojas —
+> o histórico do git não esquece. O arquivo existe no disco de quem o gerou.
+> Se ele se perder, refaça a partir do quadro da Loja seguindo o formato das
+> tabelas temporárias `_quadro_irmaos` e `_quadro_dependentes`, ou peça uma
+> cópia a quem já o tem. Guarde-o como você guarda o quadro em papel.
+
 A ordem importa: o passo 5 usa `cargo_normalizado()`, criada no 4, e o 7 usa
 `telefone_e164_br()` e `nome_normalizado()`, criadas no 6. Fora de ordem, o
 Postgres recusa a criação com a mensagem dizendo qual função falta — é de

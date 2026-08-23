@@ -18,3 +18,9 @@ playwright-report/
 # e o mesmo template servido a outras Lojas.
 *.pdf
 *.PDF
+
+# Cargas com dados pessoais do quadro da Loja (nome, telefone, nascimento de
+# Irmaos, cunhadas e criancas). O arquivo fica no disco para rodar no SQL
+# Editor, mas nao entra no historico: este repositorio e o mesmo template
+# servido a todas as Lojas, e o git nao esquece.
+supabase/seed_*.sql

@@ -22,7 +22,7 @@ test.describe('Landing Page & Navigation Tests', () => {
     }
 
     // Find the Agenda button in navigation and click it
-    const agendaBtn = page.getByRole('button', { name: 'Agenda', exact: true });
+    const agendaBtn = page.getByRole('link', { name: 'Agenda', exact: true });
     await expect(agendaBtn).toBeVisible();
     await agendaBtn.click({ force: true });
 

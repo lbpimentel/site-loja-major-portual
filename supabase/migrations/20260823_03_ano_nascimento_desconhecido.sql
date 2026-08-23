@@ -117,5 +117,5 @@ $fn$;
 -- -----------------------------------------------------------------------------
 -- CONFERÊNCIA
 -- -----------------------------------------------------------------------------
--- select public.telefone_e164_br('(21) 99603-0318');  -- 5521996030318
+-- select public.telefone_e164_br('(21) 99999-0000');  -- 5521999990000
 -- select public.nome_normalizado('JOSÉ  FERREIRA SOARES NETO'); -- JOSE FERREIRA SOARES NETO

@@ -29,11 +29,12 @@ function ambiente() {
   const url = process.env.SUPABASE_URL;
   const chave = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
-  if (!url || !chave) {
-    throw new Error(
-      'SUPABASE_URL e SUPABASE_SERVICE_ROLE_KEY precisam estar configuradas ' +
-      'nesta implantação da Vercel.'
-    );
+  const faltando = [];
+  if (!url) faltando.push('SUPABASE_URL');
+  if (!chave) faltando.push('SUPABASE_SERVICE_ROLE_KEY');
+
+  if (faltando.length) {
+    throw new Error('Falta configurar na Vercel: ' + faltando.join(' e ') + '.');
   }
   return { url: normalizarUrlSupabase(url), chave: chave };
 }

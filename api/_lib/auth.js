@@ -19,12 +19,23 @@
 
 import { normalizarUrlSupabase } from '../../supabase-url.js';
 
+/**
+ * Diz QUAL variavel falta, nao apenas que "falta alguma".
+ *
+ * A mensagem generica custou uma rodada inteira de investigacao em producao:
+ * com quatro variaveis possiveis e um `vercel env pull` que devolve vazio para
+ * as marcadas como sensitive, nao havia como saber onde olhar.
+ */
 function ambiente() {
   const url = process.env.SUPABASE_URL;
   const anon = process.env.SUPABASE_ANON_KEY;
 
-  if (!url || !anon) {
-    return null;
+  const faltando = [];
+  if (!url) faltando.push('SUPABASE_URL');
+  if (!anon) faltando.push('SUPABASE_ANON_KEY');
+
+  if (faltando.length) {
+    return { erro: 'Falta configurar na Vercel: ' + faltando.join(' e ') + '.' };
   }
   return { url: normalizarUrlSupabase(url), anon: anon };
 }
@@ -43,11 +54,8 @@ export async function sessaoValida(req) {
   }
 
   const env = ambiente();
-  if (!env) {
-    return {
-      ok: false,
-      motivo: 'SUPABASE_URL/SUPABASE_ANON_KEY não configuradas nesta implantação.'
-    };
+  if (env.erro) {
+    return { ok: false, motivo: env.erro };
   }
 
   try {
@@ -73,7 +81,7 @@ export async function sessaoValida(req) {
  */
 export async function ehDiretoriaZap(token) {
   const env = ambiente();
-  if (!env) return false;
+  if (env.erro) return false;
 
   try {
     const resposta = await fetch(env.url + '/rest/v1/rpc/is_diretoria_zap', {

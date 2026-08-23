@@ -17,6 +17,8 @@
  * service_role, tudo responderia "sim" e a checagem não checaria nada.
  */
 
+import { normalizarUrlSupabase } from '../../supabase-url.js';
+
 function ambiente() {
   const url = process.env.SUPABASE_URL;
   const anon = process.env.SUPABASE_ANON_KEY;
@@ -24,7 +26,7 @@ function ambiente() {
   if (!url || !anon) {
     return null;
   }
-  return { url: url.replace(/\/+$/, ''), anon: anon };
+  return { url: normalizarUrlSupabase(url), anon: anon };
 }
 
 /** Extrai o token do cabeçalho `Authorization: Bearer ...`. */

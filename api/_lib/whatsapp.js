@@ -21,6 +21,8 @@
  * NUNCA a exponha ao navegador — ela dá acesso total ao banco.
  */
 
+import { normalizarUrlSupabase } from '../../supabase-url.js';
+
 const TIMEOUT_MS = 15000;
 
 function ambiente() {
@@ -33,7 +35,7 @@ function ambiente() {
       'nesta implantação da Vercel.'
     );
   }
-  return { url: url.replace(/\/+$/, ''), chave: chave };
+  return { url: normalizarUrlSupabase(url), chave: chave };
 }
 
 /** Chamada ao PostgREST com a service_role. */

@@ -27,6 +27,8 @@
  * Nenhum arquivo .html precisa ser tocado.
  */
 
+import { normalizarUrlSupabase } from './supabase-url.js';
+
 import majorPortugal from './lojas/major-portugal.js';
 import lojaTeste from './lojas/loja-teste.js';
 
@@ -57,7 +59,10 @@ if (!config) {
 // Override integrations with environment variables if present (useful for local development/tests)
 if (config && config.integracoes && config.integracoes.supabase) {
   if (process.env.SUPABASE_URL) {
-    config.integracoes.supabase.url = process.env.SUPABASE_URL;
+    // Normalizado: o painel do Supabase exibe a URL do projeto ao lado do
+    // endpoint REST, e colar o errado aqui quebra o cadastro com uma mensagem
+    // que nao aponta para a causa. Ver supabase-url.js.
+    config.integracoes.supabase.url = normalizarUrlSupabase(process.env.SUPABASE_URL);
   }
   if (process.env.SUPABASE_ANON_KEY) {
     config.integracoes.supabase.anonKey = process.env.SUPABASE_ANON_KEY;

@@ -597,6 +597,14 @@
                 // O quadro da Loja so registra dia e mes. Onde o ano nao e
                 // conhecido, a linha nao exibe idade nenhuma — um numero
                 // calculado sobre o ano-sentinela seria simplesmente falso.
+                // "Familia de": nas linhas do proprio Irmao nao ha o que dizer, e
+                // o traco fica. Nas demais, o nome vem do perfil quando ja existe
+                // conta, e de responsavel_nome enquanto o Irmao nao se cadastrou —
+                // o quadro da Loja e anterior aos logins.
+                const familiaDe = p.responsavel
+                    ? 'Ir&#8756; ' + esc(p.responsavel)
+                    : '&mdash;';
+
                 const idade = p.ano_conhecido === false
                     ? '&mdash;'
                     : calc.idadeQueCompleta(p.data_nascimento, hoje) + ' anos';
@@ -606,7 +614,7 @@
                         '<td class="px-6 py-4 whitespace-nowrap"><span class="font-newsreader text-lg font-bold">' + esc(calc.diaMes(p.data_nascimento)) + '</span>' + marcaDia + '</td>' +
                         '<td class="px-6 py-4"><p class="font-medium">' + esc(p.nome) + '</p><p class="text-slate-600 text-xs">' + idade + '</p></td>' +
                         '<td class="px-6 py-4"><span class="text-[10px] uppercase tracking-wider font-bold px-2.5 py-1 rounded-full border ' + estilo.classe + '">' + esc(estilo.rotulo) + '</span></td>' +
-                        '<td class="px-6 py-4 hidden md:table-cell text-slate-500 text-xs">' + esc(p.responsavel || '—') + '</td>' +
+                        '<td class="px-6 py-4 hidden md:table-cell text-slate-500 text-xs">' + familiaDe + '</td>' +
                         '<td class="px-6 py-4">' +
                             '<div class="flex justify-end gap-2">' +
                                 '<button onclick="abrirWhatsApp(' + i + ')" title="Abrir WhatsApp" class="flex items-center gap-1.5 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 border border-emerald-500/20 text-xs font-bold px-3 py-2 rounded-lg transition-all whitespace-nowrap">' +

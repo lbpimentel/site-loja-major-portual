@@ -38,7 +38,13 @@
  * um site com um marcador aparecendo no meio do texto.
  */
 
-import siteConfig from './siteConfig.js';
+import fs from 'node:fs';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+import siteConfig, { slugLoja } from './siteConfig.js';
+
+const RAIZ = path.dirname(fileURLToPath(import.meta.url));
 
 /** Resolve "loja.nomeCompleto" dentro do objeto de config. */
 function resolvePath(path, scope) {
@@ -62,6 +68,18 @@ function escapeHtml(value) {
 }
 
 /**
+ * Escape para valores que caem dentro de uma string JavaScript (o modelo do
+ * service worker). Aqui o escape de HTML seria errado: `&` viraria `&amp;` no
+ * meio de uma URL de precache.
+ */
+function escapeJs(value) {
+  // JSON.stringify ja produz exatamente o conteudo de uma string JS entre
+  // aspas duplas; so removemos as aspas externas, que o modelo ja traz.
+  // Por isso os marcadores no modelo do SW usam aspas DUPLAS.
+  return JSON.stringify(String(value)).slice(1, -1);
+}
+
+/**
  * Substitui os marcadores de um trecho, usando `scope` como raiz de busca.
  *
  *   {{caminho}}    → valor escapado (seguro para texto e atributos)
@@ -71,7 +89,7 @@ function escapeHtml(value) {
  * História (que trazem <strong> no meio). Use-a apenas com conteúdo que você
  * mesmo escreveu no siteConfig.js — nunca com dado vindo de fora.
  */
-function interpolate(chunk, scope, filename) {
+function interpolate(chunk, scope, filename, escape = escapeHtml) {
   const pattern = /\{\{\{\s*([\w.]+)\s*\}\}\}|\{\{\s*([\w.]+)\s*\}\}/g;
 
   return chunk.replace(pattern, (_match, rawPath, escapedPath) => {
@@ -93,7 +111,7 @@ function interpolate(chunk, scope, filename) {
       );
     }
 
-    return isRaw ? String(value) : escapeHtml(value);
+    return isRaw ? String(value) : escape(value);
   });
 }
 
@@ -122,6 +140,64 @@ function expandLoops(html, config, filename) {
   });
 }
 
+/**
+ * ---------------------------------------------------------------------------
+ * PWA — manifest.json e sw.js gerados a partir do config
+ * ---------------------------------------------------------------------------
+ * Estes dois arquivos NAO podem morar em `public/`: o Vite copia public/ cru,
+ * sem passar por aqui, e toda Loja acabaria publicando o nome e o logo da
+ * Major Portugal no icone de app instalado. Sao gerados no build (e servidos
+ * de memoria no dev) para acompanharem a Loja que esta sendo construida.
+ */
+
+/** Tipo MIME do icone, deduzido da extensao do arquivo de logo. */
+function tipoDaImagem(caminho) {
+  const ext = path.extname(caminho).toLowerCase();
+  if (ext === '.jpg' || ext === '.jpeg') return 'image/jpeg';
+  if (ext === '.svg') return 'image/svg+xml';
+  if (ext === '.webp') return 'image/webp';
+  return 'image/png';
+}
+
+function gerarManifest() {
+  const { loja, marca } = siteConfig;
+
+  return JSON.stringify(
+    {
+      name: loja.nomeCompleto,
+      short_name: loja.nomeCurto,
+      description: loja.metaDescricao,
+      start_url: '/index.html',
+      display: 'standalone',
+      background_color: marca.corFundo ?? '#0a0a0a',
+      theme_color: marca.corPrimaria,
+      orientation: 'portrait',
+      icons: [192, 512].map((lado) => ({
+        src: marca.logo,
+        sizes: `${lado}x${lado}`,
+        type: tipoDaImagem(marca.logo),
+        purpose: 'any',
+      })),
+    },
+    null,
+    2
+  );
+}
+
+function gerarServiceWorker() {
+  const modelo = path.join(RAIZ, 'pwa', 'sw-template.js');
+  const fonte = fs.readFileSync(modelo, 'utf-8');
+
+  // O nome do cache carrega o slug: sem isso, quem visitasse duas Lojas no
+  // mesmo navegador veria uma servir paginas da outra a partir do cache.
+  const escopo = {
+    ...siteConfig,
+    pwa: { cacheName: `${slugLoja}-v1` },
+  };
+
+  return interpolate(fonte, escopo, 'pwa/sw-template.js', escapeJs);
+}
+
 export default function siteConfigPlugin() {
   return {
     name: 'vite-plugin-site-config',
@@ -138,6 +214,42 @@ export default function siteConfigPlugin() {
         const expanded = expandLoops(html, siteConfig, filename);
         return interpolate(expanded, siteConfig, filename);
       },
+    },
+
+    /** No build: emite manifest.json e sw.js na raiz do dist. */
+    generateBundle() {
+      this.emitFile({
+        type: 'asset',
+        fileName: 'manifest.json',
+        source: gerarManifest(),
+      });
+      this.emitFile({
+        type: 'asset',
+        fileName: 'sw.js',
+        source: gerarServiceWorker(),
+      });
+    },
+
+    /**
+     * No dev: serve os mesmos dois arquivos de memoria. Sem isto, /manifest.json
+     * e /sw.js dariam 404 apenas em desenvolvimento, e o PWA so seria testavel
+     * depois do build — o tipo de diferenca entre dev e producao que faz um bug
+     * aparecer tarde demais.
+     */
+    configureServer(server) {
+      server.middlewares.use((req, res, next) => {
+        const rota = (req.url || '').split('?')[0];
+
+        if (rota === '/manifest.json') {
+          res.setHeader('Content-Type', 'application/manifest+json');
+          return res.end(gerarManifest());
+        }
+        if (rota === '/sw.js') {
+          res.setHeader('Content-Type', 'application/javascript');
+          return res.end(gerarServiceWorker());
+        }
+        return next();
+      });
     },
   };
 }

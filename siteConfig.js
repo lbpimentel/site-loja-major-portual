@@ -64,6 +64,11 @@ if (config && config.integracoes && config.integracoes.supabase) {
   }
 }
 
+// O slug identifica a Loja tambem fora do HTML — e o que nomeia o cache do
+// service worker, para que a Loja A e a Loja B nao disputem a mesma chave de
+// cache quando alguem visita as duas no mesmo navegador.
+export const slugLoja = slug;
+
 console.log(`[siteConfig] Construindo o site da Loja: ${slug}`);
 
 export default config;

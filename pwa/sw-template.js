@@ -1,4 +1,17 @@
-const CACHE_NAME = 'major-portugal-v1';
+/**
+ * SERVICE WORKER — modelo processado no build.
+ *
+ * Este arquivo NAO e servido como esta. O vite-plugin-site-config substitui os
+ * marcadores de config e emite o resultado em `/sw.js`. Por isso vive fora de
+ * `public/`: tudo que esta em public/ e copiado cru, sem passar pelo plugin, e
+ * uma Loja acabaria fazendo precache do logo de outra.
+ */
+
+const CACHE_NAME = "{{pwa.cacheName}}";
+
+// Somente caminhos que existem com ESTE nome no dist. Os assets processados
+// pelo Vite (css/js empacotados) ganham hash no nome e por isso NAO entram
+// aqui — quem os guarda e o handler de fetch, no primeiro acesso.
 const ASSETS_TO_CACHE = [
   '/',
   '/index.html',
@@ -12,18 +25,28 @@ const ASSETS_TO_CACHE = [
   '/historia.html',
   '/patrono.html',
   '/timbre.html',
-  '/css/mobile.css',
+  '/sisoriente.html',
   '/js/supabase-config.js',
-  '/logo.png',
-  '/background.png'
+  '/js/theme.js',
+  "{{marca.logo}}",
+  "{{marca.heroBackground}}"
 ];
 
 // Install Event
 self.addEventListener('install', (event) => {
   event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => {
-      return cache.addAll(ASSETS_TO_CACHE);
-    })
+    caches.open(CACHE_NAME).then((cache) =>
+      // Um cache.addAll() rejeita inteiro se UM item der 404, e o service
+      // worker nunca chega a instalar. Guardando um a um, uma pagina que
+      // deixou de existir custa aquela pagina, nao o modo offline todo.
+      Promise.all(
+        ASSETS_TO_CACHE.map((url) =>
+          cache.add(url).catch((erro) => {
+            console.warn('[sw] nao consegui cachear', url, erro);
+          })
+        )
+      )
+    )
   );
   self.skipWaiting();
 });
@@ -46,7 +69,7 @@ self.addEventListener('activate', (event) => {
 
 // Fetch Event (Network First, fallback to cache)
 self.addEventListener('fetch', (event) => {
-  // Ignorar requisições do Supabase/externas para evitar problemas de CORS ou RLS
+  // Ignorar requisicoes do Supabase/externas para evitar problemas de CORS ou RLS
   if (!event.request.url.startsWith(self.location.origin)) {
     return;
   }

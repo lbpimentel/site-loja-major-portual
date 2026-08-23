@@ -27,9 +27,12 @@ const ASSETS_TO_CACHE = [
   '/timbre.html',
   '/sisoriente.html',
   '/fraternidadezap.html',
+  '/balaustre.html',
   '/js/supabase-config.js',
   '/js/theme.js',
   '/js/fraternidade.js',
+  '/js/balaustre.js',
+  '/js/balaustre-sanitizer.js',
   "{{marca.logo}}",
   "{{marca.heroBackground}}"
 ];

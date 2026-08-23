@@ -2,6 +2,7 @@ import tailwindcss from '@tailwindcss/vite';
 import react from '@vitejs/plugin-react';
 import path from 'path';
 import {defineConfig, loadEnv} from 'vite';
+import apiDevPlugin from './vite-plugin-api-dev.js';
 import siteConfigPlugin from './vite-plugin-site-config.js';
 
 export default defineConfig(({mode}) => {
@@ -10,7 +11,9 @@ export default defineConfig(({mode}) => {
   return {
     // siteConfigPlugin preenche os marcadores {{...}} do HTML a partir de
     // siteConfig.js, tanto no `dev` quanto no `build`.
-    plugins: [siteConfigPlugin(), react(), tailwindcss()],
+    // apiDevPlugin serve as funcoes de api/ no `dev`; em producao quem as
+    // serve e a propria Vercel.
+    plugins: [siteConfigPlugin(), apiDevPlugin(), react(), tailwindcss()],
     define: {
       'process.env.GEMINI_API_KEY': JSON.stringify(env.GEMINI_API_KEY),
     },
@@ -35,6 +38,7 @@ export default defineConfig(({mode}) => {
           patrono: path.resolve(__dirname, 'patrono.html'),
           sisoriente: path.resolve(__dirname, 'sisoriente.html'),
           fraternidadezap: path.resolve(__dirname, 'fraternidadezap.html'),
+          balaustre: path.resolve(__dirname, 'balaustre.html'),
         },
       },
     },

@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Balaústre Bot - Portal {{loja.nomeCurto}}</title>
+    <meta name="description" content="Redação assistida do Balaústre da {{loja.nomeCompleto}}.">
+    <script src="/js/theme.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;0,6..72,700;1,6..72,400&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #e9c349;
+            --secondary: #e9c349;
+            --background: #0a0a0a;
+            --surface: #141414;
+            --on-background: #ffffff;
+            --on-surface: #ffffff;
+            --on-surface-variant: #94a3b8;
+        }
+        body { font-family: 'Inter', sans-serif; background-color: var(--background); color: var(--on-background); }
+        .font-newsreader { font-family: 'Newsreader', serif; }
+        .glass-card {
+            background: rgba(20, 20, 20, 0.8);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 1rem;
+        }
+        .bg-logo-overlay {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 70vh;
+            height: 70vh;
+            background-image: url('{{marca.logo}}');
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            opacity: 0.15;
+            z-index: -1;
+            pointer-events: none;
+        }
+        /* iOS: backdrop-filter e dvh */
+        .glass-card, nav { -webkit-backdrop-filter: blur(12px); }
+        .min-h-screen { min-height: 100dvh; }
+        #mobileMenu { height: 100dvh !important; }
+        /* iOS: prevent zoom on inputs */
+        input, select, textarea { font-size: 16px !important; }
+
+        /* ================================================================
+           IMPRESSÃO — só o Balaústre, em A4.
+           A tela inteira é escondida e o contêiner de impressão é revelado.
+           Uma janela nova seria bloqueada como pop-up na maioria dos casos,
+           e o botão pareceria não fazer nada.
+           ================================================================ */
+        #areaImpressao { display: none; }
+
+        @page {
+            size: A4;
+            margin: 25mm 20mm 20mm 30mm; /* margem interna maior, para encadernar */
+        }
+
+        @media print {
+            body > *:not(#areaImpressao) { display: none !important; }
+
+            html, body {
+                background: #ffffff !important;
+                color: #000000 !important;
+            }
+
+            #areaImpressao {
+                display: block !important;
+                white-space: pre-wrap;
+                font-family: 'Newsreader', Georgia, serif;
+                font-size: 12pt;
+                line-height: 1.7;
+                color: #000000;
+                text-align: justify;
+            }
+        }
+    </style>
+<link rel="stylesheet" href="/css/mobile.css">
+</head>
+<body class="bg-background text-on-background min-h-screen">
+    <div class="bg-logo-overlay"></div>
+
+    <!-- MOBILE TOP BAR -->
+    <nav class="lg:hidden fixed top-0 w-full z-50 flex justify-between items-center px-6 py-4 bg-slate-950/90 backdrop-blur-xl border-b border-white/10">
+        <div class="flex items-center gap-3">
+            <img src="{{marca.logo}}" alt="Logo" class="h-8 w-auto">
+            <span class="font-newsreader text-amber-500 font-bold">{{loja.nomeCurto}}</span>
+        </div>
+        <div class="flex items-center gap-2">
+            <button onclick="toggleTheme()" class="text-amber-500 hover:text-amber-300 transition-colors flex items-center justify-center p-2 focus:outline-none" aria-label="Alternar Tema">
+                <span class="material-symbols-outlined theme-icon text-2xl">light_mode</span>
+            </button>
+            <button onclick="toggleMobileMenu()" class="text-amber-500">
+                <span class="material-symbols-outlined text-3xl">menu</span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- MOBILE MENU OVERLAY -->
+    <div id="mobileMenu" class="fixed inset-0 z-[60] hidden flex flex-col bg-slate-950/98 backdrop-blur-2xl p-8 transform transition-transform duration-500 translate-x-full">
+        <div class="flex justify-between items-center mb-12">
+            <div class="flex items-center gap-3">
+                <img src="{{marca.logo}}" alt="Logo" class="h-8">
+                <span class="font-newsreader text-amber-500 font-bold text-lg">Menu Principal</span>
+            </div>
+            <button onclick="toggleMobileMenu()" class="text-amber-500 w-12 h-12 flex items-center justify-center">
+                <span class="material-symbols-outlined text-4xl">close</span>
+            </button>
+        </div>
+        <div class="flex flex-col gap-4">
+            <a id="dashboardMenuLinkMobile" class="flex items-center gap-6 p-5 bg-white/5 text-slate-200 border-white/5 rounded-2xl active:scale-95 transition-all border" href="dashboard.html">
+                <span class="material-symbols-outlined text-amber-500">dashboard</span>
+                <span class="text-lg font-medium tracking-wide">Painel Principal</span>
+            </a>
+            <a class="flex items-center gap-6 p-5 bg-amber-500/10 text-amber-500 border-amber-500/10 rounded-2xl active:scale-95 transition-all border" href="balaustre.html">
+                <span class="material-symbols-outlined text-amber-500">history_edu</span>
+                <span class="text-lg font-medium tracking-wide">Balaústre</span>
+            </a>
+            <a class="flex items-center gap-6 p-5 bg-white/5 text-slate-200 border-white/5 rounded-2xl active:scale-95 transition-all border" href="biblioteca.html">
+                <span class="material-symbols-outlined text-amber-500">auto_stories</span>
+                <span class="text-lg font-medium tracking-wide">Biblioteca Digital</span>
+            </a>
+            <a class="flex items-center gap-6 p-5 bg-white/5 text-slate-200 border-white/5 rounded-2xl active:scale-95 transition-all border" href="fraternidade.html">
+                <span class="material-symbols-outlined text-amber-500">local_library</span>
+                <span class="text-lg font-medium tracking-wide">Galeria de Fotos</span>
+            </a>
+            <a class="flex items-center gap-6 p-5 bg-white/5 text-slate-200 border-white/5 rounded-2xl active:scale-95 transition-all border" href="fraternidadezap.html">
+                <span class="material-symbols-outlined text-amber-500">cake</span>
+                <span class="text-lg font-medium tracking-wide">FraternidadeZap</span>
+            </a>
+            <a class="flex items-center gap-6 p-5 bg-white/5 text-slate-200 border-white/5 rounded-2xl active:scale-95 transition-all border" href="calendario.html">
+                <span class="material-symbols-outlined text-amber-500">calendar_month</span>
+                <span class="text-lg font-medium tracking-wide">Calendário de Sessões</span>
+            </a>
+            <a class="flex items-center gap-6 p-5 bg-white/5 text-slate-200 border-white/5 rounded-2xl active:scale-95 transition-all border" href="tesouraria.html">
+                <span class="material-symbols-outlined text-amber-500">account_balance_wallet</span>
+                <span class="text-lg font-medium tracking-wide">Tesouraria</span>
+            </a>
+            <a id="adminMenuLinkMobile" href="dashboard.html?section=admin" class="hidden items-center gap-6 p-5 bg-white/5 rounded-2xl text-slate-200 border border-white/5 active:scale-95 transition-all">
+                <span class="material-symbols-outlined text-amber-500">admin_panel_settings</span>
+                <span class="text-lg font-medium tracking-wide">Administração</span>
+            </a>
+            <button onclick="logout()" class="flex items-center gap-6 p-5 bg-red-500/10 rounded-2xl text-red-400 border border-red-500/10 active:scale-95 transition-all mt-8">
+                <span class="material-symbols-outlined">logout</span>
+                <span class="text-lg font-medium tracking-wide uppercase">Sair do Portal</span>
+            </button>
+        </div>
+        <div class="mt-auto text-center pb-8 px-6">
+            <p class="text-slate-600 text-[10px] uppercase tracking-widest mb-4">{{loja.nomeCompleto}}</p>
+        </div>
+    </div>
+
+    <!-- SIDE NAVBAR (Desktop) -->
+    <nav class="hidden lg:flex fixed left-0 top-0 h-screen flex-col bg-slate-950/95 backdrop-blur-xl w-72 border-r border-white/10 shadow-2xl z-50">
+        <div class="p-8 flex flex-col items-center text-center">
+            <h1 class="text-amber-500 font-bold font-newsreader text-lg leading-tight tracking-tight">{{loja.nomeCompleto}}</h1>
+            <p class="text-slate-500 text-[10px] uppercase tracking-[0.2em] mt-2">{{loja.obediencia}}</p>
+        </div>
+
+        <div class="flex-1 px-4 py-6 space-y-2 overflow-y-auto">
+            <a id="dashboardMenuLink" href="dashboard.html" class="flex items-center gap-4 px-6 py-4 text-slate-400 hover:text-amber-500 hover:bg-white/5 rounded-xl transition-all group">
+                <span class="material-symbols-outlined">dashboard</span>
+                <span class="font-medium">Painel Principal</span>
+            </a>
+            <a href="balaustre.html" class="flex items-center gap-4 px-6 py-4 bg-amber-500/10 text-amber-500 rounded-xl transition-all group">
+                <span class="material-symbols-outlined">history_edu</span>
+                <span class="font-medium">Balaústre</span>
+            </a>
+            <a href="biblioteca.html" class="flex items-center gap-4 px-6 py-4 text-slate-400 hover:text-amber-500 hover:bg-white/5 rounded-xl transition-all group">
+                <span class="material-symbols-outlined">auto_stories</span>
+                <span class="font-medium">Biblioteca Digital</span>
+            </a>
+            <a href="fraternidade.html" class="flex items-center gap-4 px-6 py-4 text-slate-400 hover:text-amber-500 hover:bg-white/5 rounded-xl transition-all group">
+                <span class="material-symbols-outlined">local_library</span>
+                <span class="font-medium">Galeria de Fotos</span>
+            </a>
+            <a href="fraternidadezap.html" class="flex items-center gap-4 px-6 py-4 text-slate-400 hover:text-amber-500 hover:bg-white/5 rounded-xl transition-all group">
+                <span class="material-symbols-outlined">cake</span>
+                <span class="font-medium">FraternidadeZap</span>
+            </a>
+            <a href="calendario.html" class="flex items-center gap-4 px-6 py-4 text-slate-400 hover:text-amber-500 hover:bg-white/5 rounded-xl transition-all group">
+                <span class="material-symbols-outlined">calendar_month</span>
+                <span class="font-medium">Calendário de Sessões</span>
+            </a>
+            <a href="tesouraria.html" class="flex items-center gap-4 px-6 py-4 text-slate-400 hover:text-amber-500 hover:bg-white/5 rounded-xl transition-all group">
+                <span class="material-symbols-outlined">account_balance_wallet</span>
+                <span class="font-medium">Tesouraria</span>
+            </a>
+            <a id="adminMenuLink" href="dashboard.html?section=admin" class="hidden items-center gap-4 px-6 py-4 text-slate-400 hover:text-amber-500 hover:bg-white/5 rounded-xl transition-all group">
+                <span class="material-symbols-outlined">admin_panel_settings</span>
+                <span class="font-medium">Administração</span>
+            </a>
+        </div>
+
+        <div class="p-6 border-t border-white/5">
+            <div class="flex items-center gap-4 p-4 bg-white/5 rounded-2xl mb-4">
+                <div class="w-10 h-10 rounded-full bg-amber-500 flex items-center justify-center text-black font-bold" id="navInitial">M</div>
+                <div class="flex-1">
+                    <p class="text-sm font-bold text-slate-200" id="navName">Membro</p>
+                    <p class="text-[10px] text-slate-500 uppercase tracking-widest" id="navPosition">Portal Ativo</p>
+                </div>
+            </div>
+            <button onclick="toggleTheme()" class="w-full flex items-center justify-center gap-2 py-2 text-slate-500 hover:text-amber-500 transition-colors text-xs font-bold uppercase tracking-widest group mb-2">
+                <span class="material-symbols-outlined theme-icon text-lg">light_mode</span>
+                <span>Alternar Tema</span>
+            </button>
+            <button onclick="logout()" class="w-full flex items-center justify-center gap-2 py-3 text-slate-500 hover:text-red-400 transition-colors text-sm font-bold uppercase tracking-widest group">
+                <span class="material-symbols-outlined text-xl group-hover:rotate-12 transition-transform">logout</span>
+                Sair do Portal
+            </button>
+        </div>
+    </nav>
+
+    <main class="lg:ml-72 min-h-screen p-6 lg:p-12 pt-24 lg:pt-12">
+        <header class="mb-10">
+            <p class="text-amber-500/70 text-[10px] uppercase tracking-[0.3em] font-bold mb-2">Secretaria</p>
+            <h2 class="font-newsreader text-4xl lg:text-5xl font-bold">Balaústre</h2>
+            <p class="text-slate-400 mt-3 max-w-2xl">
+                Redação assistida da ata da sessão, no vernáculo do Rito. O conteúdo
+                ritualístico é suprimido antes de qualquer envio, e a minuta gerada
+                é sempre um rascunho para a revisão do Secretário.
+            </p>
+        </header>
+
+        <!-- ============ SEM ACESSO ============ -->
+        <div id="semAcesso" class="hidden glass-card p-12 text-center max-w-xl">
+            <span class="material-symbols-outlined text-5xl text-slate-700">lock</span>
+            <h3 class="font-newsreader text-2xl font-bold mt-4">Área da Secretaria</h3>
+            <p class="text-slate-400 mt-2">
+                A redação do Balaústre é atribuição do Secretário, do Venerável Mestre e
+                do Orador. Se você ocupa um desses cargos e vê esta mensagem, peça ao
+                administrador para conferir seu cargo no cadastro.
+            </p>
+            <a href="dashboard.html" class="inline-block mt-6 bg-white/5 hover:bg-white/10 border border-white/10 font-bold px-6 py-3 rounded-xl transition-all">
+                Voltar ao Painel
+            </a>
+        </div>
+
+        <!-- ============ FLUXO ============ -->
+        <div id="fluxo" class="hidden">
+            <!-- Trilha dos passos -->
+            <div class="grid gap-3 sm:grid-cols-3 mb-8">
+                <button id="trilha1" onclick="irParaPasso(1)" class="flex items-center gap-3 px-4 py-3 rounded-xl border transition-all bg-amber-500/10 border-amber-500/30 text-amber-400">
+                    <span class="material-symbols-outlined">edit_calendar</span>
+                    <span class="font-medium text-sm text-left">1. Dados da sessão</span>
+                </button>
+                <button id="trilha2" onclick="irParaPasso(2)" class="flex items-center gap-3 px-4 py-3 rounded-xl border transition-all bg-white/5 border-white/5 text-slate-500">
+                    <span class="material-symbols-outlined">notes</span>
+                    <span class="font-medium text-sm text-left">2. Notas do Secretário</span>
+                </button>
+                <button id="trilha3" onclick="irParaPasso(3)" class="flex items-center gap-3 px-4 py-3 rounded-xl border transition-all bg-white/5 border-white/5 text-slate-500">
+                    <span class="material-symbols-outlined">history_edu</span>
+                    <span class="font-medium text-sm text-left">3. Minuta e revisão</span>
+                </button>
+            </div>
+
+            <!-- ---------- PASSO 1 ---------- -->
+            <section id="passo1" class="space-y-6">
+                <div class="glass-card p-6 space-y-5">
+                    <h3 class="font-newsreader text-2xl font-bold">Dados da sessão</h3>
+
+                    <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                        <div>
+                            <label class="block text-xs text-slate-400 mb-2" for="mdNumeroSessao">Número da sessão</label>
+                            <input type="text" id="mdNumeroSessao" inputmode="numeric" placeholder="1.284"
+                                   class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:border-amber-500 focus:outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-xs text-slate-400 mb-2" for="mdNumeroBalaustre">Número do Balaústre</label>
+                            <input type="text" id="mdNumeroBalaustre" inputmode="numeric" placeholder="1.284"
+                                   class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:border-amber-500 focus:outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-xs text-slate-400 mb-2" for="mdOriente">Oriente</label>
+                            <input type="text" id="mdOriente" placeholder="Rio de Janeiro - RJ"
+                                   class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:border-amber-500 focus:outline-none">
+                        </div>
+
+                        <div>
+                            <label class="block text-xs text-slate-400 mb-2" for="mdGrau">Grau dos trabalhos</label>
+                            <select id="mdGrau" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:border-amber-500 focus:outline-none">
+                                <option class="bg-background" value="1º Grau - Aprendiz">1º Grau - Aprendiz</option>
+                                <option class="bg-background" value="2º Grau - Companheiro">2º Grau - Companheiro</option>
+                                <option class="bg-background" value="3º Grau - Mestre">3º Grau - Mestre</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs text-slate-400 mb-2" for="mdTipoSessao">Tipo de sessão</label>
+                            <select id="mdTipoSessao" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:border-amber-500 focus:outline-none">
+                                <option class="bg-background" value="Ordinária">Ordinária</option>
+                                <option class="bg-background" value="Magna">Magna</option>
+                                <option class="bg-background" value="Financeira">Financeira</option>
+                                <option class="bg-background" value="Eleitoral">Eleitoral</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs text-slate-400 mb-2" for="mdTronco">Tronco de beneficência</label>
+                            <input type="text" id="mdTronco" inputmode="decimal" placeholder="R$ 250,00"
+                                   class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:border-amber-500 focus:outline-none">
+                        </div>
+
+                        <div>
+                            <label class="block text-xs text-slate-400 mb-2" for="mdData">Data</label>
+                            <input type="date" id="mdData"
+                                   class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:border-amber-500 focus:outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-xs text-slate-400 mb-2" for="mdHoraAbertura">Abertura</label>
+                            <input type="time" id="mdHoraAbertura"
+                                   class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:border-amber-500 focus:outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-xs text-slate-400 mb-2" for="mdHoraEncerramento">Encerramento</label>
+                            <input type="time" id="mdHoraEncerramento"
+                                   class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:border-amber-500 focus:outline-none">
+                        </div>
+                    </div>
+
+                    <div class="grid gap-4 lg:grid-cols-2">
+                        <div>
+                            <label class="block text-xs text-slate-400 mb-2" for="mdOficiais">Oficiais presentes</label>
+                            <textarea id="mdOficiais" rows="4" placeholder="Ven∴ Mest∴ Fulano&#10;1º Vig∴ Beltrano&#10;Orador Sicrano"
+                                      class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:border-amber-500 focus:outline-none"></textarea>
+                        </div>
+                        <div>
+                            <label class="block text-xs text-slate-400 mb-2" for="mdVisitantes">Visitantes</label>
+                            <textarea id="mdVisitantes" rows="4" placeholder="Ir∴ Fulano, da Loja X nº 0000"
+                                      class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:border-amber-500 focus:outline-none"></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex justify-end">
+                    <button onclick="irParaPasso(2)"
+                            class="flex items-center gap-2 bg-amber-500 hover:bg-amber-400 text-black font-bold px-6 py-3 rounded-xl transition-all active:scale-95">
+                        Continuar
+                        <span class="material-symbols-outlined">arrow_forward</span>
+                    </button>
+                </div>
+            </section>
+
+            <!-- ---------- PASSO 2 ---------- -->
+            <section id="passo2" class="hidden space-y-6">
+                <div class="glass-card p-6 space-y-5">
+                    <div>
+                        <h3 class="font-newsreader text-2xl font-bold">Notas da sessão</h3>
+                        <p class="text-slate-400 text-sm mt-2">
+                            Cole a transcrição do áudio, as anotações da pauta, as proposições
+                            lidas e o resumo das falas na Palavra a Bem da Ordem. Escreva à
+                            vontade — o passo seguinte mostra o que será suprimido antes de sair.
+                        </p>
+                    </div>
+
+                    <div class="bg-amber-500/5 border border-amber-500/20 rounded-xl p-4">
+                        <p class="text-amber-400/90 text-sm font-bold flex items-center gap-2">
+                            <span class="material-symbols-outlined text-lg">shield</span>
+                            Conteúdo ritualístico
+                        </p>
+                        <p class="text-slate-400 text-xs mt-2 leading-relaxed">
+                            Palavras de passe, palavras sagradas, toques, sinais e baterias são
+                            suprimidos automaticamente. Para suprimir algo que o filtro não
+                            reconheça, escreva entre parênteses duplos:
+                            <span class="font-mono text-amber-400/80">((assunto que não deve sair daqui))</span>.
+                        </p>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs text-slate-400 mb-2" for="notas">Notas / transcrição</label>
+                        <textarea id="notas" rows="16" placeholder="Aberta a sessão às 20h, o Ven∴ Mest∴ deu as boas-vindas..."
+                                  class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 font-mono text-sm leading-relaxed focus:border-amber-500 focus:outline-none"></textarea>
+                    </div>
+
+                    <details class="border border-white/5 rounded-xl p-4">
+                        <summary class="cursor-pointer text-sm text-slate-400 font-medium">Termos adicionais desta Loja</summary>
+                        <p class="text-slate-500 text-xs mt-3 mb-2">
+                            Um por linha. Serão suprimidos onde quer que apareçam. Ficam apenas
+                            neste navegador — não são enviados a lugar nenhum.
+                        </p>
+                        <textarea id="termosExtras" rows="3"
+                                  class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 font-mono text-sm focus:border-amber-500 focus:outline-none"></textarea>
+                    </details>
+                </div>
+
+                <div class="flex flex-wrap justify-between gap-3">
+                    <div class="flex gap-3">
+                        <button onclick="irParaPasso(1)"
+                                class="flex items-center gap-2 bg-white/5 hover:bg-white/10 border border-white/10 font-bold px-6 py-3 rounded-xl transition-all">
+                            <span class="material-symbols-outlined">arrow_back</span>
+                            Voltar
+                        </button>
+                        <button onclick="descartarRascunho()"
+                                class="flex items-center gap-2 bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/20 font-bold px-6 py-3 rounded-xl transition-all">
+                            Descartar rascunho
+                        </button>
+                    </div>
+                    <button onclick="revisarSupressao()"
+                            class="flex items-center gap-2 bg-amber-500 hover:bg-amber-400 text-black font-bold px-6 py-3 rounded-xl transition-all active:scale-95">
+                        <span class="material-symbols-outlined">shield</span>
+                        Revisar e gerar
+                    </button>
+                </div>
+            </section>
+
+            <!-- ---------- PASSO 3 ---------- -->
+            <section id="passo3" class="hidden space-y-6">
+                <div class="glass-card p-6 space-y-5">
+                    <div class="flex flex-wrap justify-between items-start gap-4">
+                        <div>
+                            <h3 class="font-newsreader text-2xl font-bold">Minuta do Balaústre</h3>
+                            <p class="text-slate-400 text-sm mt-1">
+                                Rascunho para a sua revisão. Confira nomes, valores e deliberações
+                                antes de levar à aprovação em sessão.
+                            </p>
+                        </div>
+                        <button onclick="irParaPasso(2)"
+                                class="flex items-center gap-2 bg-white/5 hover:bg-white/10 border border-white/10 text-sm font-bold px-4 py-2 rounded-xl transition-all">
+                            <span class="material-symbols-outlined text-lg">arrow_back</span>
+                            Voltar às notas
+                        </button>
+                    </div>
+
+                    <textarea id="editorMinuta" rows="24"
+                              class="w-full bg-white/5 border border-white/10 rounded-xl px-5 py-4 font-newsreader text-base leading-relaxed focus:border-amber-500 focus:outline-none"></textarea>
+
+                    <div class="flex flex-wrap gap-3">
+                        <button onclick="copiarMinuta()"
+                                class="flex items-center gap-2 bg-amber-500 hover:bg-amber-400 text-black font-bold px-5 py-3 rounded-xl transition-all active:scale-95">
+                            <span class="material-symbols-outlined">content_copy</span>
+                            Copiar texto
+                        </button>
+                        <button onclick="baixarTxt()"
+                                class="flex items-center gap-2 bg-white/5 hover:bg-white/10 border border-white/10 font-bold px-5 py-3 rounded-xl transition-all">
+                            <span class="material-symbols-outlined">download</span>
+                            Baixar TXT
+                        </button>
+                        <button onclick="baixarMarkdown()"
+                                class="flex items-center gap-2 bg-white/5 hover:bg-white/10 border border-white/10 font-bold px-5 py-3 rounded-xl transition-all">
+                            <span class="material-symbols-outlined">download</span>
+                            Baixar Markdown
+                        </button>
+                        <button onclick="imprimirMinuta()"
+                                class="flex items-center gap-2 bg-white/5 hover:bg-white/10 border border-white/10 font-bold px-5 py-3 rounded-xl transition-all">
+                            <span class="material-symbols-outlined">print</span>
+                            Imprimir / PDF (A4)
+                        </button>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- ============ MODAL: REVISÃO DA SUPRESSÃO ============ -->
+    <div id="modalRevisao" class="hidden fixed inset-0 bg-black/85 backdrop-blur-sm z-[150] flex items-center justify-center p-4">
+        <div class="glass-card w-full max-w-3xl max-h-[90dvh] overflow-y-auto">
+            <div class="flex justify-between items-center p-6 border-b border-white/5">
+                <div>
+                    <h3 class="font-newsreader text-2xl font-bold">O que sairá deste navegador</h3>
+                    <p class="text-slate-500 text-xs mt-1">Leia antes de confirmar. Nada foi enviado ainda.</p>
+                </div>
+                <button onclick="fecharRevisao()" class="text-slate-500 hover:text-amber-500 w-10 h-10 flex items-center justify-center">
+                    <span class="material-symbols-outlined text-3xl">close</span>
+                </button>
+            </div>
+
+            <div class="p-6 space-y-5">
+                <div id="painelOcorrencias" class="hidden bg-red-500/5 border border-red-500/20 rounded-xl p-4">
+                    <p class="text-red-400 text-sm font-bold flex items-center gap-2">
+                        <span class="material-symbols-outlined text-lg">shield</span>
+                        <span id="contagemSupressoes">0</span> trecho(s) suprimido(s)
+                    </p>
+                    <ul id="listaOcorrencias" class="mt-3 space-y-2 max-h-40 overflow-y-auto"></ul>
+                </div>
+
+                <div>
+                    <p class="text-xs text-slate-400 mb-2">Texto que será enviado</p>
+                    <pre id="previaSanitizada" class="bg-black/40 border border-white/10 rounded-xl p-4 text-sm text-slate-300 whitespace-pre-wrap max-h-72 overflow-y-auto font-mono leading-relaxed"></pre>
+                </div>
+
+                <label class="flex items-start gap-3 bg-white/5 border border-white/10 rounded-xl p-4 cursor-pointer">
+                    <input type="checkbox" id="confirmacaoEnvio" class="mt-1 w-5 h-5 accent-amber-500">
+                    <span class="text-sm text-slate-300">
+                        Li o texto acima e confirmo que ele não contém conteúdo ritualístico.
+                        Entendo que ele será enviado a um provedor externo de IA para a redação da minuta.
+                    </span>
+                </label>
+
+                <div class="flex flex-wrap gap-3 justify-end">
+                    <button onclick="fecharRevisao()"
+                            class="bg-white/5 hover:bg-white/10 border border-white/10 font-bold px-6 py-3 rounded-xl transition-all">
+                        Voltar e editar
+                    </button>
+                    <button onclick="gerarMinuta()" id="botaoGerar"
+                            class="bg-amber-500 hover:bg-amber-400 text-black font-bold px-6 py-3 rounded-xl transition-all active:scale-95">
+                        Gerar minuta
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Contêiner de impressão: escondido na tela, revelado pelo @media print -->
+    <div id="areaImpressao"></div>
+
+    <div id="aviso" class="hidden fixed bottom-6 left-1/2 -translate-x-1/2 z-[200] px-6 py-4 rounded-2xl font-medium shadow-2xl"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <!-- Config da Loja: injetada em build-time a partir de lojas/<slug>.js -->
+<script>
+  window.__SITE_CONFIG__ = {
+    supabase: {
+      url: "{{integracoes.supabase.url}}",
+      anonKey: "{{integracoes.supabase.anonKey}}"
+    },
+    loja: {
+      nomeCompleto: "{{loja.nomeCompleto}}",
+      nomeCurto: "{{loja.nomeCurto}}"
+    }
+  };
+
+  function toggleMobileMenu() {
+      const menu = document.getElementById('mobileMenu');
+      menu.classList.toggle('hidden');
+      menu.classList.toggle('translate-x-full');
+  }
+
+  async function logout() {
+      await window.supabaseClient.auth.signOut();
+      window.location.href = 'login.html';
+  }
+</script>
+<script src="/js/supabase-config.js"></script>
+<!--
+  Módulo ES: importa o sanitizador do mesmo arquivo que a função serverless
+  usa. Uma cópia da regra de sigilo em cada lado divergiria com o tempo, e a
+  divergência apareceria como vazamento. Os manipuladores de onclick são
+  pendurados em window pelo próprio módulo.
+-->
+<script type="module" src="/js/balaustre.js"></script>
+</body>
+</html>

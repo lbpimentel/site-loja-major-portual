@@ -14,6 +14,7 @@
  *   GEMINI_API_KEY     obrigatória — chave do provedor
  *   SUPABASE_URL       obrigatória — projeto Supabase DESTA Loja
  *   SUPABASE_ANON_KEY  obrigatória — chave publicável DESTA Loja
+ *   GEMINI_MODEL       opcional — sobrescreve o modelo, sem precisar de deploy
  *
  * Cada Loja é um projeto Vercel próprio (ver README-TEMPLATE.md), então cada
  * uma tem o seu conjunto. Uma chave de IA por Loja também mantém o custo
@@ -40,7 +41,20 @@ import { contemResiduoRitual, MARCA_SUPRESSAO } from '../../public/js/balaustre-
 /** Teto de entrada. Uma ata longa cabe folgada; um despejo de arquivo, não. */
 const LIMITE_NOTAS = 40000;
 
-const MODELO = 'gemini-2.5-flash';
+/**
+ * Modelo do provedor.
+ *
+ * Configuravel por variavel de ambiente de proposito: `gemini-2.5-flash` saiu
+ * de disponibilidade para contas novas de um dia para o outro, e o Balaustre
+ * quebrou em producao com um 404 do Google. Sem esta valvula, toda
+ * descontinuacao futura exige mexer no codigo e refazer o deploy — sendo que
+ * quem descobre o problema costuma ser o Secretario, no meio da redacao da
+ * ata.
+ *
+ * Para trocar sem deploy: Vercel -> Settings -> Environment Variables ->
+ * GEMINI_MODEL.
+ */
+const MODELO = process.env.GEMINI_MODEL || 'gemini-3.6-flash';
 
 /**
  * Instrução de sistema.
@@ -194,6 +208,18 @@ export default async function handler(req, res) {
     return res.status(200).json({ minuta: minuta, modelo: MODELO });
   } catch (erro) {
     console.error('[balaustre/generate] falha na chamada ao provedor:', erro);
-    return res.status(502).json({ erro: 'Falha ao gerar a minuta: ' + erro.message });
+
+    // O provedor descontinua modelos e responde 404 dizendo qual usar no lugar.
+    // A mensagem crua ja traz o nome do substituto, mas nao diz onde troca-lo.
+    const modeloIndisponivel = /NOT_FOUND|no longer available|is not found/i.test(erro.message);
+    const dica = modeloIndisponivel
+      ? ' O modelo "' + MODELO + '" nao esta disponivel para esta conta. ' +
+        'Ajuste a variavel GEMINI_MODEL na Vercel com o nome indicado acima.'
+      : '';
+
+    return res.status(502).json({
+      erro: 'Falha ao gerar a minuta: ' + erro.message + dica,
+      modelo: MODELO
+    });
   }
 }

@@ -4,6 +4,9 @@
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <script src="/js/theme.js"></script>
+<!-- B-01: esconde o conteudo ate a sessao ser confirmada. Sem isto a pagina
+     pintava por inteiro antes do redirecionamento e piscava para o anonimo. -->
+<script src="/js/guarda-sessao.js"></script>
 <title>Biblioteca Digital - {{loja.nomeCompleto}}</title>
 <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
 <link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400;500;700&amp;family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
@@ -415,7 +418,7 @@
 <!-- File 1 -->
 <div onclick="window.open('https://drive.google.com/drive/folders/1e9uT8lf0_Fv9LaXepzlO2PFTOsdKZOii', '_blank')" class="group glass-card rounded-xl overflow-hidden hover:border-secondary/30 transition-all cursor-pointer">
 <div class="h-40 bg-surface-container-low relative overflow-hidden flex items-center justify-center">
-<img class="w-full h-full object-cover opacity-30 grayscale transition-transform duration-700 group-hover:scale-110" src="https://lh3.googleusercontent.com/aida/ADBb0ug1DxbhESPlnO45YCODgj8Sp5HUgqG9_Ilmo8fPRJmg1d9cIq5ij4z_zlbFpxhyCIfGlNpgNfMRoiV9VyQSlnzONll2NATxWF2uc88wBokcqLjfXDZvbNyXDjIxBmMYQCcyALztrm6MWr3SR3ELNySugxequ2QFUjnX1MDAJevosHUuk5KgJxjbLPos0PIIEdZ-GeCQbzsgd6Rk2c11Nep2S-4aIT2l2AVc_qSprlshA-diBxNmehRErNl0qivRSoMaCMssFW48"/>
+<img class="w-full h-full object-cover opacity-30 grayscale transition-transform duration-700 group-hover:scale-110" src="{{marca.heroBackground}}" alt="" aria-hidden="true" loading="lazy" decoding="async"/>
 <span class="material-symbols-outlined absolute text-secondary/30 text-6xl" data-icon="description">description</span>
 </div>
 <div class="p-5 border-t border-white/5 flex items-center gap-4">
@@ -607,7 +610,7 @@
                     return;
                 }
 
-                if (!session) { window.location.href = 'login.html'; return; }
+                if (!session) { (window.guardaSessao ? window.guardaSessao.irParaLogin() : window.location.replace('login.html')); return; }
 
                 // Set User Metadata para o menu lateral (Desktop e Mobile)
                 const navName = document.getElementById('navName');
@@ -671,7 +674,7 @@
 
     window.logout = async function() {
         await window.supabaseClient.auth.signOut();
-        window.location.href = 'login.html';
+        (window.guardaSessao ? window.guardaSessao.irParaLogin() : window.location.replace('login.html'));
     };
 
     window.previewDocument = (url, title) => {

@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { test, expect } from './fixtures';
 
 test.describe('Portal do Membro - Authentication & Form Tests', () => {
   test.beforeEach(async ({ page }) => {
@@ -13,12 +13,18 @@ test.describe('Portal do Membro - Authentication & Form Tests', () => {
     await expect(heading).toContainText(/A∴R∴L∴S∴ Major Manoel dos Santos Portugal/i);
 
     // Verify presence of input fields and labels
-    const emailLabel = page.locator('label[for="identifier"]');
-    await expect(emailLabel).toHaveText(/Email ou CIM/i);
-
     const emailInput = page.locator('#email');
     await expect(emailInput).toBeVisible();
     await expect(emailInput).toHaveAttribute('placeholder', 'E-mail ou Nº do CIM');
+
+    // O rotulo aponta para o id real do campo: clicar nele foca o input, e o
+    // leitor de tela anuncia "Email ou CIM" ao chegar ali. Antes o for= apontava
+    // para "identifier", um id que nao existe em lugar nenhum da pagina.
+    const emailLabel = page.locator('label[for="email"]');
+    await expect(emailLabel).toHaveText(/Email ou CIM/i);
+
+    await emailLabel.click();
+    await expect(emailInput).toBeFocused();
 
     const passwordLabel = page.locator('label[for="password"]');
     await expect(passwordLabel).toHaveText(/Senha de Acesso/i);
@@ -26,6 +32,9 @@ test.describe('Portal do Membro - Authentication & Form Tests', () => {
     const passwordInput = page.locator('#password');
     await expect(passwordInput).toBeVisible();
     await expect(passwordInput).toHaveAttribute('placeholder', '••••••••');
+    // Sem required dava para enviar com a senha em branco e receber um erro
+    // generico do servidor no lugar da validacao imediata do navegador.
+    await expect(passwordInput).toHaveAttribute('required', '');
   });
 
   test('should show validation error for incorrect credentials', async ({ page }) => {

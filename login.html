@@ -4,6 +4,19 @@
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <title>Portal do Membro - {{loja.nomeCompleto}}</title>
+    <meta name="description" content="Acesso restrito aos membros da {{loja.nomeCompleto}}.">
+    <link rel="canonical" href="{{loja.siteUrl}}/login.html">
+    <link rel="icon" href="{{marca.logo}}">
+    <link rel="apple-touch-icon" href="{{marca.logo}}">
+    <!-- Open Graph: sem isto, compartilhar o link da Loja no WhatsApp nao gera previa. -->
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="{{loja.nomeCompleto}}">
+    <meta property="og:locale" content="pt_BR">
+    <meta property="og:url" content="{{loja.siteUrl}}/login.html">
+    <meta property="og:title" content="Portal do Membro — {{loja.nomeCompleto}}">
+    <meta property="og:description" content="Acesso restrito aos membros da {{loja.nomeCompleto}}.">
+    <meta property="og:image" content="{{loja.siteUrl}}{{marca.logo}}">
+    <meta name="twitter:card" content="summary_large_image">
 <script src="/js/theme.js"></script>
 <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
 <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,200..800;1,6..72,200..800&amp;family=Inter:wght@100..900&amp;display=swap" rel="stylesheet"/>
@@ -160,7 +173,7 @@
 <!-- Background Imagery -->
 <div class="absolute inset-0 z-0">
 <div class="absolute inset-0 bg-gradient-to-b from-background via-background/60 to-background z-10"></div>
-<img class="w-full h-full object-cover opacity-60 grayscale contrast-125" data-alt="A majestic, dimly lit grand assembly hall with ornate neoclassical architecture, featuring towering marble columns and subtle golden filigree details. The atmosphere is solemn and prestigious, with soft atmospheric light filtering from high windows, casting long, elegant shadows across the polished dark floors. The overall color palette is dominated by deep charcoal, obsidian, and metallic gold accents, reflecting a high-end, traditional yet modern academic society aesthetic." src="https://lh3.googleusercontent.com/aida/ADBb0ug1DxbhESPlnO45YCODgj8Sp5HUgqG9_Ilmo8fPRJmg1d9cIq5ij4z_zlbFpxhyCIfGlNpgNfMRoiV9VyQSlnzONll2NATxWF2uc88wBokcqLjfXDZvbNyXDjIxBmMYQCcyALztrm6MWr3SR3ELNySugxequ2QFUjnX1MDAJevosHUuk5KgJxjbLPos0PIIEdZ-GeCQbzsgd6Rk2c11Nep2S-4aIT2l2AVc_qSprlshA-diBxNmehRErNl0qivRSoMaCMssFW48"/>
+<img class="w-full h-full object-cover opacity-60 grayscale contrast-125" src="{{marca.heroBackground}}" alt="" aria-hidden="true" fetchpriority="high" decoding="async"/>
 </div>
 <!-- Login Container -->
 <div class="relative z-20 w-full max-w-[440px] animate-in fade-in slide-in-from-bottom-8 duration-1000">
@@ -177,7 +190,7 @@
 <form class="space-y-8" id="loginForm">
 <!-- Identity Input -->
 <div class="relative group">
-<label class="block font-label-caps text-label-caps text-on-tertiary-container mb-3 uppercase" for="identifier">Email ou CIM</label>
+<label class="block font-label-caps text-label-caps text-on-tertiary-container mb-3 uppercase" for="email">Email ou CIM</label>
 <div class="relative">
 <input class="w-full bg-transparent border-0 border-b border-outline-variant py-3 focus:ring-0 focus:border-secondary transition-all text-on-background placeholder:text-on-tertiary-container/50 font-body-md" id="email" name="email" placeholder="E-mail ou Nº do CIM" type="text" required/>
 <span class="material-symbols-outlined absolute right-0 top-3 text-on-tertiary-container/50 text-xl">person</span>
@@ -189,7 +202,7 @@
 <label class="block font-label-caps text-label-caps text-on-tertiary-container uppercase" for="password">Senha de Acesso</label>
 </div>
 <div class="relative">
-<input class="w-full bg-transparent border-0 border-b border-outline-variant py-3 focus:ring-0 focus:border-secondary transition-all text-on-background placeholder:text-on-tertiary-container/50 font-body-md" id="password" name="password" placeholder="••••••••" type="password"/>
+<input class="w-full bg-transparent border-0 border-b border-outline-variant py-3 focus:ring-0 focus:border-secondary transition-all text-on-background placeholder:text-on-tertiary-container/50 font-body-md" id="password" name="password" placeholder="••••••••" type="password" required/>
 <span id="togglePassword" class="material-symbols-outlined absolute right-0 top-3 text-on-tertiary-container/50 text-xl cursor-pointer hover:text-secondary transition-colors">visibility_off</span>
 </div>
 </div>
@@ -200,9 +213,9 @@
                         </button>
 <div class="mt-4 text-center text-red-500 text-sm hidden" id="errorMessage"></div>
 <div class="flex items-center justify-between">
-<a id="forgotPassword" class="font-label-caps text-[10px] text-on-tertiary-container hover:text-secondary transition-colors tracking-widest uppercase" href="#">Esqueceu a senha?</a>
+<button type="button" id="forgotPassword" class="font-label-caps text-[10px] text-on-tertiary-container hover:text-secondary transition-colors tracking-widest uppercase bg-transparent border-0 cursor-pointer py-3 px-1 min-h-[44px]">Esqueceu a senha?</button>
 <div class="h-1 w-1 bg-outline-variant rounded-full"></div>
-<a class="font-label-caps text-[10px] text-on-tertiary-container hover:text-secondary transition-colors tracking-widest uppercase" href="cadastro.html">Solicitar Ingresso</a>
+<a class="font-label-caps text-[10px] text-on-tertiary-container hover:text-secondary transition-colors tracking-widest uppercase inline-flex items-center py-3 px-1 min-h-[44px]" href="cadastro.html">Solicitar Ingresso</a>
 </div>
 </div>
 </form>
@@ -211,11 +224,9 @@
 <div class="mt-16 text-center">
 <div class="fade-divider mb-8"></div>
 <div class="flex flex-col md:flex-row justify-center items-center gap-6 text-on-tertiary-container">
-<a class="font-label-caps text-[10px] hover:text-secondary transition-colors uppercase" href="#">Privacidade</a>
+<a class="font-label-caps text-[10px] hover:text-secondary transition-colors uppercase inline-flex items-center py-3 px-2 min-h-[44px]" href="biblioteca.html">Estatuto Geral</a>
 <span class="hidden md:block opacity-20">|</span>
-<a class="font-label-caps text-[10px] hover:text-secondary transition-colors uppercase" href="#">Estatuto Geral</a>
-<span class="hidden md:block opacity-20">|</span>
-<a class="font-label-caps text-[10px] hover:text-secondary transition-colors uppercase" href="#">Suporte Técnico</a>
+<a class="font-label-caps text-[10px] hover:text-secondary transition-colors uppercase inline-flex items-center py-3 px-2 min-h-[44px]" href="mailto:{{rodape.desenvolvedor.email}}?subject=Suporte%20-%20Portal%20do%20Membro">Suporte Técnico</a>
 </div>
                 <p class="mt-8 font-label-caps text-[10px] text-on-tertiary-container/40 uppercase tracking-widest">
                     © {{loja.anoCopyright}} {{loja.nomeCompleto}}. Todos os direitos reservados.
@@ -225,10 +236,10 @@
                 <div class="mt-12 pt-8 border-t border-white/5 flex flex-col items-center text-center">
                     <div class="flex items-center gap-8 mb-4">
                         <a href="{{rodape.orientes.0.url}}" target="_blank" rel="noopener noreferrer" class="transition-transform hover:scale-105">
-                            <img src="{{rodape.orientes.0.logo}}" alt="Grande Oriente do Brasil no Rio de Janeiro" class="h-12 w-auto opacity-30 hover:opacity-100 grayscale hover:grayscale-0 transition-all duration-500">
+                            <img src="{{rodape.orientes.0.logo}}" alt="Grande Oriente do Brasil no Rio de Janeiro" loading="lazy" decoding="async" class="h-12 w-auto opacity-30 hover:opacity-100 grayscale hover:grayscale-0 transition-all duration-500">
                         </a>
                         <a href="{{rodape.orientes.1.url}}" target="_blank" rel="noopener noreferrer" class="transition-transform hover:scale-105">
-                            <img src="{{rodape.orientes.1.logo}}" alt="Grande Oriente do Brasil" class="h-12 w-auto opacity-30 hover:opacity-100 grayscale hover:grayscale-0 transition-all duration-500">
+                            <img src="{{rodape.orientes.1.logo}}" alt="Grande Oriente do Brasil" loading="lazy" decoding="async" class="h-12 w-auto opacity-30 hover:opacity-100 grayscale hover:grayscale-0 transition-all duration-500">
                         </a>
                     </div>
                     <div class="space-y-1">
@@ -250,8 +261,8 @@
 <div id="resetPasswordModal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-black/95 backdrop-blur-md">
     <div class="glass-card w-full max-w-[440px] p-10 rounded-lg shadow-2xl relative border border-secondary/20">
         <!-- Close Button -->
-        <button id="closeResetModal" class="absolute top-6 right-6 text-slate-400 hover:text-secondary transition-colors">
-            <span class="material-symbols-outlined text-2xl">close</span>
+        <button id="closeResetModal" aria-label="Fechar recuperação de senha" class="absolute top-6 right-6 min-w-[44px] min-h-[44px] flex items-center justify-center text-slate-400 hover:text-secondary transition-colors">
+            <span class="material-symbols-outlined text-2xl" aria-hidden="true">close</span>
         </button>
 
         <div class="text-center mb-8">
@@ -316,6 +327,48 @@
     const loginForm = document.getElementById('loginForm');
     const errorMessage = document.getElementById('errorMessage');
 
+    /**
+     * Traduz o erro do Supabase Auth para uma frase em português.
+     *
+     * O Supabase responde em inglês ("Invalid login credentials"), e essa frase
+     * chegava crua na tela de um site inteiramente em português.
+     *
+     * O casamento é por TRECHO e não por igualdade: o provedor muda a redação
+     * dessas mensagens entre versões, e uma comparação exata voltaria a vazar
+     * inglês silenciosamente. Mensagens que já escrevemos aqui (CIM não
+     * encontrado, acesso pendente) passam intactas.
+     */
+    function mensagemDeErro(erro) {
+        const bruta = (erro && erro.message) || '';
+
+        const traducoes = [
+            [/invalid login credentials/i,
+             'E-mail/CIM ou senha incorretos.'],
+            [/email not confirmed/i,
+             'Confirme seu e-mail antes de entrar. Procure a mensagem de confirmação na sua caixa de entrada.'],
+            [/invalid email/i,
+             'E-mail inválido. Confira o endereço digitado.'],
+            [/too many requests|rate limit/i,
+             'Tentativas demais em pouco tempo. Aguarde alguns minutos e tente de novo.'],
+            [/user not found/i,
+             'Não encontramos esse cadastro. Confira o e-mail ou o número do CIM.'],
+            [/password should be at least/i,
+             'A senha é curta demais.'],
+            [/network|fetch failed|failed to fetch/i,
+             'Não foi possível falar com o servidor. Verifique sua conexão e tente novamente.']
+        ];
+
+        const achou = traducoes.find(([padrao]) => padrao.test(bruta));
+        if (achou) return achou[1];
+
+        // Nossas próprias mensagens já estão em português — devolve como está.
+        if (/[áàâãéêíóôõúç]/i.test(bruta) || /\b(CIM|Acesso|senha)\b/.test(bruta)) return bruta;
+
+        // Desconhecida: o usuário recebe algo útil, o console guarda o original.
+        console.error('Erro de autenticação não mapeado:', bruta);
+        return 'Não foi possível entrar agora. Tente novamente em instantes.';
+    }
+
     loginForm.addEventListener('submit', async (e) => {
         e.preventDefault();
         errorMessage.classList.add('hidden');
@@ -378,7 +431,7 @@
                 window.location.href = 'dashboard.html';
             }
         } catch (error) {
-            errorMessage.textContent = error.message;
+            errorMessage.textContent = mensagemDeErro(error);
             errorMessage.classList.remove('hidden');
             submitBtn.disabled = false;
             submitBtn.innerHTML = originalText;
@@ -437,7 +490,7 @@
             resetMessage.classList.remove('hidden');
             resetForm.reset();
         } catch (error) {
-            resetMessage.textContent = error.message;
+            resetMessage.textContent = mensagemDeErro(error);
             resetMessage.className = "text-center text-xs p-4 bg-red-500/10 text-red-400 border-red-500/20 rounded-lg mt-2 block";
             resetMessage.classList.remove('hidden');
         } finally {

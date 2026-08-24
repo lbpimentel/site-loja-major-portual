@@ -1,0 +1,18 @@
+# Portal da Loja — o que o buscador pode indexar.
+#
+# As paginas restritas ficam de fora nao por sigilo (quem protege os dados e o
+# RLS no banco, nao este arquivo), mas porque indexa-las jogaria telas de login
+# e paineis vazios no resultado de busca de quem procura a Loja.
+
+User-agent: *
+
+Disallow: /dashboard.html
+Disallow: /biblioteca.html
+Disallow: /calendario.html
+Disallow: /fraternidade.html
+Disallow: /tesouraria.html
+Disallow: /fraternidadezap.html
+Disallow: /balaustre.html
+Disallow: /api/
+
+Allow: /

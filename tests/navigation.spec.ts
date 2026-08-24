@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { test, expect } from './fixtures';
 
 test.describe('Landing Page & Navigation Tests', () => {
   test.beforeEach(async ({ page }) => {
@@ -31,9 +31,9 @@ test.describe('Landing Page & Navigation Tests', () => {
     await expect(agendaModal).toBeVisible();
     await expect(agendaModal).not.toHaveClass(/hidden/);
 
-    // Find and click the close button inside the modal
-    const closeBtn = agendaModal.locator('button').filter({ has: page.locator('span:has-text("close")') });
-    await closeBtn.click();
+    // Por aria-label, e nao por "o botao que tem um icone close": o modal agora
+    // tem dois botoes de fechar — o do modal e o do painel de detalhes da sessao.
+    await agendaModal.getByRole('button', { name: 'Fechar agenda' }).click();
 
     // The modal should now be hidden or contain the "hidden" class
     await expect(agendaModal).toHaveClass(/hidden/);
@@ -55,8 +55,7 @@ test.describe('Landing Page & Navigation Tests', () => {
     await expect(interestModal).not.toHaveClass(/hidden/);
 
     // Close the interest modal
-    const closeBtn = interestModal.locator('button').filter({ has: page.locator('span:has-text("close")') });
-    await closeBtn.click();
+    await interestModal.getByRole('button', { name: 'Fechar formulário de interesse' }).click();
 
     // Verify it is hidden
     await expect(interestModal).toHaveClass(/hidden/);

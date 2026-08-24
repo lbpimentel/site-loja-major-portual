@@ -27,6 +27,11 @@ export default defineConfig(({mode}) => {
       rollupOptions: {
         input: {
           main: path.resolve(__dirname, 'index.html'),
+          // Precisa entrar aqui por dois motivos: sem estar nos inputs o arquivo
+          // nao chega ao dist/, e os marcadores {{...}} nao sao substituidos —
+          // a pagina de erro sairia com "{{loja.nomeCompleto}}" cru na tela.
+          // Na Vercel, um 404.html na raiz da saida vira a pagina de erro padrao.
+          erro404: path.resolve(__dirname, '404.html'),
           login: path.resolve(__dirname, 'login.html'),
           dashboard: path.resolve(__dirname, 'dashboard.html'),
           biblioteca: path.resolve(__dirname, 'biblioteca.html'),

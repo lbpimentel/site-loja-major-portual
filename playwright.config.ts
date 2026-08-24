@@ -29,7 +29,16 @@ export default defineConfig({
 
     /* Automatically wait for elements */
     actionTimeout: 10000,
-    navigationTimeout: 15000,
+    /*
+     * 30s, e nao 15s: o primeiro `goto` de cada worker paga o custo do navegador
+     * frio, e era ele que derrubava o primeiro teste da suite mesmo com tudo
+     * funcionando.
+     *
+     * O outro lado desta correcao e o `waitUntil: 'domcontentloaded'`, que o
+     * Playwright NAO aceita aqui no config — ele vive na fixture compartilhada
+     * em tests/fixtures.ts, que todos os specs importam.
+     */
+    navigationTimeout: 30000,
   },
 
   /* Run local dev server before starting the tests */

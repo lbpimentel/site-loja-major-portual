@@ -4,6 +4,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SisOriente - Sistema para Gestão de Loja Maçônica</title>
+    <meta name="description" content="Portal, tesouraria, biblioteca e agenda para a sua Loja, em um sistema só.">
+    <link rel="canonical" href="{{loja.siteUrl}}/sisoriente.html">
+    <link rel="icon" href="{{marca.logo}}">
+    <link rel="apple-touch-icon" href="{{marca.logo}}">
+    <!-- Open Graph: sem isto, compartilhar o link da Loja no WhatsApp nao gera previa. -->
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="{{loja.nomeCompleto}}">
+    <meta property="og:locale" content="pt_BR">
+    <meta property="og:url" content="{{loja.siteUrl}}/sisoriente.html">
+    <meta property="og:title" content="SisOriente — Sistema para Gestão de Loja Maçônica">
+    <meta property="og:description" content="Portal, tesouraria, biblioteca e agenda para a sua Loja, em um sistema só.">
+    <meta property="og:image" content="{{loja.siteUrl}}{{marca.logo}}">
+    <meta name="twitter:card" content="summary_large_image">
     <script src="/js/theme.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
@@ -164,9 +177,15 @@
 </head>
 <body class="selection:bg-amber-500/20 selection:text-white">
 
-<!-- Ambient Background Light Effects -->
-<div class="absolute top-[-20%] left-[-10%] w-[500px] h-[500px] bg-amber-500/5 rounded-full filter blur-[120px] pointer-events-none z-0"></div>
-<div class="absolute top-[30%] right-[-10%] w-[600px] h-[600px] bg-blue-500/5 rounded-full filter blur-[150px] pointer-events-none z-0"></div>
+<!-- Ambient Background Light Effects
+     Sao decorativos, mas com largura fixa (500px/600px) somada a um deslocamento
+     negativo eles empurravam o documento 88px alem da viewport a 375px, e o
+     celular passava a rolar de lado. Agora a largura acompanha a tela, e o
+     container corta o que sobra. -->
+<div class="fixed inset-0 overflow-hidden pointer-events-none z-0" aria-hidden="true">
+    <div class="absolute top-[-20%] left-[-10%] w-[min(500px,90vw)] aspect-square bg-amber-500/5 rounded-full filter blur-[120px]"></div>
+    <div class="absolute top-[30%] right-[-10%] w-[min(600px,90vw)] aspect-square bg-blue-500/5 rounded-full filter blur-[150px]"></div>
+</div>
 
 <!-- Top Sticky Navigation Header -->
 <nav class="fixed top-0 w-full z-50 bg-slate-950/70 backdrop-blur-xl border-b border-white/5 flex justify-between items-center px-6 md:px-12 py-4">
@@ -198,8 +217,8 @@
         <a href="#precos" class="btn-gold px-4 py-2 text-xs hidden sm:inline-flex">
             Testar Grátis
         </a>
-        <button class="lg:hidden text-amber-500 flex items-center" onclick="toggleMobileMenu()">
-            <span class="material-symbols-outlined text-3xl">menu</span>
+        <button class="min-w-[44px] min-h-[44px] flex items-center justify-center lg:hidden text-amber-500 flex items-center" onclick="toggleMobileMenu()" aria-label="Abrir menu">
+            <span class="material-symbols-outlined text-3xl" aria-hidden="true">menu</span>
         </button>
     </div>
 </nav>
@@ -208,8 +227,8 @@
 <div id="mobileMenu" class="fixed inset-0 z-50 hidden flex flex-col bg-slate-950/98 backdrop-blur-3xl transform transition-transform duration-500 translate-x-full">
     <div class="flex justify-between items-center px-6 py-5 border-b border-white/5 bg-[#090d16]">
         <span class="font-display text-amber-500 font-bold text-xl">Menu Principal</span>
-        <button onclick="toggleMobileMenu()" class="text-amber-500 flex items-center">
-            <span class="material-symbols-outlined text-3xl">close</span>
+        <button class="min-w-[44px] min-h-[44px] flex items-center justify-center text-amber-500 flex items-center" onclick="toggleMobileMenu()" aria-label="Fechar menu">
+            <span class="material-symbols-outlined text-3xl" aria-hidden="true">close</span>
         </button>
     </div>
     <div class="flex flex-col gap-4 p-6 overflow-y-auto text-sm">
@@ -267,7 +286,7 @@
         <div class="max-w-5xl mx-auto mt-20 px-4 relative z-10 animate-fade-in">
             <div class="glass-card p-2 bg-white/5 border border-glass-border/30 rounded-[2rem] shadow-2xl relative">
                 <div class="absolute inset-0 bg-gradient-to-t from-slate-950/70 via-transparent to-transparent z-10 rounded-[2rem] pointer-events-none"></div>
-                <img src="img/modelo1_sismacom.png" alt="SisOriente Dashboard Preview" class="w-full h-auto rounded-[1.75rem] shadow-lg border border-glass-border/10">
+                <img src="/img/modelo1_sismacom.svg" alt="Tela de gestão do SisOriente: indicadores da Loja, agenda de sessões e quadro de membros." loading="lazy" decoding="async" class="w-full h-auto rounded-[1.75rem] shadow-lg border border-glass-border/10">
             </div>
         </div>
     </section>
@@ -395,7 +414,7 @@
             <!-- Laptop Showcase Preview Mockup image -->
             <div class="flex justify-center">
                 <div class="glass-card p-3 bg-white/5 border border-glass-border/30 rounded-2xl shadow-xl relative w-full max-w-lg">
-                    <img src="img/modelo1_sismacom.png" alt="Plataforma de Gestão Maçônica" class="w-full h-auto rounded-xl">
+                    <img src="/img/modelo1_sismacom.svg" alt="Plataforma de gestão maçônica do SisOriente em um painel único." loading="lazy" decoding="async" class="w-full h-auto rounded-xl">
                 </div>
             </div>
         </div>
@@ -561,7 +580,7 @@
         <div class="text-center md:text-right">
             <p class="text-slate-400 text-sm mb-2">&copy; 2026 SisOriente. Todos os direitos reservados.</p>
             <p class="text-[10px] text-amber-500/80 uppercase tracking-widest font-bold">
-                Desenvolvido por: <a href="mailto:leandrobessa@hotmail.com" class="text-amber-500 hover:underline transition-colors decoration-none" title="Enviar e-mail">LEANDRO BESSA PIMENTEL</a>
+                Desenvolvido por: <a href="mailto:leandrobessa@hotmail.com" class="text-amber-500 hover:underline transition-colors decoration-none inline-flex items-center min-h-[44px] px-1" title="Enviar e-mail">LEANDRO BESSA PIMENTEL</a>
             </p>
         </div>
     </div>

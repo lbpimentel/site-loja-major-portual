@@ -5,6 +5,19 @@
     <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
     <script src="/js/theme.js"></script>
     <title>Solicitar Ingresso - {{loja.nomeCompleto}}</title>
+    <meta name="description" content="Formulário de solicitação de ingresso na {{loja.nomeCompleto}}.">
+    <link rel="canonical" href="{{loja.siteUrl}}/cadastro.html">
+    <link rel="icon" href="{{marca.logo}}">
+    <link rel="apple-touch-icon" href="{{marca.logo}}">
+    <!-- Open Graph: sem isto, compartilhar o link da Loja no WhatsApp nao gera previa. -->
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="{{loja.nomeCompleto}}">
+    <meta property="og:locale" content="pt_BR">
+    <meta property="og:url" content="{{loja.siteUrl}}/cadastro.html">
+    <meta property="og:title" content="Solicitar Ingresso — {{loja.nomeCompleto}}">
+    <meta property="og:description" content="Formulário de solicitação de ingresso na {{loja.nomeCompleto}}.">
+    <meta property="og:image" content="{{loja.siteUrl}}{{marca.logo}}">
+    <meta name="twitter:card" content="summary_large_image">
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
     <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,200..800;1,6..72,200..800&amp;family=Inter:wght@100..900&amp;display=swap" rel="stylesheet"/>
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
@@ -171,14 +184,14 @@
         <!-- Background Imagery -->
         <div class="absolute inset-0 z-0">
             <div class="absolute inset-0 bg-gradient-to-b from-background via-background/60 to-background z-10"></div>
-            <img class="w-full h-full object-cover opacity-40 grayscale contrast-125" src="https://lh3.googleusercontent.com/aida/ADBb0ug1DxbhESPlnO45YCODgj8Sp5HUgqG9_Ilmo8fPRJmg1d9cIq5ij4z_zlbFpxhyCIfGlNpgNfMRoiV9VyQSlnzONll2NATxWF2uc88wBokcqLjfXDZvbNyXDjIxBmMYQCcyALztrm6MWr3SR3ELNySugxequ2QFUjnX1MDAJevosHUuk5KgJxjbLPos0PIIEdZ-GeCQbzsgd6Rk2c11Nep2S-4aIT2l2AVc_qSprlshA-diBxNmehRErNl0qivRSoMaCMssFW48"/>
+            <img class="w-full h-full object-cover opacity-40 grayscale contrast-125" src="{{marca.heroBackground}}" alt="" aria-hidden="true" loading="lazy" decoding="async"/>
         </div>
 
         <!-- Header -->
         <div class="relative z-20 w-full max-w-[500px] mb-8 flex justify-between items-center px-2">
             <img src="{{marca.logo}}" alt="Logo" class="h-12 w-auto">
-            <a class="font-label-caps text-[10px] text-on-tertiary-container hover:text-secondary transition-colors tracking-widest uppercase flex items-center gap-2" href="login.html">
-                <span class="material-symbols-outlined text-sm">arrow_back</span> Voltar ao Login
+            <a class="font-label-caps text-[10px] text-on-tertiary-container hover:text-secondary transition-colors tracking-widest uppercase flex items-center gap-2 min-h-[44px] px-2" href="login.html">
+                <span class="material-symbols-outlined text-sm" aria-hidden="true">arrow_back</span> Voltar ao Login
             </a>
         </div>
 
@@ -281,10 +294,10 @@
             <div class="mt-12 pt-8 border-t border-white/5 flex flex-col items-center text-center">
                 <div class="flex items-center gap-8 mb-4">
                     <a href="{{rodape.orientes.0.url}}" target="_blank" rel="noopener noreferrer" class="transition-transform hover:scale-105">
-                        <img src="{{rodape.orientes.0.logo}}" alt="Grande Oriente do Brasil no Rio de Janeiro" class="h-10 w-auto opacity-30 hover:opacity-100 grayscale hover:grayscale-0 transition-all duration-500">
+                        <img src="{{rodape.orientes.0.logo}}" alt="Grande Oriente do Brasil no Rio de Janeiro" loading="lazy" decoding="async" class="h-10 w-auto opacity-30 hover:opacity-100 grayscale hover:grayscale-0 transition-all duration-500">
                     </a>
                     <a href="{{rodape.orientes.1.url}}" target="_blank" rel="noopener noreferrer" class="transition-transform hover:scale-105">
-                        <img src="{{rodape.orientes.1.logo}}" alt="Grande Oriente do Brasil" class="h-10 w-auto opacity-30 hover:opacity-100 grayscale hover:grayscale-0 transition-all duration-500">
+                        <img src="{{rodape.orientes.1.logo}}" alt="Grande Oriente do Brasil" loading="lazy" decoding="async" class="h-10 w-auto opacity-30 hover:opacity-100 grayscale hover:grayscale-0 transition-all duration-500">
                     </a>
                 </div>
                 <div class="space-y-1">

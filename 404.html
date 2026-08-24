@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Página não encontrada - {{loja.nomeCompleto}}</title>
+    <meta name="robots" content="noindex">
+    <link rel="icon" href="{{marca.logo}}">
+    <link rel="apple-touch-icon" href="{{marca.logo}}">
+    <script src="/js/theme.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Newsreader:opsz,wght@6..72,200..800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <style>
+        :root {
+            --primary: #e9c349;
+            --secondary: #e9c349;
+            --background: #0a0a0a;
+            --surface: #141414;
+            --on-background: #ffffff;
+            --on-surface-variant: #94a3b8;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--background);
+            color: var(--on-background);
+        }
+        .font-newsreader { font-family: 'Newsreader', serif; }
+        .bg-logo-overlay {
+            position: fixed;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80vw; height: 80vw;
+            max-width: 70vh; max-height: 70vh;
+            background-image: url('{{marca.logo}}');
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            opacity: 0.12;
+            z-index: -1;
+            pointer-events: none;
+        }
+    </style>
+    <link rel="stylesheet" href="/css/mobile.css">
+</head>
+<body class="min-h-screen flex items-center justify-center px-6 py-16">
+
+<div class="bg-logo-overlay" aria-hidden="true"></div>
+
+<main class="w-full max-w-xl text-center">
+    <img src="{{marca.logo}}" alt="Logo {{loja.nomeCompleto}}" class="h-20 w-auto mx-auto mb-10 opacity-70">
+
+    <p class="text-[10px] font-bold uppercase tracking-[0.4em] text-amber-500/70 mb-5">Erro 404</p>
+
+    <h1 class="font-newsreader text-4xl md:text-5xl mb-6 leading-tight">
+        Esta página não existe
+    </h1>
+
+    <p class="text-slate-400 leading-relaxed mb-12">
+        O endereço pode ter sido digitado com um erro, ou a página pode ter mudado
+        de lugar. Se você chegou aqui por um link nosso, escreva para
+        <a href="mailto:{{contato.email}}" class="text-amber-500 hover:text-amber-300 underline underline-offset-4 transition-colors">{{contato.email}}</a>
+        que corrigimos.
+    </p>
+
+    <div class="flex flex-col sm:flex-row gap-4 justify-center">
+        <a href="/"
+           class="inline-flex items-center justify-center gap-2 min-h-[44px] px-8 py-4 bg-amber-500 text-black font-bold uppercase tracking-[0.15em] text-xs rounded-xl hover:brightness-110 active:scale-[0.98] transition-all">
+            <span class="material-symbols-outlined text-lg" aria-hidden="true">home</span>
+            Voltar ao início
+        </a>
+        <a href="/login.html"
+           class="inline-flex items-center justify-center gap-2 min-h-[44px] px-8 py-4 border border-amber-500/30 text-amber-500 font-bold uppercase tracking-[0.15em] text-xs rounded-xl hover:bg-amber-500/10 transition-all">
+            <span class="material-symbols-outlined text-lg" aria-hidden="true">lock</span>
+            Portal do Membro
+        </a>
+    </div>
+
+    <p class="mt-16 text-[10px] uppercase tracking-[0.25em] text-slate-600">
+        {{loja.nomeCompleto}}
+    </p>
+</main>
+
+</body>
+</html>

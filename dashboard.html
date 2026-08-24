@@ -5,6 +5,9 @@
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <title>Painel do Membro - {{loja.nomeCompleto}}</title>
 <script src="/js/theme.js"></script>
+<!-- B-01: esconde o conteudo ate a sessao ser confirmada. Sem isto a pagina
+     pintava por inteiro antes do redirecionamento e piscava para o anonimo. -->
+<script src="/js/guarda-sessao.js"></script>
 <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
 <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,200..800;1,6..72,200..800&amp;family=Inter:wght@100..900&amp;display=swap" rel="stylesheet"/>
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
@@ -1088,7 +1091,7 @@
     window.logout = async function() {
         const { error } = await window.supabaseClient.auth.signOut();
         if (error) console.error("Erro ao sair:", error);
-        window.location.href = 'login.html';
+        (window.guardaSessao ? window.guardaSessao.irParaLogin() : window.location.replace('login.html'));
     };
 
 
@@ -1279,7 +1282,7 @@
         const { data: { session } } = await window.supabaseClient.auth.getSession();
         
         if (!session) {
-            window.location.href = 'login.html';
+            (window.guardaSessao ? window.guardaSessao.irParaLogin() : window.location.replace('login.html'));
             return;
         }
 

@@ -6,6 +6,9 @@
     <title>FraternidadeZap - Portal {{loja.nomeCurto}}</title>
     <meta name="description" content="Lembrador de aniversários da família maçônica da {{loja.nomeCompleto}}.">
     <script src="/js/theme.js"></script>
+<!-- B-01: esconde o conteudo ate a sessao ser confirmada. Sem isto a pagina
+     pintava por inteiro antes do redirecionamento e piscava para o anonimo. -->
+<script src="/js/guarda-sessao.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;0,6..72,700;1,6..72,400&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
@@ -529,7 +532,7 @@
 
         async function logout() {
             await window.supabaseClient.auth.signOut();
-            window.location.href = 'login.html';
+            (window.guardaSessao ? window.guardaSessao.irParaLogin() : window.location.replace('login.html'));
         }
 
         /** Escapa antes de injetar em innerHTML: os nomes vêm do banco. */
@@ -1031,7 +1034,7 @@
         async function iniciar() {
             const { data: { session } } = await window.supabaseClient.auth.getSession();
             if (!session) {
-                window.location.href = 'login.html';
+                (window.guardaSessao ? window.guardaSessao.irParaLogin() : window.location.replace('login.html'));
                 return;
             }
 

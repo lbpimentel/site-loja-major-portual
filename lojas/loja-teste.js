@@ -35,6 +35,10 @@ export default {
     slogan: "Formando Homens Bons e Homens Melhores",
     metaDescricao:
       "Loja Maçônica Nome da Loja Nº 1111, do Grande Oriente do Brasil no Rio de Janeiro. Formando Homens Bons e Homens Melhores.",
+    // Endereço público do site, SEM barra no fim. Usado no <link rel="canonical">
+    // e nas meta tags Open Graph — sem ele o compartilhamento no WhatsApp sai
+    // sem prévia e o buscador não sabe qual é o endereço oficial da página.
+    siteUrl: "https://exemplo.vercel.app",
     // Ano exibido no aviso de copyright do rodapé.
     anoCopyright: "2026",
   },
@@ -115,25 +119,25 @@ export default {
     itens: [
       {
         nome: "Ir. Marcelo",
-        foto: "/img/veneraveis/marcelo.png",
+        foto: "/img/veneraveis/marcelo.webp",
         cargo: "Venerável Mestre",
         anos: "2022 — 2023",
       },
       {
         nome: "Ir. Elton",
-        foto: "/img/veneraveis/elton.png",
+        foto: "/img/veneraveis/elton.webp",
         cargo: "Venerável Mestre",
         anos: "2021 — 2022",
       },
       {
         nome: "Ir. Cezar",
-        foto: "/img/veneraveis/cezar.png",
+        foto: "/img/veneraveis/cezar.webp",
         cargo: "Venerável Mestre",
         anos: "2020 — 2021",
       },
       {
         nome: "Ir. Leonardo",
-        foto: "/img/veneraveis/leonardo.png",
+        foto: "/img/veneraveis/leonardo.webp",
         cargo: "Venerável Mestre",
         anos: "2019 — 2020",
       },
@@ -158,9 +162,9 @@ export default {
     titulo: "Galeria de Fotos",
     linkTexto: "Ver Galeria Completa",
     fotos: [
-      { src: "img/galeria/foto1.jpg", alt: "Foto institucional 1" },
-      { src: "img/galeria/foto2.jpg", alt: "Foto institucional 2" },
-      { src: "img/galeria/foto3.jpg", alt: "Foto institucional 3" },
+      { src: "img/galeria/foto1.webp", alt: "Foto institucional 1" },
+      { src: "img/galeria/foto2.webp", alt: "Foto institucional 2" },
+      { src: "img/galeria/foto3.webp", alt: "Foto institucional 3" },
     ],
   },
 
@@ -219,12 +223,12 @@ export default {
     orientes: [
       {
         nome: "Grande Oriente do Brasil no Rio de Janeiro",
-        logo: "/img/institucional/logo_gob_rj-2.png",
+        logo: "/img/institucional/logo_gob_rj-2.webp",
         url: "https://gob-rj.org.br/home",
       },
       {
         nome: "Grande Oriente do Brasil",
-        logo: "/img/institucional/logo-gob-brasilia-df-selo.png",
+        logo: "/img/institucional/logo-gob-brasilia-df-selo.webp",
         url: "https://www.gob.org.br/",
       },
     ],

@@ -4,6 +4,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Patrono - {{loja.nomeCompleto}}</title>
+    <meta name="description" content="Quem foi o patrono que dá nome à {{loja.nomeCompleto}} e por que a Loja o homenageia.">
+    <link rel="canonical" href="{{loja.siteUrl}}/patrono.html">
+    <link rel="icon" href="{{marca.logo}}">
+    <link rel="apple-touch-icon" href="{{marca.logo}}">
+    <!-- Open Graph: sem isto, compartilhar o link da Loja no WhatsApp nao gera previa. -->
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="{{loja.nomeCompleto}}">
+    <meta property="og:locale" content="pt_BR">
+    <meta property="og:url" content="{{loja.siteUrl}}/patrono.html">
+    <meta property="og:title" content="Patrono — {{loja.nomeCompleto}}">
+    <meta property="og:description" content="Quem foi o patrono que dá nome à {{loja.nomeCompleto}} e por que a Loja o homenageia.">
+    <meta property="og:image" content="{{loja.siteUrl}}{{marca.logo}}">
+    <meta name="twitter:card" content="summary_large_image">
     <script src="/js/theme.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Newsreader:ital,opsz,wght@0,6..72,200..800;1,6..72,200..800&family=Outfit:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -87,8 +100,8 @@
         <a class="inline-flex items-center font-newsreader text-xs sm:text-sm uppercase tracking-widest text-amber-500 hover:text-amber-300 transition-colors border border-amber-500/20 px-3 sm:px-6 py-1.5 sm:py-2 rounded-full bg-amber-500/5 text-center" href="login.html">
             {{navegacao.ctaPortal}}
         </a>
-        <button class="lg:hidden text-amber-500" onclick="toggleMobileMenu()">
-            <span class="material-symbols-outlined text-3xl">menu</span>
+        <button class="min-w-[44px] min-h-[44px] flex items-center justify-center lg:hidden text-amber-500" onclick="toggleMobileMenu()" aria-label="Abrir menu">
+            <span class="material-symbols-outlined text-3xl" aria-hidden="true">menu</span>
         </button>
     </div>
 </nav>
@@ -97,8 +110,8 @@
 <div id="mobileMenu" class="fixed inset-0 z-50 hidden flex flex-col bg-slate-950/98 backdrop-blur-3xl transform transition-transform duration-500 translate-x-full">
     <div class="flex justify-between items-center px-6 py-5 border-b border-white/5">
         <span class="font-newsreader text-amber-500 font-bold text-xl">Menu</span>
-        <button onclick="toggleMobileMenu()" class="text-amber-500">
-            <span class="material-symbols-outlined text-4xl">close</span>
+        <button class="min-w-[44px] min-h-[44px] flex items-center justify-center text-amber-500" onclick="toggleMobileMenu()" aria-label="Fechar menu">
+            <span class="material-symbols-outlined text-4xl" aria-hidden="true">close</span>
         </button>
     </div>
     <div class="flex flex-col gap-4 p-6 overflow-y-auto">
@@ -135,7 +148,7 @@
         <div class="max-w-4xl mx-auto">
             <div class="text-center mb-16">
                 <span class="font-bold uppercase tracking-[0.4em] text-secondary mb-4 block">{{paginas.patrono.chapeu}}</span>
-                <h2 class="font-newsreader text-4xl md:text-5xl mb-6 text-on-background">{{paginas.patrono.titulo}}</h2>
+                <h1 class="font-newsreader text-4xl md:text-5xl mb-6 text-on-background">{{paginas.patrono.titulo}}</h1>
                 <div class="h-1 w-24 bg-amber-500 mx-auto"></div>
             </div>
 

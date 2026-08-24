@@ -18,6 +18,7 @@ const PAGINAS_PUBLICAS = [
   '/historia.html',
   '/patrono.html',
   '/timbre.html',
+  '/privacidade.html',
   // Landing comercial do SisOriente: e publica de proposito, nao area restrita.
   '/sisoriente.html'
 ];

@@ -42,6 +42,7 @@ export default defineConfig(({mode}) => {
           timbre: path.resolve(__dirname, 'timbre.html'),
           historia: path.resolve(__dirname, 'historia.html'),
           patrono: path.resolve(__dirname, 'patrono.html'),
+          privacidade: path.resolve(__dirname, 'privacidade.html'),
           sisoriente: path.resolve(__dirname, 'sisoriente.html'),
           fraternidadezap: path.resolve(__dirname, 'fraternidadezap.html'),
           balaustre: path.resolve(__dirname, 'balaustre.html'),
